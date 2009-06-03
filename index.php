@@ -69,17 +69,20 @@ function GENERAR_CABEZA()
         echo ui_href("cabecera_link_Categorias","./","Categorías","izq");
     if (!S_iniciado())
     {
-        echo ui_href("cabecera_link_sesion","iniciar","Cuenta","");
+        echo ui_href("cabecera_link_sesion","iniciar","Ingresar","");
         echo ui_href("cabecera_link_cuenta","registrar","Registrarse","");
-    }
-    else
-    {
-        echo ui_href("cabecera_link_sesion","finalizar","Salir","");
-        echo ui_href("cabecera_link_cuenta","perfil","Perfil","");
-    }
         echo ui_href("cabecera_link_vender","vender","Vender","");
         echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
         echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
+    }
+    else
+    {
+        echo ui_href("cabecera_link_cuenta","perfil","Mi cuenta","");
+        echo ui_href("cabecera_link_vender","vender","Vender","");
+        echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
+        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
+        echo ui_href("cabecera_link_sesion","finalizar","Salir","");
+    }
 
     echo "</div>";
 }
@@ -127,10 +130,17 @@ function GENERAR_COLUMNA2()
     $data = '';
     $data .= "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
-    $c = "SELECT CONCAT('<a href=\"categoria_' , id_categoria, '_', nombre , '\">', nombre, '</a>') AS link FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
+    $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
     $resultado = db_consultar($c);
     $data .= '<span id="categorias">';
-    $data .= db_ui_lista($resultado);
+    $data .= '<table>';
+    $n_campos = mysql_num_rows($resultado);
+    for ($i = 0; $i < $n_campos; $i++) {
+        $r = mysql_fetch_row($resultado);
+        $data .= ui_tr(ui_td('<a href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. $r[1].'</a><br />'));
+
+    }
+    $data .= '</table>';
     $data .= '</span>';
     $data .= (isset($_GET['categoria'])) ? '<br /><a href="./">Ver todas las categorías</a>' : '';
     return $data;
