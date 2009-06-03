@@ -83,15 +83,18 @@ function get_path($node) {
 
 // http://www.sitepoint.com/article/hierarchical-data-database/
 function ver_hijos($padre, $nivel = 0, $profundidad = 5) {
-if ($nivel == $profundidad) return array();
 $r = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE padre='$padre'");
 $arbol = array();
-   while ($row = mysql_fetch_array($r)) {
-       $arbol[] = '<option value="'.$row['id_categoria'].'">' . str_repeat('··',$nivel).$row['nombre'] . '</option>';
-       $arbol = array_merge($arbol, ver_hijos($row['id_categoria'], $nivel+1));
-   }
-   return $arbol;
+while ($row = mysql_fetch_array($r)) {
+    $arbol[] = '<option value="'.$row['id_categoria'].'">' . str_repeat('··',$nivel).$row['nombre'] . '</option>';
+    if ($nivel+1 < $profundidad)
+    {
+        $arbol = array_merge($arbol, ver_hijos($row['id_categoria'], $nivel+1));
+    }
 }
+return $arbol;
+}
+
 function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion)
 {
     $c = "SELECT $valor, $texto, $explicacion FROM $tabla";
