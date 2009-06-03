@@ -1,0 +1,203 @@
+html, body {
+    margin:auto;
+    padding:0;
+    border:0;			/* This removes the border around the viewport in old versions of IE */
+    width:98%;
+    background:#FFFFFF;
+    min-width:600px;		/* Minimum width of layout - remove line if not required */
+    font-size:90%;
+    font-family: Verdana, Helvetica, "Lucida Grande", Arial, sans-serif;
+}
+
+a {
+    color:#00f;
+    text-decoration:none;
+}
+
+a.menu {
+    padding-left:5px;
+    padding-right:5px;
+}
+a:hover {
+    color:#50f;
+}
+h1, h2, h3 {
+    margin:.8em 0 .2em 0;
+    padding:0;
+}
+h1 {
+    font-size:99%;
+    text-align:center;
+}
+h2 {
+    font-size:90%;
+}
+h3 {
+    font-size:85%;
+}
+p {
+    margin:.4em 0 .8em 0;
+    padding:0;
+}
+img {
+    margin:10px 0 5px;
+    border:0;
+}
+/* Header styles */
+#header {
+    clear:both;
+    float:left;
+    width:100%;
+/*
+    border-bottom:1px solid #000;
+*/
+}
+
+
+/* column container */
+.colmask {
+    position:relative;	/* This fixes the IE7 overflow hidden bug */
+    clear:both;
+    float:left;
+    width:100%;			/* width of whole page */
+    overflow:hidden;	/* This chops off any overhanging divs */
+    border-top:1px solid #CCCCCC;
+    border-bottom:1px solid #CCCCCC;
+}
+/* common column settings */
+.colright,
+.colmid,
+.colleft {
+    float:left;
+    width:100%;			/* width of page */
+    position:relative;
+}
+.col1,
+.col2,
+.col3 {
+    float:left;
+    position:relative;
+    padding:0 0 1em 0;	/* no left and right padding on columns, we just make them narrower instead
+                    only padding top and bottom is included here, make it whatever value you need */
+    overflow:hidden;
+}
+/* 3 Column settings */
+.threecol {
+    background:#EDF7FF;	/* right column background colour */
+}
+.threecol .colmid {
+    background:#FFF;	/* center column background colour */
+    right:15%;			/* width of the right column */
+    border-right:1px solid #CCCCCC;
+}
+.threecol .colleft {
+    right:67%;			/* width of the middle column (encoge izq.)*/
+    background:#EDF7FF;	/* left column background colour */
+    border-right:1px solid #CCCCCC;
+}
+/*
+Columna Central Contenido
+*/
+.threecol .col1 {
+    width:63%; /* Ancho contenido Col Central */
+    left:102%; /* Left del contenido de Col Central */
+}
+/*
+Columna Izq. Contenido
+*/
+.threecol .col2 {
+    width:17%;  /* Ancho contenido Col Izq. */
+    left:19.5%;   /* Left del contenido de Col Izq. */
+}
+/*
+Columna Der. Contenido
+*/
+.threecol .col3 {
+    width:15%;
+    left:87%;
+}
+/* Footer styles */
+#footer {
+    position:relative;
+    bottom:0;
+    clear:both;
+    float:left;
+    width:100%;
+/*
+    border-top:1px solid #000;
+*/
+}
+#footer p {
+    padding:10px;
+    margin:0;
+    text-align:center;
+    font-size:0.8em
+}
+
+#menu {
+    float:right;
+    padding-bottom:1px;
+    padding-left:1px;
+}
+
+#menu a {
+    background:transparent url(IMG/fmenu.gif) repeat-x scroll left bottom;
+    background-attachment: scroll;
+    background-color: transparent;
+    color:#000;
+    display:table-cell;
+    position:relative;
+    vertical-align:middle;
+    font-weight:bolder;
+    border-right:1px solid #CCCCCC;
+    font-size: 13px;
+    height: 16px;
+    line-height: normal;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-top: 6px;
+    white-space: nowrap;
+    width: 40px;
+
+}
+#menu a.izq {
+   border-left:1px solid #CCCCCC;
+}
+#categorias {
+    font-size:80%;
+}
+
+#categorias table {
+    width:100%;
+}
+
+#categorias td {
+    padding:3px;
+    background:transparent url(IMG/fmenu.gif) repeat-x scroll left bottom;
+    border-right:1px solid #CCCCCC;
+    vertical-align:middle;
+    font-weight:bold;
+}
+
+#categorias a {
+color:#000;
+}
+
+.explicacion {
+background-color:#EEE;
+margin:.8em 0 .2em 0;
+}
+
+#error
+	{background-color:#F00;border:2px solid #000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#FFF;text-align:center}
+#error:before
+	{content:'Error: '}
+#info
+	{background-color:#F4F4F4;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000;text-align:center}
+#info:before
+	{content:"Información: "}
+#nota
+	{background-color:#CCCCFF;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000	;text-align:center}
+#nota:before
+	{content:"Nota: "}
