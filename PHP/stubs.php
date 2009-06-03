@@ -64,7 +64,7 @@ function despachar_notificaciones_email($mensaje){
 // http://www.sitepoint.com/article/hierarchical-data-database/
 function get_path($node) {
    // look up the parent of this node
-   $result = db_consultar("SELECT padre,  CONCAT('<a href=\"categoria_' , id_categoria, '_', nombre , '\">', nombre, '</a>') AS nombre FROM ventas_categorias WHERE id_categoria='$node'");
+   $result = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE id_categoria='$node'");
    $row = mysql_fetch_array($result);
 
    // save the path in this array
@@ -73,7 +73,7 @@ function get_path($node) {
    // only continue if this $node isn't the root node (that's the node with no parent)
    if ($row['padre']!='') {
        // the last part of the path to $node, is the name of the parent of $node
-       $path[] = $row['nombre'];
+       $path[] = ui_href("principal_ubicacion_link[]","categoria-".$row['id_categoria']."-".urlencode($row['nombre']), $row['nombre']);
 
        // we should add the path to the parent of this node to the path
        $path = array_merge(get_path($row['padre']), $path);

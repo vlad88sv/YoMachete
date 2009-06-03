@@ -319,7 +319,7 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Diccionarios y Enciclopedias", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Ensayos", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros Antiguos", "descripcion" => ""));
-    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros Esotéricos/Paranormales", "descripcion" => ""));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros Esotéricos-Paranormales", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros Técnicos y Cursos", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Arquitectura y Diseño", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Arte", "descripcion" => ""));
@@ -327,9 +327,9 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Ciencias Económicas", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Ciencias Exactas", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Ciencias Sociales", "descripcion" => ""));
-    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Computación/Internet", "descripcion" => ""));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Computación-Internet", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Cs Humanísticas", "descripcion" => ""));
-    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Cs Médicas/Naturales", "descripcion" => ""));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Cs Médicas-Naturales", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Derecho", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Ficción", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Libros de Idiomas", "descripcion" => ""));

@@ -18,17 +18,14 @@ require_once ("PHP/vital.php");
 </head>
 
 <body>
-<div id="header"><?php GENERAR_CABEZA(); ?></div>
-<div class="colmask">
+<div id="header"><?php GENERAR_CABEZA(); ?><div style="clear:both"></div></div>
 <?php
 if (!isset($_GET['peticion']))
 {
     echo '
-        <div class="colmask threecol"><div class="colmid"><div class="colleft">
-		<div class="col1">'. GENERAR_COLUMNA1() .' </div>
-		<div class="col2">'. GENERAR_COLUMNA2() .' </div>
-		<div class="col3">'. GENERAR_COLUMNA3() .' </div>
-        </div></div></div>
+		<div id="secc_categorias">'. GENERAR_CATEGORIAS() .' </div>
+		<div id="secc_articulos">'. GENERAR_ARTICULOS() .' </div>
+		<div id="secc_destacados">'. GENERAR_DESTACADOS() .' </div>
         ';
 
     return;
@@ -38,8 +35,7 @@ else
     require_once('PHP/traductor.php');
 }
 ?>
-</div>
-<div id="footer"><?php GENERAR_PIE(); ?></div>
+<div id="footer"><?php echo GENERAR_PIE(); ?></div>
 </body>
 </html>
 
@@ -88,7 +84,7 @@ function GENERAR_CABEZA()
 }
 
 // Columna central
-function GENERAR_COLUMNA1()
+function GENERAR_ARTICULOS()
 {
     $data = '';
     $categoria = isset($_GET['categoria']) ? db_codex($_GET['categoria']) : 0;
@@ -103,7 +99,7 @@ function GENERAR_COLUMNA1()
             $data .= "<h1>Mostrando artículos de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
             $data .= "Ubicación: " . join(" > ", get_path($categoria)) . "<br />";
             $data .= "<hr />";
-            $data .= "Deseo publicar una <a href=\"./vender:$categoria\">venta</a> / <a href=\"./comprar:$categoria\">compra</a> en esta categoría<br />";
+            $data .= "Deseo publicar una <a href=\"./vender-en-$categoria\">venta</a> en esta categoría<br />";
             $data .= "<hr />";
             // Mostrar todos los articulos en la categoría
             $c = "SELECT (SELECT ubicacion FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE id_categoria='$categoria'";
@@ -125,29 +121,23 @@ function GENERAR_COLUMNA1()
 }
 
 // Columna Izq.
-function GENERAR_COLUMNA2()
+function GENERAR_CATEGORIAS()
 {
     $data = '';
-    $data .= "<h1>Categorías</h1>";
+    $data .= (isset($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
     $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
     $resultado = db_consultar($c);
-    $data .= '<span id="categorias">';
-    $data .= '<table>';
     $n_campos = mysql_num_rows($resultado);
     for ($i = 0; $i < $n_campos; $i++) {
         $r = mysql_fetch_row($resultado);
-        $data .= ui_tr(ui_td('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. Truncar($r[1],24).'</a><br />'));
-
+        $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
     }
-    $data .= '</table>';
-    $data .= '</span>';
-    $data .= (isset($_GET['categoria'])) ? '<br /><a href="./">Ver todas las categorías</a>' : '';
     return $data;
 }
 
 // Columna Der.
-function GENERAR_COLUMNA3()
+function GENERAR_DESTACADOS()
 {
     $data = '';
     $data .= "<h1>Destacados</h1>";
@@ -156,6 +146,8 @@ function GENERAR_COLUMNA3()
 }
 function GENERAR_PIE()
 {
-    echo "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 CEPASA de C.V. Todos los derechos reservados.</p>";
+    $data = '';
+    $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 CEPASA de C.V. Todos los derechos reservados.</p>";
+    return $data;
 }
 ?>

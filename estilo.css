@@ -1,10 +1,9 @@
 html, body {
     margin:auto;
     padding:0;
-    border:0;			/* This removes the border around the viewport in old versions of IE */
+    border:0;
     width:98%;
     background:#FFFFFF;
-    min-width:600px;		/* Minimum width of layout - remove line if not required */
     font-size:90%;
     font-family: Verdana, Helvetica, "Lucida Grande", Arial, sans-serif;
 }
@@ -43,89 +42,20 @@ img {
     margin:10px 0 5px;
     border:0;
 }
-/* Header styles */
 #header {
-    clear:both;
-    float:left;
+    height:auto;
     width:100%;
-/*
-    border-bottom:1px solid #000;
-*/
-}
-
-
-/* column container */
-.colmask {
-    position:relative;	/* This fixes the IE7 overflow hidden bug */
-    clear:both;
-    float:left;
-    width:100%;			/* width of whole page */
-    overflow:hidden;	/* This chops off any overhanging divs */
-    border-top:1px solid #CCCCCC;
+    padding: 0px;
+    margin: 0px;
     border-bottom:1px solid #CCCCCC;
 }
-/* common column settings */
-.colright,
-.colmid,
-.colleft {
-    float:left;
-    width:100%;			/* width of page */
-    position:relative;
-}
-.col1,
-.col2,
-.col3 {
-    float:left;
-    position:relative;
-    padding:0 0 1em 0;	/* no left and right padding on columns, we just make them narrower instead
-                    only padding top and bottom is included here, make it whatever value you need */
-    overflow:hidden;
-}
-/* 3 Column settings */
-.threecol {
-    background:#EDF7FF;	/* right column background colour */
-}
-.threecol .colmid {
-    background:#FFF;	/* center column background colour */
-    right:15%;			/* width of the right column */
-    border-right:1px solid #CCCCCC;
-}
-.threecol .colleft {
-    right:67%;			/* width of the middle column (encoge izq.)*/
-    background:#EDF7FF;	/* left column background colour */
-    border-right:1px solid #CCCCCC;
-}
-/*
-Columna Central Contenido
-*/
-.threecol .col1 {
-    width:63%; /* Ancho contenido Col Central */
-    left:102%; /* Left del contenido de Col Central */
-}
-/*
-Columna Izq. Contenido
-*/
-.threecol .col2 {
-    width:17.9%;  /* Ancho contenido Col Izq. */
-    left:19.1%;   /* Left del contenido de Col Izq. */
-}
-/*
-Columna Der. Contenido
-*/
-.threecol .col3 {
-    width:15%;
-    left:86%;
-}
-/* Footer styles */
+
 #footer {
     position:relative;
     bottom:0;
     clear:both;
     float:left;
     width:100%;
-/*
-    border-top:1px solid #000;
-*/
 }
 #footer p {
     padding:10px;
@@ -164,27 +94,40 @@ Columna Der. Contenido
 #menu a.izq {
    border-left:1px solid #CCCCCC;
 }
-#categorias {
-    font-size:85%;
+
+#secc_categorias {
+    text-align:center;
+    font-size:90%;
+    border-bottom:1px solid #CCCCCC;
+    margin:5px;
 }
 
-#categorias table {
-    width:100%;
+#secc_categorias a {
+    white-space: nowrap;
+    color:#000;
 }
 
-#categorias td {
-    padding:3px;
+#secc_categorias a:hover {
+    color:#00f;
+}
+
+#secc_categorias .item_cat {
+    display:inline;
+    line-height:25px;
+    margin-right:3px;
+    padding:2px;
     background:transparent url(IMG/fmenu.gif) repeat-x scroll left bottom;
-    border-right:1px solid #CCCCCC;
+    border:1px solid #CCCCCC;
     vertical-align:middle;
-    font-weight:bold;
 }
 
-#categorias a {
-color:#000;
+#secc_categorias .item_cat_todos {
+    clear:both;
 }
-#categorias a:hover {
-color:#00f;
+
+#secc_articulos {
+    background-color:#eeeef8;
+    padding:10px;
 }
 
 .explicacion {
