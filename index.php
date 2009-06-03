@@ -137,7 +137,7 @@ function GENERAR_COLUMNA2()
     $n_campos = mysql_num_rows($resultado);
     for ($i = 0; $i < $n_campos; $i++) {
         $r = mysql_fetch_row($resultado);
-        $data .= ui_tr(ui_td('<a href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. $r[1].'</a><br />'));
+        $data .= ui_tr(ui_td('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. Truncar($r[1],24).'</a><br />'));
 
     }
     $data .= '</table>';

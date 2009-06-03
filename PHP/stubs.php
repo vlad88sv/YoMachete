@@ -102,4 +102,12 @@ function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion)
     }
     return $html;
 }
+
+function Truncar($cadena, $largo) {
+    if (strlen($cadena) > $largo) {
+        $cadena = substr($cadena,0,($largo -3));
+            $cadena .= '...';
+    }
+    return $cadena;
+}
 ?>
