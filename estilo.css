@@ -106,8 +106,8 @@ Columna Central Contenido
 Columna Izq. Contenido
 */
 .threecol .col2 {
-    width:17%;  /* Ancho contenido Col Izq. */
-    left:19.5%;   /* Left del contenido de Col Izq. */
+    width:17.9%;  /* Ancho contenido Col Izq. */
+    left:19.1%;   /* Left del contenido de Col Izq. */
 }
 /*
 Columna Der. Contenido
@@ -182,6 +182,9 @@ Columna Der. Contenido
 
 #categorias a {
 color:#000;
+}
+#categorias a:hover {
+color:#00f;
 }
 
 .explicacion {
