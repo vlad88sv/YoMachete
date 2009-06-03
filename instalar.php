@@ -275,7 +275,7 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Figuras de Acción", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Álbumes y Cromos", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Filatelia", "descripcion" => ""));
-    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Lapiceras, Plumas y Bolígrafos", "descripcion" => ""));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Plumas y Bolígrafos", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Latas, Botellas y Afines", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Militaría y Afines", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Modelismo", "descripcion" => ""));
