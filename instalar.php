@@ -123,7 +123,7 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Game Boy SP", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "GameCube", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Nintendo 64", "descripcion" => ""));
-    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Nintendo DS/DSi", "descripcion" => ""));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Nintendo DS-DSi", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Nintendo Wii", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "PSP - PlayStation Portable", "descripcion" => ""));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "PlayStation 1", "descripcion" => ""));
