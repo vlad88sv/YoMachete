@@ -72,11 +72,11 @@ function CONTENIDO_VENDER()
     echo "Ud. ha pre-seleccionado la categoría <b>$nombreCategoria</b>";
     echo ui_input("vender_categoria",$nombreCategoria,"hidden");
     }
-    echo "<li>Título del artículo</li>";
+    echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 30 carácteres. No se admite código HTML.</span><br />";
     echo "Titulo " . ui_input("vender_titulo","","","","width:30ex","MAXLENGTH='30'")."<br />";
-    echo "<li>Descripción corta del artículo</li>";
-    echo "<span class='explicacion'>Describa brevemente tu artículo, solo los detalles más importantes, máximo 100 carácteres. No se admite código HTML.</span><br />";
+    echo "<li>Descripción corta de la publicación</li>";
+    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 100 carácteres. No se admite código HTML.</span><br />";
     echo "Descripción corta<br />" . ui_textarea("vender_descripcion_corta","","","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
