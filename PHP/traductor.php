@@ -19,16 +19,10 @@ switch ($_GET['peticion'])
         CONTENIDO_REGISTRAR();
         break;
     case 'vender':
-        require_once("PHP/vender.php");
-        CONTENIDO_VENDER();
-    break;
     case 'vender_servicio':
-        require_once("PHP/vender.php");
-        CONTENIDO_VENDER("servicios");
-    break;
     case 'vender_articulo':
         require_once("PHP/vender.php");
-        CONTENIDO_VENDER("articulos");
+        CONTENIDO_VENDER();
     break;
     case 'vip':
         require_once ("PHP/contenido.php");
