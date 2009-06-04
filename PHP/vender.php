@@ -38,6 +38,18 @@ function CONTENIDO_VENDER()
         case "automotor":
             $tipoVenta="automotor";
         break;
+        case "categoria":
+            if (isset($_GET['cat']))
+            {
+                $c = "SELECT rubro FROM ventas_categorias WHERE id_categoria='".db_codex(isset($_GET['cat']))."' LIMIT 1";
+                $r = db_consultar($c);
+                $f = mysql_fetch_row($r);
+                if (isset($f[0]))
+                {
+                    $tipoVenta = $f[0];
+                    break;
+                }
+            }
         default:
             $tipoVenta="articulo";
     }
