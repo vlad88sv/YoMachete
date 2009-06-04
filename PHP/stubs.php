@@ -120,4 +120,19 @@ function Truncar($cadena, $largo) {
     }
     return $cadena;
 }
+
+
+function _F_form_cache($campo)
+{
+    if (!isset($_POST))
+        return '';
+    if (array_key_exists($campo, $_POST))
+    {
+        return $_POST[$campo];
+    }
+    else
+    {
+        return '';
+    }
+}
 ?>
