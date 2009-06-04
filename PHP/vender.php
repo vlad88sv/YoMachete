@@ -40,12 +40,12 @@ function CONTENIDO_VENDER()
             $tipoVenta="automotor";
         break;
         case "categoria":
-            if (isset($_GET['cat']))
+            if (!empty($_GET['cat']))
             {
-                $c = "SELECT rubro,nombre FROM ventas_categorias WHERE id_categoria='".db_codex(isset($_GET['cat']))."' LIMIT 1";
+                $c = "SELECT rubro,nombre FROM ventas_categorias WHERE id_categoria='".db_codex($_GET['cat'])."' LIMIT 1";
                 $r = db_consultar($c);
                 $f = mysql_fetch_row($r);
-                if (isset($f[0]))
+                if (!empty($f[0]))
                 {
                     $flag_categoriaDirecta=true;
                     $tipoVenta = $f[0];
