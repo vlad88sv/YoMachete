@@ -23,6 +23,7 @@ function CONTENIDO_VENDER()
         return;
     }
 
+    $flag_categoriaDirecta=false;
     // Ya escogió
     switch($_GET['op'])
     {
@@ -41,12 +42,14 @@ function CONTENIDO_VENDER()
         case "categoria":
             if (isset($_GET['cat']))
             {
-                $c = "SELECT rubro FROM ventas_categorias WHERE id_categoria='".db_codex(isset($_GET['cat']))."' LIMIT 1";
+                $c = "SELECT rubro,nombre FROM ventas_categorias WHERE id_categoria='".db_codex(isset($_GET['cat']))."' LIMIT 1";
                 $r = db_consultar($c);
                 $f = mysql_fetch_row($r);
                 if (isset($f[0]))
                 {
+                    $flag_categoriaDirecta=true;
                     $tipoVenta = $f[0];
+                    $nombreCategoria = $f[1];
                     break;
                 }
             }
@@ -57,9 +60,18 @@ function CONTENIDO_VENDER()
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
     echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.";
     echo "<ol class=\"ventas\">";
-    echo "<li>Selección de categoría para el artículo</li>";
+    if (!$flag_categoriaDirecta || !isset($nombreCategoria))
+    {
+    echo "<li>Selección de categoría</li>";
     echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span><br />";
     echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("vender_categoria",join("",ver_hijos("",$tipoVenta)))."<br />";
+    }
+    else
+    {
+    echo "<li>Categoría seleccionada</li>";
+    echo "Ud. ha pre-seleccionado la categoría <b>$nombreCategoria</b>";
+    echo ui_input("vender_categoria",$nombreCategoria,"hidden");
+    }
     echo "<li>Título del artículo</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 30 carácteres. No se admite código HTML.</span><br />";
     echo "Titulo " . ui_input("vender_titulo","","","","width:30ex","MAXLENGTH='30'")."<br />";
