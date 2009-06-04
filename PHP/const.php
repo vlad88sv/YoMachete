@@ -9,6 +9,7 @@ define('_N_usuario',            2);
 // Estados
 define('_N_bloqueado_temp',     1);
 define('_N_bloqueado_perm',     2);
+define('_N_esp_activacion',     3);
 
 /*
 Constantes para mensajes

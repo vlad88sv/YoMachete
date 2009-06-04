@@ -41,7 +41,7 @@ function _F_usuario_acceder($email, $clave){
 	$email = db_codex (trim($email));
 	$clave = md5 (trim($clave));
 
-	$c = "SELECT * FROM $tablaUsuarios WHERE email='$email' AND clave='$clave'";
+	$c = "SELECT * FROM $tablaUsuarios WHERE email='$email' AND clave='$clave' AND estado!="._N_esp_activacion;
 	DEPURAR($c,0);
 	$resultado = db_consultar ($c);
 	if ($resultado) {
