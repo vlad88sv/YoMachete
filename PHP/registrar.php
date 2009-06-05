@@ -11,12 +11,17 @@ function CONTENIDO_REGISTRAR()
         $flag_registroExitoso=true;
         if (!empty($_POST['registrar_campo_email']))
         {
+            if (!validEmail($_POST['registrar_campo_email']))
+            {
+                echo mensaje ("Este correo electrónico no es válido, por favor revise que este escrito correctamente o escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
             if (_F_usuario_existe($_POST['registrar_campo_email'],"email"))
             {
                 echo mensaje ("Este correo electrónico ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
                 $flag_registroExitoso=false;
             }
-            $datos['email'] = $_POST['registrar_campo_email'];
+                $datos['email'] = $_POST['registrar_campo_email'];
         }
         else
         {
@@ -31,7 +36,11 @@ function CONTENIDO_REGISTRAR()
                 echo mensaje ("Este nombre de usuario ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
                 $flag_registroExitoso=false;
             }
-
+            if (strpos($_POST['registrar_campo_usuario']," "))
+            {
+                echo mensaje ("Este nombre de usuario no es válido (contiene espacios), por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
             $datos['nombre'] = $_POST['registrar_campo_usuario'];
         }
         else
