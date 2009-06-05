@@ -36,7 +36,7 @@ function CONTENIDO_REGISTRAR()
                 echo mensaje ("Este nombre de usuario ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
                 $flag_registroExitoso=false;
             }
-            if (strpos($_POST['registrar_campo_usuario']," "))
+            if (strpos(trim($_POST['registrar_campo_usuario'])," "))
             {
                 echo mensaje ("Este nombre de usuario no es válido (contiene espacios), por favor escoja otro e intente de nuevo",_M_ERROR);
                 $flag_registroExitoso=false;
@@ -89,14 +89,13 @@ function CONTENIDO_REGISTRAR()
         }
         else
         {
-            echo mensaje ("Por favor ingrese su usuario e intente de nuevo",_M_ERROR);
+            echo mensaje ("Por favor ingrese su número telefonico e intente de nuevo",_M_ERROR);
             $flag_registroExitoso=false;
         }
 
         if ($flag_registroExitoso)
         {
             $datos["estado"] = _N_esp_activacion;
-            print_r($datos)."<br />";
             db_agregar_datos("ventas_usuarios",$datos);
             echo "¡Su solicitud de registro ha sido procesada!<br />Sin embargo su registro será efectivo hasta el momento que un Administrador de el aval a su nueva cuenta.<br />Un mensaje será enviado al correo electrónico especificado al registrarse en el que se le confirmará que su cuenta esta activa.<br />Este proceso puede tardar entre 10 minutos y 2 horas en llevarse a cabo, gracias por su espera.<br />";
             echo "Le invitamos a seguir navegando en nuestro sitio mientras su cuenta es activada. ". ui_href("registrar_continuar","./", "Continuar") ."<br />";
