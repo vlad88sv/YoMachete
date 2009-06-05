@@ -9,6 +9,16 @@ function CONTENIDO_VENDER()
         return;
     }
 
+    if(isset($_POST['vender_previsualizar']))
+    {
+        echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
+        echo "Categoria en la que se quiere publicar: ";
+    }
+    if (isset($_POST['vender_publicar']))
+    {
+        MANEJAR_VENTA();
+        return;
+    }
     /*
      * Primero necesitamos conocer que es lo que necesita, se le presentarán las siguientes opciones:
      * 1. Articulo o Producto
@@ -42,7 +52,7 @@ function CONTENIDO_VENDER()
         case "categoria":
             if (!empty($_GET['cat']))
             {
-                $c = "SELECT rubro,nombre FROM ventas_categorias WHERE id_categoria='".db_codex($_GET['cat'])."' LIMIT 1";
+                $c = "SELECT rubro,nombre,id_categoria FROM ventas_categorias WHERE id_categoria='".db_codex($_GET['cat'])."' LIMIT 1";
                 $r = db_consultar($c);
                 $f = mysql_fetch_row($r);
                 if (!empty($f[0]))
@@ -50,6 +60,7 @@ function CONTENIDO_VENDER()
                     $flag_categoriaDirecta=true;
                     $tipoVenta = $f[0];
                     $nombreCategoria = $f[1];
+                    $idCategoria = $f[2];
                     break;
                 }
             }
@@ -70,17 +81,17 @@ function CONTENIDO_VENDER()
     {
     echo "<li>Categoría seleccionada</li>";
     echo "Ud. ha pre-seleccionado la categoría <b>$nombreCategoria</b>";
-    echo ui_input("vender_categoria",$nombreCategoria,"hidden");
+    echo ui_input("vender_categoria",$idCategoria,"hidden");
     }
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 30 carácteres. No se admite código HTML.</span><br />";
-    echo "Titulo " . ui_input("vender_titulo","","","","width:30ex","MAXLENGTH='30'")."<br />";
+    echo "Titulo " . ui_input("vender_titulo",_F_form_cache("vender_titulo"),"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Descripción corta de la publicación</li>";
     echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 100 carácteres. No se admite código HTML.</span><br />";
-    echo "Descripción corta<br />" . ui_textarea("vender_descripcion_corta","","","width:50em;height:4em;") . "<br />";
+    echo "Descripción corta<br />" . ui_textarea("vender_descripcion_corta",_F_form_cache("vender_descripcion_corta"),"","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
-    echo "Descripción larga<br />" . ui_textarea("vender_descripcion_larga","","","width:50em;height:20em;")."<br />";
+    echo "Descripción larga<br />" . ui_textarea("vender_descripcion_larga",_F_form_cache("vender_descripcion_larga"),"","width:50em;height:20em;")."<br />";
     if (in_array($tipoVenta, array("articulo","automotor")))
     {
     echo "<li>Características del artículo</li>";
@@ -89,7 +100,7 @@ function CONTENIDO_VENDER()
     }
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
-    echo "Précio " . ui_input("vender_precio","","","","width:30ex","MAXLENGTH='30'")."<br />";
+    echo "Précio " . ui_input("vender_precio",_F_form_cache("vender_precio"),"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
     echo db_ui_checkboxes("vender_opcionespago_chkFlags[]", "ventas_flags_pago", "nombre", "nombrep", "descripcion");
@@ -127,7 +138,15 @@ function CONTENIDO_VENDER()
     echo "</li>";
     echo "<span class='explicacion'>Puede observar como quedaría su publicación utilizando el botón 'Previsualizar'.<br />Cuando este satisfecho con el resultado presione el botón 'Publicar'.</span><br />";
     echo "<br />";
-    echo "<center>" . ui_input("vender_proceder", "Previsualizar", "submit") . "</center>";
+    echo "<center>" . ui_input("vender_previsualizar", "Previsualizar", "submit") . ui_input("vender_publicar", "Publicar", "submit") . "</center>";
     echo "</form>";
 }
+
+function MANEJAR_VENTA()
+{
+    echo "Su publicación se ha enviado, sin embargo tiene que ser aprobada manualmente por un administrador para ser pública.<br />Dicha aprobación puede tardar entre 10 minutos y 2 horas; un correo de confirmación le será enviado cuando su publicación sea aceptada.<br />";
+    echo "Le invitamos a seguir navegando en nuestro sitio mientras su publicación es aceptada. ". ui_href("vender_continuar","./", "Continuar") ."<br />";
+    return;
+}
+
 ?>
