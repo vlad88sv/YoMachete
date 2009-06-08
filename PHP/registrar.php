@@ -41,7 +41,7 @@ function CONTENIDO_REGISTRAR()
                 echo mensaje ("Este nombre de usuario no es válido (contiene espacios), por favor escoja otro e intente de nuevo",_M_ERROR);
                 $flag_registroExitoso=false;
             }
-            $datos['nombre'] = $_POST['registrar_campo_usuario'];
+            $datos['nombre'] = trim($_POST['registrar_campo_usuario']);
         }
         else
         {
