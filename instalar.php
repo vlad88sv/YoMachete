@@ -18,7 +18,7 @@ echo db_crear_tabla("ventas_usuarios", $campos, true);
 // Agregamos al usuario Admin
 $usuario['usuario']	= 'admin';
 $usuario['clave'] 	= md5('clave');
-$usuario['nombre'] 	= 'Administrador principal';
+$usuario['nombre'] 	= 'Administrador';
 $usuario['email'] 	= 'admin@localhost.com';
 $usuario['nivel'] 	= _N_administrador;
 $usuario['ultimo_acceso']= mysql_datetime();
@@ -27,7 +27,7 @@ _F_usuario_agregar ($usuario);
 // Agregamos al usuario Usuario
 $usuario['usuario'] = 'usuario';
 $usuario['clave'] 	= md5('usuario');
-$usuario['nombre'] 	= 'Usuario ejemplo';
+$usuario['nombre'] 	= 'Ejemplo';
 $usuario['email'] 	= 'usuario@localhost.com';
 $usuario['nivel'] 	= _N_usuario;
 $usuario['ultimo_acceso']= mysql_datetime();
