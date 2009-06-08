@@ -79,7 +79,7 @@ function CONTENIDO_VENDER()
     {
     echo "<li>Selección de categoría</li>";
     echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span><br />";
-    echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("vender_categoria",join("",ver_hijos("",$tipoVenta)))."<br />";
+    echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("vender_categoria",join("",ver_hijos("",$tipoVenta)), _F_form_cache("vender_categoria"))."<br />";
     }
     else
     {
