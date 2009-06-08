@@ -152,3 +152,53 @@ font-weight:bold;
 	{background-color:#CCCCFF;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000	;text-align:center}
 #nota:before
 	{content:"Nota: "}
+
+/* Para la lista de articulos */
+.art {
+width:100%;
+display:block;
+border:1px solid #111;
+height:auto;
+}
+
+.art .art_titulo {
+display:inline;
+float:left;
+background-color:#DDD;
+color:#000;
+width:89.8%;
+padding:0.1%;
+font-weight:bold;
+}
+
+.art .art_precio:before {
+content:"$";
+}
+
+.art .art_precio {
+display:inline;
+float:right;
+background-color:#000;
+color:#fff;
+width:9.8%;
+text-align:right;
+padding:0.1%;
+}
+
+.art .art_imagen {
+display:inline;
+float:left;
+background-color:#FFF;
+color:#fff;
+width:9.8%;
+padding:0.1%;
+}
+
+.art_desc {
+display:inline;
+float:right;
+background-color:#DDD;
+color:#000;
+width:89.8%;
+padding:0.1%;
+}
