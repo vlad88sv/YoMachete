@@ -6,6 +6,7 @@ function ui_href ($id_gui, $href, $texto, $clase="", $extra=""){
 	return '<a id="'.$id_gui.'" href="'.$href.'" class="' . $clase . '" ' . $extra . '>'.$texto.'</a>';
 }
 function ui_combobox ($id_gui, $opciones, $selected = "", $clase="", $estilo="") {
+	$opciones = str_replace('value="'.$selected.'"', 'selected="selected" value="'.$selected.'"', $opciones);
 	return '<select id="' . $id_gui . '" name="' . $id_gui . '" style="' . $estilo . '">'. $opciones . '</select>';
 }
 function ui_input ($id_gui, $valor="", $tipo="text", $clase="", $estilo="", $extra ="") {
