@@ -202,4 +202,10 @@ function validEmail($email)
    return $isValid;
 }
 
+function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="normal")
+{
+    $data = '';
+    $data = '<div class="art"><span class="art_titulo">'.$titulo.'</span><span class="art_precio">'.number_format($precio,2,".",",").'</span> <br /> <span class="art_imagen">'.$imagen.'</span><span class="art_desc">'.$descripcion.'</span><div style="clear:both"></div></div>';
+    return $data;
+}
 ?>
