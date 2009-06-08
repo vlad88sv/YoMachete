@@ -53,6 +53,10 @@ switch ($_GET['peticion'])
         require_once ("PHP/admin.php");
         CONTENIDO_ADMIN();
     break;
+    case 'imagen':
+        $op = empty($_GET['op']) ? "" : $_GET['op'];
+
+    break;
     default:
     echo "Petición erronea: ". $_GET['peticion'] .". Abortando";
 
