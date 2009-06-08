@@ -70,7 +70,7 @@ function CONTENIDO_VENDER()
         default:
             $tipoVenta="articulo";
     }
-    echo "<form action=\"vender\" method=\"POST\">";
+    echo "<form action=\"vender\" method=\"POST\" enctype=\"multipart/form-data\">";
     echo ui_input("op",$tipoVenta,"hidden");
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
     echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.";
@@ -130,6 +130,7 @@ function CONTENIDO_VENDER()
         break;
     }
     echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span><br />";
+    print_r($_FILES);
     echo "Imagen 1: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
     if (in_array($tipoVenta, array("articulo","automotor","inmueble")))
     {
