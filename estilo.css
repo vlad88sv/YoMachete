@@ -155,18 +155,23 @@ font-weight:bold;
 
 /* Para la lista de articulos */
 .art {
+overflow:hidden;
 width:100%;
-display:block;
 border:1px solid #111;
 height:auto;
 }
 
-.art .art_titulo {
-display:inline;
+.art_sup, .art_inf {
 float:left;
+width:100%;
+}
+
+.art .art_titulo {
+float:left;
+overflow:hidden;
 background-color:#DDD;
 color:#000;
-width:89.8%;
+width:79.8%;
 padding:0.1%;
 font-weight:bold;
 }
@@ -176,29 +181,29 @@ content:"$";
 }
 
 .art .art_precio {
-display:inline;
 float:right;
-background-color:#000;
-color:#fff;
-width:9.8%;
+overflow:hidden;
+background-color:#EEE;
+color:#F00;
+width:19.8%;
 text-align:right;
 padding:0.1%;
+font-weight:bolder;
 }
 
 .art .art_imagen {
-display:inline;
 float:left;
-background-color:#FFF;
+overflow:hidden;
+background-color:none;
 color:#fff;
-width:9.8%;
+width:19.8%;
 padding:0.1%;
 }
 
 .art_desc {
-display:inline;
 float:right;
 background-color:#DDD;
 color:#000;
-width:89.8%;
+width:79.8%;
 padding:0.1%;
 }
