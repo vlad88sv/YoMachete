@@ -9,6 +9,8 @@ function CONTENIDO_VENDER()
         return;
     }
 
+    print_r($_POST);
+
     if(isset($_POST['vender_previsualizar']))
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
@@ -24,6 +26,7 @@ function CONTENIDO_VENDER()
      * 1. Articulo o Producto
      * 2. Servicios
     */
+    if ( !empty($_POST['op']) ) $_GET['op'] = $_POST['op'];
     // Determinamos si ya escogió la opción o no...
     if (!isset($_GET['op']))
     {
@@ -68,6 +71,7 @@ function CONTENIDO_VENDER()
             $tipoVenta="articulo";
     }
     echo "<form action=\"vender\" method=\"POST\">";
+    echo ui_input("op",$tipoVenta,"hidden");
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
     echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.";
     echo "<ol class=\"ventas\">";
@@ -96,19 +100,19 @@ function CONTENIDO_VENDER()
     {
     echo "<li>Características del artículo</li>";
     echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span><br />";
-    echo db_ui_checkboxes("vender_chkFlags[]", "ventas_flags_ventas", "nombre", "nombrep", "descripcion");
+    echo db_ui_checkboxes("vender_chkFlags[]", "ventas_flags_ventas", "nombre", "nombrep", "descripcion",$_POST["vender_chkFlags"]);
     }
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
     echo "Précio " . ui_input("vender_precio",_F_form_cache("vender_precio"),"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
-    echo db_ui_checkboxes("vender_opcionespago_chkFlags[]", "ventas_flags_pago", "nombre", "nombrep", "descripcion");
+    echo db_ui_checkboxes("vender_opcionespago_chkFlags[]", "ventas_flags_pago", "nombre", "nombrep", "descripcion",$_POST["vender_opcionespago_chkFlags"]);
     if (in_array($tipoVenta, array("articulo")))
     {
     echo "<li>Formas de entrega admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span><br />";
-    echo db_ui_checkboxes("vender_opcionesentrega_chkFlags[]", "ventas_flags_entrega", "nombre", "nombrep", "descripcion");
+    echo db_ui_checkboxes("vender_opcionesentrega_chkFlags[]", "ventas_flags_entrega", "nombre", "nombrep", "descripcion",$_POST["vender_opcionesentrega_chkFlags"]);
     }
     switch($tipoVenta)
     {
