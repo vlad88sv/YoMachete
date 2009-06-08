@@ -14,7 +14,9 @@ function CONTENIDO_VENDER()
     if(isset($_POST['vender_previsualizar']))
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
-        echo "Categoria en la que se quiere publicar: ";
+        echo "Categoria en la que se quiere publicar: " . join(" > ", get_path(db_codex($_POST['vender_categoria']),false));
+        echo VISTA_ArticuloEnLista($_POST['vender_titulo'],$_POST['vender_precio'],$_POST['vender_descripcion_larga'],"");
+        echo "<hr />";
     }
     if (isset($_POST['vender_publicar']))
     {
