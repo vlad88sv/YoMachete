@@ -27,8 +27,6 @@ if (!isset($_GET['peticion']))
 		<div id="secc_articulos">'. GENERAR_ARTICULOS() .' </div>
 		<div id="secc_destacados">'. GENERAR_DESTACADOS() .' </div>
         ';
-
-    return;
 }
 else
 {
