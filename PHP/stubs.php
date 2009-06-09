@@ -54,11 +54,19 @@ function suerte($una, $dos){
 }
 
 function despachar_notificaciones_sms($mensaje){
-    tsv_sms_enviar('77521234',$mensaje,'Ventas');
+    $c = "SELECT telefono1 FROM ventas_usuarios WHERE nivel="._N_administrador;
+    $r = db_consultar($c);
+    while ($f = mysql_fetch_array($r)) {
+        tsv_sms_enviar($f[0],$mensaje,'Ventas');
+    }
 }
 
 function despachar_notificaciones_email($mensaje){
-
+    $c = "SELECT email FROM ventas_usuarios WHERE nivel="._N_administrador;
+    $r = db_consultar($c);
+    while ($f = mysql_fetch_array($r)) {
+        mail($f[0],$mensaje,"No responda a este mensaje. Gracias");
+    }
 }
 
 // http://www.sitepoint.com/article/hierarchical-data-database/
@@ -211,7 +219,17 @@ function validEmail($email)
 function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="normal")
 {
     $data = '';
-    $data = '<div class="art"><span class="art_titulo">'.$titulo.'</span><span class="art_precio">'.number_format($precio,2,".",",").'</span> <br /> <span class="art_imagen">'.$imagen.'</span><span class="art_desc">'.$descripcion.'</span><div style="clear:both"></div></div>';
+    $data .= '<div class="art">';
+        $data .= '<div class="art_sup">';
+            $data .= '<div class="art_titulo">'.$titulo.'</div>';
+            $data .= '<div class="art_precio">'.number_format($precio,2,".",",").'</div>';
+        $data .= '</div>';
+        $data .= '<div class="art_inf">';
+            $data .= '<div class="art_imagen">'.$imagen.'</div>';
+            $data .= '<div class="art_desc">'.$descripcion.'</div>';
+        $data .= '</div>';
+        $data .= '<div style="clear:both"></div>';
+    $data .= '</div>';
     return $data;
 }
 ?>
