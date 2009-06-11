@@ -54,9 +54,26 @@ switch ($_GET['peticion'])
         CONTENIDO_ADMIN();
     break;
     case 'imagen':
-        $op = empty($_GET['op']) ? "" : $_GET['op'];
-
-    break;
+        if (!empty($_GET['op']))
+        {
+            $op =  db_codex($_GET['op']);
+            $c = "SELECT id_img, id_articulo, ubicacion, mime, tipo FROM ventas_imagenes WHERE id_img='$op' LIMIT 1";
+            $r = db_consultar($c);
+            $f = mysql_fetch_array($r);
+            if (mysql_num_rows($r) == 1)
+            {
+                header("Content-Type: " . $f['mime']);
+                $archivo = "../RCS/IMG/" . $f['id_img'];
+                if (file_exists($archivo)) echo file_get_contents($archivo);
+            }
+            else
+            {
+                header("Content-Type: image/jpeg");
+                $archivo = "../IMG/i404.jpg";
+                if (file_exists($archivo)) echo file_get_contents($archivo);
+            }
+            break;
+        }
     default:
     echo "Petición erronea: ". $_GET['peticion'] .". Abortando";
 
