@@ -363,7 +363,7 @@ $campos = "id_articulo INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_categoria INT
 echo db_crear_tabla("ventas_articulos", $campos, true);
 
 // Tabla imagenes
-$campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_articulo INT, ubicacion VARCHAR(255), mime VARCHAR(100)";
+$campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_articulo INT, ubicacion VARCHAR(255), mime VARCHAR(100), tipo INT";
 echo db_crear_tabla("ventas_imagenes", $campos, true);
 
 // Tabla FLAGS ventas
