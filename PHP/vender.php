@@ -9,14 +9,15 @@ function CONTENIDO_VENDER()
         return;
     }
 
-    print_r($_POST);
-
     if(isset($_POST['vender_previsualizar']))
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
-        echo "Categoria en la que se quiere publicar: " . join(" > ", get_path(db_codex($_POST['vender_categoria']),false));
-        echo VISTA_ArticuloEnLista($_POST['vender_titulo'],$_POST['vender_precio'],$_POST['vender_descripcion_larga'],"");
-        echo "<hr />";
+        echo "<hr style=\"margin-top:50px\" />";
+        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
+        echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"");
+        echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
+        echo "<hr style=\"margin-bottom:50px\" />";
     }
     if (isset($_POST['vender_publicar']))
     {
@@ -93,7 +94,7 @@ function CONTENIDO_VENDER()
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
     echo "Titulo " . ui_input("vender_titulo",_F_form_cache("vender_titulo"),"","","width:50ex","MAXLENGTH='50'")."<br />";
     echo "<li>Descripción corta de la publicación</li>";
-    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 100 carácteres. No se admite código HTML.</span><br />";
+    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 200 carácteres. No se admite código HTML.</span><br />";
     echo "Descripción corta<br />" . ui_textarea("vender_descripcion_corta",_F_form_cache("vender_descripcion_corta"),"","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
