@@ -15,8 +15,12 @@ function CONTENIDO_VENDER()
         echo "Cancelando venta...";
         return;
     }
+
+    $flag_habilitar_publicar = false;
+
     if(isset($_POST['vender_previsualizar']))
     {
+        $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
@@ -154,7 +158,11 @@ function CONTENIDO_VENDER()
     echo "</li>";
     echo "<span class='explicacion'>Puede observar como quedaría su publicación utilizando el botón 'Previsualizar'.<br />Cuando este satisfecho con el resultado presione el botón 'Publicar'.</span><br />";
     echo "<br />";
-    echo "<center>" . ui_input("vender_previsualizar", "Previsualizar", "submit") . ui_input("vender_publicar", "Publicar", "submit"). ui_input("vender_cancelar", "Cancelar", "submit") . "</center>";
+    echo "<center>";
+    echo ui_input("vender_previsualizar", "Previsualizar", "submit");
+    if ($flag_habilitar_publicar) echo ui_input("vender_publicar", "Publicar", "submit");
+    echo ui_input("vender_cancelar", "Cancelar", "submit");
+    echo "</center>";
     echo "</form>";
 }
 
