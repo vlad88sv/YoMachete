@@ -334,4 +334,34 @@ function EliminarArchivosArr(&$arrArchivos,$PararEnPerdido=false)
     }
     return true;
 }
+/*
+ * CargarArchivos()
+ * Carga desde $_FILES todo el array de archivos.
+ * Obtiene un ticket de ventas_imagenes y lo ocupa como nombre
+ * de archivo (idealmente es único).
+*/
+function CargarArchivos($input,$id_articulo,$id_usuario)
+{
+    $id_articulo = db_codex($id_articulo);
+    $id_usuario = db_codex($id_usuario);
+
+    if (@!is_array($_FILES[$input]['tmp_name']))
+    {
+        echo "No hay archivos!";
+        return false;
+    }
+    foreach ($_FILES[$input]['tmp_name'] as $llave => $valor)
+    {
+        if (!$valor) continue;
+        $datos['id_img'] = NULL;
+        $datos['id_articulo'] = $id_articulo;
+        $datos['mime'] = $_FILES[$input]['type'][$llave];
+        $ret = db_agregar_datos("ventas_imagenes",$datos);
+        if ($ret)
+        {
+            move_uploaded_file($valor, "RCS/IMG/$ret");
+        }
+    }
+    return true;
+}
 ?>
