@@ -9,6 +9,12 @@ function CONTENIDO_VENDER()
         return;
     }
 
+    if(isset($_POST['vender_cancelar']))
+    {
+        header("location: ./");
+        echo "Cancelando venta...";
+        return;
+    }
     if(isset($_POST['vender_previsualizar']))
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
@@ -134,6 +140,8 @@ function CONTENIDO_VENDER()
     }
     echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span><br />";
     print_r($_FILES);
+
+    echo "<br />";
     echo "Imagen 1: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
     if (in_array($tipoVenta, array("articulo","automotor","inmueble")))
     {
@@ -146,7 +154,7 @@ function CONTENIDO_VENDER()
     echo "</li>";
     echo "<span class='explicacion'>Puede observar como quedaría su publicación utilizando el botón 'Previsualizar'.<br />Cuando este satisfecho con el resultado presione el botón 'Publicar'.</span><br />";
     echo "<br />";
-    echo "<center>" . ui_input("vender_previsualizar", "Previsualizar", "submit") . ui_input("vender_publicar", "Publicar", "submit") . "</center>";
+    echo "<center>" . ui_input("vender_previsualizar", "Previsualizar", "submit") . ui_input("vender_publicar", "Publicar", "submit"). ui_input("vender_cancelar", "Cancelar", "submit") . "</center>";
     echo "</form>";
 }
 
@@ -156,5 +164,4 @@ function MANEJAR_VENTA()
     echo "Le invitamos a seguir navegando en nuestro sitio mientras su publicación es aceptada. ". ui_href("vender_continuar","./", "Continuar") ."<br />";
     return;
 }
-
 ?>
