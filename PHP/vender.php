@@ -39,6 +39,10 @@ function CONTENIDO_VENDER()
             return;
         }
     }
+
+    CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
+    $imagenes = ObtenerImagenesArr($ticket,"");
+
     $flag_habilitar_publicar = false;
 
     if(isset($_POST['vender_previsualizar']))
@@ -48,7 +52,7 @@ function CONTENIDO_VENDER()
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"");
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".$imagenes[0]."\" /><br />");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
@@ -167,16 +171,20 @@ function CONTENIDO_VENDER()
         break;
     }
     echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span><br />";
-    print_r($_FILES);
 
     echo "<br />";
-    echo "Imagen 1: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
-    if (in_array($tipoVenta, array("articulo","automotor","inmueble")))
+    foreach($imagenes as $archivo)
     {
-    echo "Imagen 2: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
-    echo "Imagen 3: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
-    echo "Imagen 4: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
-    echo "Imagen 5: Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
+        echo "<img src=\"./imagen_$archivo\" /><br />";
+        echo ui_input("vender_deshabilitar[]",$archivo,"checkbox")." Eliminar esta imagen<br />";
+    }
+
+
+    $NoMaxImg = (in_array($tipoVenta, array("servicio"))) ? 1 : 5;
+    $inicio = count($imagenes);
+    for ($i = $inicio; $i < $NoMaxImg; $i++)
+    {
+        echo "Imagen ".($i+1).": Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
     }
     echo "<li>Previsualizar y Publicar</li>";
     echo "</li>";
