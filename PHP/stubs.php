@@ -273,13 +273,13 @@ function DestruirTicketTMP($id_usuario, $id_articulo)
     }
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
-    $c = "DELETE FROM ventas_articulos WHERE id_usuario='id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."'";
+    $c = "DELETE FROM ventas_articulos WHERE id_usuario='$id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."'";
     $r = db_consultar($c);
     $ret = db_afectados();
     if ($ret)
     {
         //Borrar los archivos de imagenes relacionadas
-        EliminarArchivosArr(ObtenerImagenesArr($id_articulo);
+        EliminarArchivosArr(ObtenerImagenesArr($id_articulo));
         $c = "DELETE FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
         $r = db_consultar($c);
     }
