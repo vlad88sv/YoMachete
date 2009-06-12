@@ -4,7 +4,7 @@ db_conectar(); // Iniciamos la conexión a la base de datos.
 
 function db_conectar(){
 	global $db_link;
-	$db_link = @mysql_connect(db__host, db__usuario, db__clave) or die("Fue imposible conectarse a la base de datos, posiblemente no ha ejecutado el instalador (instalar.php) de " . _NOMBRE_ . " correctamente.<br /><hr />Detalles del error:<pre>" . mysql_error() . "</pre>");
+	$db_link = @mysql_connect(db__host, db__usuario, db__clave) or die("Fue imposible conectarse a la base de datos, posiblemente no ha ejecutado el instalador (instalar.php) correctamente.<br /><hr />Detalles del error:<pre>" . mysql_error() . "</pre>");
 	mysql_select_db(db__db, $db_link) or die("Imposible seleccionar la base de datos: ". mysql_error());
 	mysql_query("set lc_time_names='es_ES'", $db_link);
 }
