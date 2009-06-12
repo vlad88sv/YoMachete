@@ -286,6 +286,19 @@ function DestruirTicketTMP($id_usuario, $id_articulo)
     return $ret;
 }
 /*
+ * ComprobarTicketTMP()
+ * Comprueba que un ticket corresponda al usuario especificado
+ * Retorna true si corresponde, false de lo contrario
+*/
+function ComprobarTicketTMP($id_usuario,$id_articulo)
+{
+    $id_articulo = db_codex($id_articulo);
+    $id_usuario = db_codex($id_usuario);
+    $c = "SELECT id_articulo FROM ventas_articulos WHERE id_usuario='$id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."' LIMIT 1";
+    $r = db_consultar($c);
+    return (mysql_num_rows($r) == 1);
+}
+/*
  * ObtenerImagenesArr()
  * Devuelve un array con las rutas (relativas) a las imagenes de cierto articulo
 */
