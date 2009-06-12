@@ -257,4 +257,24 @@ function ObtenerTicketTMP($id_usuario)
     $datos["descripcion"] = "";
     return db_agregar_datos("ventas_articulos",$datos);
 }
+/*
+ * DestruirTicketTMP()
+ * Destruye un ticket temporal e imagenes relacionados.
+ * La diferencia con DestruirArticulo() radica en que esta funcion esta
+ * limitada a articulos con estado _A_temporal y no toca las tablas de
+ * FLAGS. Esto como medida extra de seguridad ante algún exploit.
+ * Retorna 0 si no pudo borrar nada por algun motivo
+*/
+function DestruirTicketTMP($id_usuario, $id_articulo)
+{
+    if (!_F_usuario_existe($id_usuario,"id_usuario"))
+    {
+        return 0;
+    }
+    $id_articulo = db_codex($id_articulo);
+    $id_usuario = db_codex($id_usuario);
+    $c = "DELETE FROM ventas_articulos WHERE id_usuario='id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."'";
+    $r = db_consultar($c);
+    return db_afectados();
+}
 ?>
