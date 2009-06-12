@@ -275,6 +275,28 @@ function DestruirTicketTMP($id_usuario, $id_articulo)
     $id_usuario = db_codex($id_usuario);
     $c = "DELETE FROM ventas_articulos WHERE id_usuario='id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."'";
     $r = db_consultar($c);
-    return db_afectados();
+    $ret = db_afectados();
+    if ($ret)
+    {
+        //Borrar los archivos de imagenes relacionadas [To do: Borrar archivos]
+        $c = "DELETE FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
+        $r = db_consultar($c);
+    }
+    return $ret;
+}
+/*
+ * ObtenerImagenesArr()
+ * Devuelve un array con las rutas (relativas) a las imagenes de cierto articulo
+*/
+function ObtenerImagenesArr($id_articulo,$preDir="RCS/IMG/")
+{
+    $arrImg = array();
+    $id_articulo = db_codex($id_articulo);
+    $c = "SELECT id_img FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
+    $r = db_consultar($c);
+    while ($f = mysql_fetch_array($r)) {
+        $arrImg[] = $preDir.$f[0];
+    }
+    return $arrImg;
 }
 ?>
