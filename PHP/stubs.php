@@ -299,4 +299,25 @@ function ObtenerImagenesArr($id_articulo,$preDir="RCS/IMG/")
     }
     return $arrImg;
 }
+/*
+ * EliminarArchivosArr()
+ * Elimina los archivos especificados en un array
+ * Retorna false en cualquier si hubo algun error
+ * $PararEnPerdido detiene la función si el archivo no existe
+*/
+function EliminarArchivosArr(&$arrArchivos,$PararEnPerdido=false)
+{
+    if (!is_array($arrArchivos))
+    {
+        return false;
+    }
+    foreach ($arrArchivos as $archivo)
+    {
+        if (!unlink($archivo) && $PararEnPerdido)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 ?>
