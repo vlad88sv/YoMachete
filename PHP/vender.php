@@ -16,6 +16,22 @@ function CONTENIDO_VENDER()
         return;
     }
 
+    // Creamos el Ticket Temporal si no lo tenemos, o rechazamos crear una nueva venta.
+    if (empty($_POST['ticket']))
+    {
+        $ticket = ObtenerTicketTMP(_F_usuario_cache('id_usuario'));
+    }
+    else
+    {
+        $ticket = $_POST['ticket'];
+        if (!ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$ticket))
+        {
+            echo "La validación de su Ticket ha fallado.<br />";
+            echo "Esto podría ser una falla del sistema o un error en su navegador<br />";
+            echo "Lo sentimos, por seguridad su venta se ha descartado";
+            return;
+        }
+    }
     $flag_habilitar_publicar = false;
 
     if(isset($_POST['vender_previsualizar']))
@@ -85,6 +101,7 @@ function CONTENIDO_VENDER()
     }
     echo "<form action=\"vender\" method=\"POST\" enctype=\"multipart/form-data\">";
     echo ui_input("op",$tipoVenta,"hidden");
+    echo ui_input("ticket",$ticket,"hidden");
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
     echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.";
     echo "<ol class=\"ventas\">";
