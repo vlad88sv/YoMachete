@@ -57,7 +57,7 @@ switch ($_GET['peticion'])
         if (!empty($_GET['op']))
         {
             $op =  db_codex($_GET['op']);
-            $c = "SELECT id_img, id_articulo, ubicacion, mime, tipo FROM ventas_imagenes WHERE id_img='$op' LIMIT 1";
+            $c = "SELECT id_img, id_articulo, mime FROM ventas_imagenes WHERE id_img='$op' LIMIT 1";
             $r = db_consultar($c);
             $f = mysql_fetch_array($r);
             if (mysql_num_rows($r) == 1)
