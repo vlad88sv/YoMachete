@@ -3,6 +3,7 @@ $tablaUsuarios = 'ventas_usuarios';
 
 function _F_usuario_existe($usuario,$campo="usuario"){
 	global $tablaUsuarios;
+	$usuario = db_codex($usuario);
 	$resultado = db_consultar ("SELECT id_usuario FROM $tablaUsuarios where $campo='$usuario'");
 if ($resultado) {
 	$n_filas = mysql_num_rows($resultado);
