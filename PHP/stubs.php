@@ -278,7 +278,8 @@ function DestruirTicketTMP($id_usuario, $id_articulo)
     $ret = db_afectados();
     if ($ret)
     {
-        //Borrar los archivos de imagenes relacionadas [To do: Borrar archivos]
+        //Borrar los archivos de imagenes relacionadas
+        EliminarArchivosArr(ObtenerImagenesArr($id_articulo);
         $c = "DELETE FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
         $r = db_consultar($c);
     }
