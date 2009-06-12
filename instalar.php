@@ -359,7 +359,7 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Otras Entradas", "descripcion" => "", "rubro" => "articulo"));
 
 // Tabla de articulos
-$campos = "id_articulo INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_categoria INT, id_usuario INT, precio DECIMAL(12,2), titulo VARCHAR(200), descripcion_corta VARCHAR(500), descripcion LONGTEXT";
+$campos = "id_articulo INT NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo INT, fecha_ini DATETIME, fecha_fin DATETIME, id_categoria INT, id_usuario INT, precio DECIMAL(12,2), titulo VARCHAR(200), descripcion_corta VARCHAR(500), descripcion LONGTEXT";
 echo db_crear_tabla("ventas_articulos", $campos, true);
 
 // Tabla imagenes
