@@ -11,6 +11,15 @@ define('_N_bloqueado_temp',     1);
 define('_N_bloqueado_perm',     2);
 define('_N_esp_activacion',     3);
 
+// Estados para articulos
+define('_A_bloqueado_temp',     1);
+define('_A_bloqueado_perm',     2);
+define('_A_esp_activacion',     3);
+define('_A_temporal',           4);
+define('_A_promocionado',       5);
+define('_A_vendido',            6);
+define('_A_sin_stock',          7);
+
 /*
 Constantes para mensajes
 */
