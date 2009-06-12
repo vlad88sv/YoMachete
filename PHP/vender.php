@@ -12,6 +12,13 @@ function CONTENIDO_VENDER()
     if(isset($_POST['vender_cancelar']))
     {
         header("location: ./");
+        if (!empty($_POST['ticket']))
+        {
+            if (ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$_POST['ticket']))
+            {
+                DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_POST['ticket']);
+            }
+        }
         echo "Cancelando venta...";
         return;
     }
