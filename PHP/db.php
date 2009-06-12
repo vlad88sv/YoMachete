@@ -27,6 +27,13 @@ function db_codex($datos){
 	}
 	return mysql_real_escape_string($datos, $db_link);
 }
+function db_afectados(){
+	global $db_link;
+	if ( $db_link ) {
+		return mysql_affected_rows($db_link);
+	}
+	return -1;
+}
 function db_crear_tabla($tabla, $campos, $botarPrimero=false){
 	$salida = "";
 	if ( $botarPrimero ) {
