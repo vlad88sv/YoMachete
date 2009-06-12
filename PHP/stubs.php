@@ -231,4 +231,30 @@ function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="norma
     $data .= '</div>';
     return $data;
 }
+
+/*
+ * ObtenerTicketTMP()
+ * Función encargada de conseguir un número (ticket) para almacenar
+ * temporalmente los datos de la previsualización de las ventas
+ *
+ * Retorna 0 si no pudo obtener uno por cualquier motivo
+*/
+function ObtenerTicketTMP($id_usuario)
+{
+    if (!_F_usuario_existe($id_usuario,"id_usuario"))
+    {
+        return 0;
+    }
+    $datos["id_articulo"] = NULL;
+    $datos["tipo"] = _A_temporal;
+    $datos["fecha_ini"] = mysql_datetime();
+    $datos["fecha_fin"] = mysql_datetime();
+    $datos["id_categoria"] = "0";
+    $datos["id_usuario"] = $id_usuario;
+    $datos["precio"] = "0";
+    $datos["titulo"] = "";
+    $datos["descripcion_corta"] = "";
+    $datos["descripcion"] = "";
+    return db_agregar_datos("ventas_articulos",$datos);
+}
 ?>
