@@ -161,26 +161,29 @@ border:1px solid #111;
 height:auto;
 }
 
-.art_sup, .art_inf {
+.art_izq {
 float:left;
-width:100%;
+width:10%;
+height:100%;
+}
+
+.art_der {
+float:right;
+width:90%;
+height:100%;
 }
 
 .art .art_titulo {
-float:left;
 overflow:hidden;
 background-color:#DDD;
 color:#000;
-width:79.8%;
+width:99.8%;
 padding:0.1%;
 font-weight:bold;
 }
 
-.art .art_precio:before {
-content:"$";
-}
-
 .art .art_precio {
+display:inline;
 float:right;
 overflow:hidden;
 background-color:#EEE;
@@ -198,12 +201,14 @@ background-color:none;
 color:#fff;
 width:19.8%;
 padding:0.1%;
+height:100%;
 }
 
 .art_desc {
-float:right;
+float:left;
 background-color:#DDD;
 color:#000;
-width:79.8%;
+width:99.8%;
 padding:0.1%;
+height:100%;
 }

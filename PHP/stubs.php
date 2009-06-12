@@ -220,12 +220,11 @@ function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="norma
 {
     $data = '';
     $data .= '<div class="art">';
-        $data .= '<div class="art_sup">';
-            $data .= '<div class="art_titulo">'.$titulo.'</div>';
-            $data .= '<div class="art_precio">'.number_format($precio,2,".",",").'</div>';
-        $data .= '</div>';
-        $data .= '<div class="art_inf">';
+        $data .= '<div class="art_izq">';
             $data .= '<div class="art_imagen">'.$imagen.'</div>';
+        $data .= '</div>';
+        $data .= '<div class="art_der">';
+            $data .= '<div class="art_titulo"><span class="art_precio">$'.number_format($precio,2,".",",").'</span>'.$titulo.'<div style="clear:both"></div></div>';
             $data .= '<div class="art_desc">'.$descripcion.'</div>';
         $data .= '</div>';
         $data .= '<div style="clear:both"></div>';
