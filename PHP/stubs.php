@@ -345,6 +345,11 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
+	if (!ComprobarTicketTMP($id_usuario,$id_articulo))
+	{
+		return false;
+	}
+
     if (@!is_array($_FILES[$input]['tmp_name']))
     {
         //echo "No hay archivos!";
@@ -383,6 +388,11 @@ function DescargarArchivos($input,$id_articulo,$id_usuario)
 {
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
+
+	if (!ComprobarTicketTMP($id_usuario,$id_articulo))
+	{
+		return false;
+	}
 
     if (@!is_array($_POST[$input])) return false;
 
