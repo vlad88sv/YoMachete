@@ -385,7 +385,6 @@ function DescargarArchivos($input,$id_articulo,$id_usuario)
     {
         $c = "DELETE FROM ventas_imagenes WHERE id_img='". db_codex($valor) . "' LIMIT 1";
         $r = db_consultar($c);
-        echo db_afectados();
         if (db_afectados() == 1)
         {
             @unlink("RCS/IMG/$valor");
