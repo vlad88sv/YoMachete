@@ -347,7 +347,7 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
 
     if (@!is_array($_FILES[$input]['tmp_name']))
     {
-        echo "No hay archivos!";
+        //echo "No hay archivos!";
         return false;
     }
     foreach ($_FILES[$input]['tmp_name'] as $llave => $valor)
