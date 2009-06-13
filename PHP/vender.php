@@ -55,12 +55,12 @@ function CONTENIDO_VENDER()
     }
 
     echo "<b>Ticket:</b> $ticket<br />";
-    $imagenes = ObtenerImagenesArr($ticket,"");
 
     $flag_habilitar_publicar = false;
 
     if(isset($_POST['vender_previsualizar']))
     {
+        DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
         CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
         $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
@@ -71,6 +71,7 @@ function CONTENIDO_VENDER()
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
+    $imagenes = ObtenerImagenesArr($ticket,"");
     if (isset($_POST['vender_publicar']))
     {
         MANEJAR_VENTA();
