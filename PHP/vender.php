@@ -40,6 +40,7 @@ function CONTENIDO_VENDER()
         }
     }
 
+    echo "<b>Ticket:</b> $ticket<br />";
     CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
     $imagenes = ObtenerImagenesArr($ticket,"");
 
