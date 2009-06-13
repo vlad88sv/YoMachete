@@ -8,6 +8,20 @@ function CONTENIDO_VENDER()
         CONTENIDO_INICIAR_SESION();
         return;
     }
+    /*
+     * Primero necesitamos conocer que es lo que necesita, se le presentarán las siguientes opciones:
+     * 1. Articulo o Producto
+     * 2. Servicios
+    */
+    if ( !empty($_POST['op']) ) $_GET['op'] = $_POST['op'];
+    // Determinamos si ya escogió la opción o no...
+    if (!isset($_GET['op']))
+    {
+        // Le mostramos las opciones
+        echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
+        echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender_inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender_automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender_servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender_articulo", "artículo");
+        return;
+    }
 
     if(isset($_POST['vender_cancelar']))
     {
@@ -53,27 +67,13 @@ function CONTENIDO_VENDER()
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".$imagenes[0]."\" /><br />");
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".@$imagenes[0]."\" /><br />");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
     if (isset($_POST['vender_publicar']))
     {
         MANEJAR_VENTA();
-        return;
-    }
-    /*
-     * Primero necesitamos conocer que es lo que necesita, se le presentarán las siguientes opciones:
-     * 1. Articulo o Producto
-     * 2. Servicios
-    */
-    if ( !empty($_POST['op']) ) $_GET['op'] = $_POST['op'];
-    // Determinamos si ya escogió la opción o no...
-    if (!isset($_GET['op']))
-    {
-        // Le mostramos las opciones
-        echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
-        echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender_inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender_automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender_servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender_articulo", "artículo");
         return;
     }
 
