@@ -369,4 +369,29 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
     }
     return true;
 }
+/*
+ * DescargarArchivos()
+ * Descarga de la base de datos de imagenes los id_img especificados en
+ * el array.
+*/
+function DescargarArchivos($input,$id_articulo,$id_usuario)
+{
+    $id_articulo = db_codex($id_articulo);
+    $id_usuario = db_codex($id_usuario);
+
+    if (@!is_array($_POST[$input])) return false;
+
+    foreach ($_POST[$input] as $llave => $valor)
+    {
+        $c = "DELETE FROM ventas_imagenes WHERE id_img='". db_codex($valor) . "' LIMIT 1";
+        $r = db_consultar($c);
+        echo db_afectados();
+        if (db_afectados() == 1)
+        {
+            @unlink("RCS/IMG/$valor");
+        }
+    }
+
+    return true;
+}
 ?>
