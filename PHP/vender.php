@@ -55,13 +55,13 @@ function CONTENIDO_VENDER()
     }
 
     echo "<b>Ticket:</b> $ticket<br />";
-    CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
     $imagenes = ObtenerImagenesArr($ticket,"");
 
     $flag_habilitar_publicar = false;
 
     if(isset($_POST['vender_previsualizar']))
     {
+        CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
         $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
