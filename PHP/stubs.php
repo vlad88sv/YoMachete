@@ -356,6 +356,11 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
         $datos['id_img'] = NULL;
         $datos['id_articulo'] = $id_articulo;
         $datos['mime'] = $_FILES[$input]['type'][$llave];
+        if (!in_array($datos['mime'],array("image/jpeg")))
+        {
+            echo "La imagen \"" . $_FILES[$input]['name'][$llave] . "\" no es un tipo de imagen admitida; la imagen ha sido descartada.<br />";
+            continue;
+        }
         $ret = db_agregar_datos("ventas_imagenes",$datos);
         if ($ret)
         {
