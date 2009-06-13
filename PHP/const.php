@@ -19,6 +19,7 @@ define('_A_temporal',           4);
 define('_A_promocionado',       5);
 define('_A_vendido',            6);
 define('_A_sin_stock',          7);
+define('_A_aceptado',           8);
 
 /*
 Constantes para mensajes
