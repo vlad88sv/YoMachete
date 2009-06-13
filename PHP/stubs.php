@@ -350,6 +350,11 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
         //echo "No hay archivos!";
         return false;
     }
+	if (!is_writable("RCS/IMG/"))
+	{
+		echo Mensaje("lo sentimos, parece que hay un problema técnico con la carga de imagenes",_M_ERROR);
+		return false;
+	}
     foreach ($_FILES[$input]['tmp_name'] as $llave => $valor)
     {
         if (!$valor) continue;
