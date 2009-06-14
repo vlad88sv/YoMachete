@@ -18,6 +18,7 @@ require_once ("PHP/vital.php");
 </head>
 
 <body>
+<div id="wrapper">
 <div id="header"><?php GENERAR_CABEZA(); ?><div style="clear:both"></div></div>
 <?php
 if (!isset($_GET['peticion']))
@@ -33,6 +34,7 @@ else
     require_once('PHP/traductor.php');
 }
 ?>
+</div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
 </body>
 </html>

@@ -6,6 +6,7 @@ html, body {
     background:#FFFFFF;
     font-size:90%;
     font-family: Verdana, Helvetica, "Lucida Grande", Arial, sans-serif;
+	height: 100%;
 }
 
 a {
@@ -50,11 +51,15 @@ img {
     border-bottom:1px solid #CCCCCC;
 }
 
+#wrapper {
+	height: auto;
+	min-height: 90%;
+}
+
 #footer {
-    position:relative;
-    bottom:0;
-    clear:both;
-    float:left;
+	position:relative;
+	bottom:0px;
+	height:auto;
     width:100%;
 }
 #footer p {
