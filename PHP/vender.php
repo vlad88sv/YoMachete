@@ -186,7 +186,7 @@ function CONTENIDO_VENDER()
     $inicio = count($imagenes);
     for ($i = $inicio; $i < $NoMaxImg; $i++)
     {
-        echo "Imagen ".($i+1).": Cargar ". ui_input("vender_imagenes[]","","file") . " <b>o</b> usar enlace externo ". ui_input("vender_enlaces[]","") ."<br />";
+        echo "Imagen ".($i+1).": Cargar ". ui_input("vender_imagenes[]","","file") . "<br />";
     }
     echo "<li>Previsualizar y Publicar</li>";
     echo "</li>";
