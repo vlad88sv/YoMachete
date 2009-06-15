@@ -56,24 +56,55 @@ switch ($_GET['peticion'])
     case 'imagen':
         if (!empty($_GET['op']))
         {
+            $flag_Abortar = false;
             $op =  db_codex($_GET['op']);
             $c = "SELECT id_img, id_articulo, mime FROM ventas_imagenes WHERE id_img='$op' LIMIT 1";
             $r = db_consultar($c);
             $f = mysql_fetch_array($r);
-            if (mysql_num_rows($r) == 1)
+
+            // Se encontró la imagen en la base de datos?
+            $flag_Abortar = (mysql_num_rows($r) != 1);
+
+            if (!$flag_Abortar)
             {
-                header("Content-Type: " . $f['mime']);
+                // Se encontró en la base de datos, pero estará en el disco?
                 $archivo = "../RCS/IMG/" . $f['id_img'];
-                if (file_exists($archivo)) echo file_get_contents($archivo);
+                if (file_exists($archivo))
+                {
+                    $TipoContenido = $f['mime'];
+                }
+                else
+                {
+                    $flag_Abortar = true;
+                }
             }
-            else
+
+            if (!$flag_Abortar && isset($_GET['miniatura']))
             {
-                header("Content-Type: image/jpeg");
-                $archivo = "../IMG/i404.jpg";
-                if (file_exists($archivo)) echo file_get_contents($archivo);
+                // Se encontró el archivo principal, y se solicitó una minuatura de el.
+                // Ya se estableció el tipo de contenido.
+                $archivo_m = "../RCS/IMG/" . $f['id_img'] . "m";
+
+                // Comprobamos si existe la miniatura o si debemos crearla
+                if (!file_exists($archivo_m))
+                {
+                    // Si no se puede crear la miniatura, abortamos
+                    $flag_Abortar = !Imagen__CrearMiniatura($archivo,$archivo_m);
+                }
+                $archivo = $archivo_m;
             }
-            break;
+
+            if ($flag_Abortar)
+            {
+                $TipoContenido =  "image/jpeg";
+                $archivo = "../IMG/i404.jpg";
+            }
+
+            // Mostramos lo que se pidio o el 404
+            header("Content-Type: " . $TipoContenido);
+            echo file_get_contents($archivo);
         }
+    break;
     default:
     echo "Petición erronea: ". $_GET['peticion'] .". Abortando";
 
