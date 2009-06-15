@@ -62,16 +62,16 @@ function CONTENIDO_VENDER()
     {
         DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
         CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
+        $imagenes = ObtenerImagenesArr($ticket,"");
         $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".@$imagenes[0]."\" /><br />");
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".@$imagenes[0]."m\" /><br />");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
-    $imagenes = ObtenerImagenesArr($ticket,"");
     if (isset($_POST['vender_publicar']))
     {
         MANEJAR_VENTA();
@@ -175,15 +175,19 @@ function CONTENIDO_VENDER()
     echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span><br />";
 
     echo "<br />";
+
+    if (isset($imagenes) && is_array($imagenes))
+    {
     foreach($imagenes as $archivo)
     {
         echo "<img src=\"./imagen_$archivo\" /><br />";
         echo ui_input("vender_deshabilitar[]",$archivo,"checkbox")." Eliminar esta imagen<br />";
     }
+    }
 
 
     $NoMaxImg = (in_array($tipoVenta, array("servicio"))) ? 1 : 5;
-    $inicio = count($imagenes);
+    $inicio = isset($imagenes) ? count($imagenes) : 0;
     for ($i = $inicio; $i < $NoMaxImg; $i++)
     {
         echo "Imagen ".($i+1).": Cargar ". ui_input("vender_imagenes[]","","file") . "<br />";
