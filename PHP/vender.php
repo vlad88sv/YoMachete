@@ -180,9 +180,9 @@ function CONTENIDO_VENDER()
     {
     foreach($imagenes as $archivo)
     {
-        echo "<img src=\"./imagen_$archivo\" /><br />";
-        echo ui_input("vender_deshabilitar[]",$archivo,"checkbox")." Eliminar esta imagen<br />";
+        echo "<div style='display:inline-block'><img src=\"./imagen_".$archivo."m\" /><br />".ui_input("vender_deshabilitar[]",$archivo,"checkbox")."&nbsp;Eliminar</div>";
     }
+    echo "<div style=\"clear:both\"></div>";
     }
 
 
