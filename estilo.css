@@ -159,57 +159,64 @@ font-weight:bold;
 	{content:"Nota: "}
 
 /* Para la lista de articulos */
-.art {
-overflow:hidden;
+.articulo {
 width:100%;
+height:auto;
+border-collapse:collapse;
 border:1px solid #111;
+padding:0;
+margin:0;
+}
+
+.articulo .imagen {
+background-color:none;
+color:#fff;
+width:102px;
+height:102px;
+padding:1px;
+margin:0;
+border:0;
+}
+
+.articulo .imagen img {
+padding:0;
+margin:0;
+border:0;
+}
+
+.articulo .detalle {
+vertical-align:top;
+width:100%;
+height:100%;
+}
+
+.articulo .titular {
+border:0;
+border-collapse:collapse;
+padding:0;
+margin:0;
+width:100%;
 height:auto;
 }
 
-.art_izq {
-float:left;
-width:10%;
-height:100%;
-}
-
-.art_der {
-float:right;
-width:90%;
-height:100%;
-}
-
-.art .art_titulo {
-overflow:hidden;
+.articulo .titular .titulo {
 background-color:#DDD;
 color:#000;
-width:99.8%;
+width:80%;
 padding:0.1%;
 font-weight:bold;
 }
 
-.art .art_precio {
-display:inline;
-float:right;
-overflow:hidden;
+.articulo .titular .precio {
 background-color:#EEE;
 color:#F00;
-width:19.8%;
+width:20%;
 text-align:right;
 padding:0.1%;
 font-weight:bolder;
 }
 
-.art .art_imagen {
-float:left;
-overflow:hidden;
-background-color:none;
-color:#fff;
-width:19.8%;
-padding:0.1%;
-height:100%;
-}
-
-.art_desc {
+.articulo .desc {
 float:left;
 background-color:#DDD;
 color:#000;

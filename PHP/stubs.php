@@ -219,16 +219,22 @@ function validEmail($email)
 function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="normal")
 {
     $data = '';
-    $data .= '<div class="art">';
-        $data .= '<div class="art_izq">';
-            $data .= '<div class="art_imagen">'.$imagen.'</div>';
-        $data .= '</div>';
-        $data .= '<div class="art_der">';
-            $data .= '<div class="art_titulo"><span class="art_precio">$'.number_format($precio,2,".",",").'</span>'.$titulo.'<div style="clear:both"></div></div>';
-            $data .= '<div class="art_desc">'.$descripcion.'</div>';
-        $data .= '</div>';
-        $data .= '<div style="clear:both"></div>';
-    $data .= '</div>';
+    $data .= '<table class="articulo">';
+    $data .= '<tbody>';
+    $data .= '<tr>';
+    $data .= '<td class= "imagen">'.$imagen.'</td>';
+    $data .= '<td class="detalle">';
+    $data .= '<table class="titular">';
+    $data .= '<tr>';
+    $data .= '<td class="titulo">'.$titulo.'</td>';
+    $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
+    $data .= '</tr>'; // Titulo + Precio
+    $data .= '</table>';
+    $data .= '<br class="desc">'.$descripcion.'</br>';
+    $data .= '</td>';
+    $data .= '</tr>';
+    $data .= '</tbody>';
+    $data .= '</table>';
     return $data;
 }
 
