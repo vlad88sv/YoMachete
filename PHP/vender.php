@@ -23,61 +23,6 @@ function CONTENIDO_VENDER()
         return;
     }
 
-    if(isset($_POST['vender_cancelar']))
-    {
-        header("location: ./");
-        if (!empty($_POST['ticket']))
-        {
-            if (ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$_POST['ticket']))
-            {
-                DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_POST['ticket']);
-            }
-        }
-        echo "Cancelando venta...";
-        return;
-    }
-
-    // Creamos el Ticket Temporal si no lo tenemos, o rechazamos crear una nueva venta.
-    if (empty($_POST['ticket']))
-    {
-        $ticket = ObtenerTicketTMP(_F_usuario_cache('id_usuario'));
-    }
-    else
-    {
-        $ticket = $_POST['ticket'];
-        if (!ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$ticket))
-        {
-            echo "La validación de su Ticket ha fallado.<br />";
-            echo "Esto podría ser una falla del sistema o un error en su navegador<br />";
-            echo "Lo sentimos, por seguridad su venta se ha descartado";
-            return;
-        }
-    }
-
-    echo "<b>Ticket:</b> $ticket<br />";
-
-    $flag_habilitar_publicar = false;
-
-    if(isset($_POST['vender_previsualizar']))
-    {
-        DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
-        CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
-        $imagenes = ObtenerImagenesArr($ticket,"");
-        $flag_habilitar_publicar = true;
-        echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
-        echo "<hr style=\"margin-top:50px\" />";
-        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
-        echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".@$imagenes[0]."m\" />");
-        echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
-        echo "<hr style=\"margin-bottom:50px\" />";
-    }
-    if (isset($_POST['vender_publicar']))
-    {
-        MANEJAR_VENTA();
-        return;
-    }
-
     $flag_categoriaDirecta=false;
     // Ya escogió
     switch($_GET['op'])
@@ -112,9 +57,68 @@ function CONTENIDO_VENDER()
         default:
             $tipoVenta="articulo";
     }
+
+    if(isset($_POST['vender_cancelar']))
+    {
+        header("location: ./");
+        if (!empty($_POST['ticket']))
+        {
+            if (ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$_POST['ticket']))
+            {
+                DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_POST['ticket']);
+            }
+        }
+        echo "Cancelando venta...";
+        return;
+    }
+
+    // Creamos el Ticket Temporal si no lo tenemos, o rechazamos crear una nueva venta.
+    if (empty($_POST['ticket']))
+    {
+        $ticket = ObtenerTicketTMP(_F_usuario_cache('id_usuario'));
+    }
+    else
+    {
+        $ticket = $_POST['ticket'];
+        if (!ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$ticket))
+        {
+            echo "La validación de su Ticket ha fallado.<br />";
+            echo "Esto podría ser una falla del sistema o un error en su navegador<br />";
+            echo "Lo sentimos, por seguridad su venta se ha descartado";
+            return;
+        }
+    }
+
+    echo "<b>Ticket:</b> $ticket<br />";
+
+    $flag_habilitar_publicar = false;
+    $flag_habilitar_publicando = isset($_POST['vender_publicar']);
+
+    if(isset($_POST['vender_previsualizar']) || $flag_habilitar_publicando)
+    {
+        DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
+        CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
+        $imagenes = ObtenerImagenesArr($ticket,"");
+        $flag_habilitar_publicar = true;
+        echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
+        echo "<hr style=\"margin-top:50px\" />";
+        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
+        echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".@$imagenes[0]."m\" />");
+        echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
+        echo "<hr style=\"margin-bottom:50px\" />";
+    }
+
     echo "<form action=\"vender\" method=\"POST\" enctype=\"multipart/form-data\">";
     echo ui_input("op",$tipoVenta,"hidden");
     echo ui_input("ticket",$ticket,"hidden");
+    if ($flag_habilitar_publicando)
+    {
+        echo "<span class='explicacion'>\"Editar\" le dará la oportunidad de realizar cambios a su publicación. \"Enviar\" realiza la publicación.</span><br />";
+        echo ui_input("vender_previsualizar", "Editar", "submit");
+        echo ui_input("vender_previsualizar", "Enviar", "submit");
+        return;
+    }
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
     echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.";
     echo "<ol class=\"ventas\">";
