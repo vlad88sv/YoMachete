@@ -11,13 +11,13 @@ function CONTENIDO_VENDER()
     }
 
     // --------------------------VARIABLES----------------------------
-    $op = empty($_GET['op']) ? "" : $_GET['op'];
+    $op = !isset($_GET['op']) ? "" : $_GET['op'];
     $flag_habilitar_publicar = false;
     $flag_habilitar_publicando = isset($_POST['vender_publicar']);
     $flag_modo_escritura = isset($_POST['vender_publicar']) || isset($_POST['vender_previsualizar']);
 
     // --------------------------CATEGORIA-------------------------------
-    if ( !$op )
+    if ( $op === "" )
     {
         // No ha escogido categoría, le mostramos las opciones.
         echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
@@ -27,14 +27,17 @@ function CONTENIDO_VENDER()
 
         $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_temporal."'";
         $r = db_consultar($c);
-        echo "<hr />";
-        echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación. Puede continuarlas si lo desea<br />";
-        echo "<ul>";
-        while ($f = mysql_fetch_array($r))
+        if ( mysql_num_rows($r) > 1 )
         {
-            echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [ELIMINAR] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+            echo "<hr />";
+            echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación. Puede continuarlas si lo desea<br />";
+            echo "<ul>";
+            while ($f = mysql_fetch_array($r))
+            {
+                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [ELIMINAR] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+            }
+            echo "</ul>";
         }
-        echo "</ul>";
         return;
     }
 
