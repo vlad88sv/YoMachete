@@ -393,6 +393,9 @@ db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_sv", "nombrep
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_pactada", "nombrep" => "Entrega personalmente", "descripcion" => "Marque esta opción si Ud. desea acordar con el comprar un lugar específico para la venta"));
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "Marque esta opción si Ud. desea enviar el producto a travez de un courier o una empresa de entrega de paquetes"));
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "Marque esta opción si Ud. desea enviar el producto a travez de correo nacional"));
+
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_flag INT, id_articulo INT";
+echo db_crear_tabla("ventas_flags_art", $campos, true);
 ?>
 </body>
 </html>
