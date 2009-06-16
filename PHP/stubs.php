@@ -325,7 +325,7 @@ function ObtenerImagenesArr($id_articulo,$preDir="RCS/IMG/")
  * Retorna false en cualquier si hubo algun error
  * $PararEnPerdido detiene la función si el archivo no existe
 */
-function EliminarArchivosArr(&$arrArchivos,$PararEnPerdido=false)
+function EliminarArchivosArr($arrArchivos,$PararEnPerdido=false)
 {
     if (!is_array($arrArchivos))
     {
