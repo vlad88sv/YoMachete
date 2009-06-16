@@ -455,7 +455,7 @@ function CargarDatos($id_articulo,$id_usuario)
 
     foreach(array("flags_ventas", "flags_pago", "flags_entrega") as $campo)
     {
-        if (is_array($_POST[$campo]))
+        if (isset($_POST[$campo]) && is_array($_POST[$campo]))
         {
             foreach($_POST[$campo] as $llave => $valor)
             {
