@@ -71,6 +71,23 @@ function db_agregar_datos($tabla, $datos) {
 	return $id;
 }
 
+function db_reemplazar_datos($tabla, $datos) {
+	global $db_link;
+	$campos = $valores = NULL;
+	foreach ($datos as $clave => $valor) {
+		//echo "clave: $clave; valor: $valor<br />\n";
+		$arr_campos[] 	= mysql_real_escape_string($clave);
+		$arr_valores[] 	= mysql_real_escape_string($valor);
+	}
+	$campos = implode (",", $arr_campos);
+	$valores = "'".implode ("','", $arr_valores)."'";
+	$c = "REPLACE INTO $tabla ($campos) VALUES ($valores)";
+	$resultado = db_consultar ($c);
+	$id = @mysql_insert_id ($db_link);
+	DEPURAR ($c, 0);
+	return $id;
+}
+
 function db_resultado($resultado, $campo, $posicion='0'){
 	return @mysql_result($resultado, $posicion, $campo);
 }
