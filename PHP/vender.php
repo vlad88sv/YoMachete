@@ -1,7 +1,6 @@
 <?php
 function CONTENIDO_VENDER()
 {
-    print_r($_POST);
     // Comprobamos que ya haya ingresado al sistema
     if (!S_iniciado())
     {
