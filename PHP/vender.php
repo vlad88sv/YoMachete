@@ -12,6 +12,31 @@ function CONTENIDO_VENDER()
 
     // --------------------------VARIABLES----------------------------
     $op = empty($_GET['op']) ? "" : $_GET['op'];
+    $flag_habilitar_publicar = false;
+    $flag_habilitar_publicando = isset($_POST['vender_publicar']);
+    $flag_modo_escritura = isset($_POST['vender_publicar']) || isset($_POST['vender_previsualizar']);
+
+    // --------------------------CATEGORIA-------------------------------
+    if ( !$op )
+    {
+        // No ha escogido categoría, le mostramos las opciones.
+        echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
+        echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?op=articulo", "artículo");
+
+        // Mostrar las ventas incompletas:
+
+        $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_temporal."'";
+        $r = db_consultar($c);
+        echo "<hr />";
+        echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación. Puede continuarlas si lo desea<br />";
+        echo "<ul>";
+        while ($f = mysql_fetch_array($r))
+        {
+            echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [ELIMINAR] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+        }
+        echo "</ul>";
+        return;
+    }
 
     // --------------------------TICKET-------------------------------
     // Creamos el Ticket Temporal de venta si no lo tenemos o validamos el actual
@@ -34,8 +59,7 @@ function CONTENIDO_VENDER()
 
         // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
 
-        // Modo de escritura...
-        if (isset($_POST))
+        if ($flag_modo_escritura)
         {
             DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
             CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
@@ -46,13 +70,6 @@ function CONTENIDO_VENDER()
     }
 
     // --------------------------CATEGORIA-------------------------------
-    if ( !$op )
-    {
-        // No ha escogido categoría, le mostramos las opciones.
-        echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
-        echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?ticket=$ticket&op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?ticket=$ticket&op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?ticket=$ticket&op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?ticket=$ticket&op=articulo", "artículo");
-        return;
-    }
 
     // Ya escogió categoría?
     switch( $op )
@@ -99,10 +116,7 @@ function CONTENIDO_VENDER()
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
     echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.<br /><br />";
 
-    $flag_habilitar_publicar = false;
-    $flag_habilitar_publicando = isset($_POST['vender_publicar']);
-
-    if(isset($_POST['vender_previsualizar']) || $flag_habilitar_publicando)
+    if($flag_modo_escritura)
     {
         $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
@@ -131,6 +145,7 @@ function CONTENIDO_VENDER()
     {
         echo "<li>Categoría seleccionada</li>";
         echo "Ud. ha pre-seleccionado la categoría <b>$nombreCategoria</b>";
+        echo ui_input("id_categoria",$idCategoria,"hidden");
     }
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
