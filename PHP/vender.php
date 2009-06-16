@@ -10,7 +10,6 @@ function CONTENIDO_VENDER()
         return;
     }
 
-    print_r($_GET);
     // --------------------------VARIABLES----------------------------
     $op = empty($_GET['op']) ? "" : $_GET['op'];
 
@@ -32,6 +31,18 @@ function CONTENIDO_VENDER()
             echo "Lo sentimos, por seguridad su venta se ha descartado";
             return;
         }
+
+        // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
+
+        // Modo de escritura...
+        if (isset($_POST))
+        {
+            DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
+            CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
+            CargarDatos($ticket,_F_usuario_cache('id_usuario'));
+        }
+        $Buffer = ObtenerDatos($ticket);
+        $imagenes = ObtenerImagenesArr($ticket,"");
     }
 
     // --------------------------CATEGORIA-------------------------------
@@ -77,7 +88,7 @@ function CONTENIDO_VENDER()
     if(isset($_POST['vender_cancelar']))
     {
         header("location: ./");
-        if (!empty($_GET['ticket']) && ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$_GET['ticket']))
+        if (!empty($_GET['ticket']))
         {
             DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_GET['ticket']);
         }
@@ -93,15 +104,12 @@ function CONTENIDO_VENDER()
 
     if(isset($_POST['vender_previsualizar']) || $flag_habilitar_publicando)
     {
-        DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
-        CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
-        $imagenes = ObtenerImagenesArr($ticket,"");
         $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
-        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['idCategoria']),false))."</b><br/><br/>";
+        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['id_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<a href=\"./imagen_".@$imagenes[0]."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".@$imagenes[0]."m\" /></a>");
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",@$Buffer['titulo']),@$Buffer['precio'],substr(@$Buffer['descripcion_corta'],0,200),"<a href=\"./imagen_".@$imagenes[0]."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".@$imagenes[0]."m\" /></a>");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
@@ -117,23 +125,22 @@ function CONTENIDO_VENDER()
     {
         echo "<li>Selección de categoría</li>";
         echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span><br />";
-        echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("vender_categoria",join("",ver_hijos("",$tipoVenta)), _F_form_cache("idCategoria"))."<br />";
+        echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",$tipoVenta)), @$Buffer["id_categoria"])."<br />";
     }
     else
     {
         echo "<li>Categoría seleccionada</li>";
         echo "Ud. ha pre-seleccionado la categoría <b>$nombreCategoria</b>";
-        echo ui_input("idCategoria",$idCategoria,"hidden");
     }
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
-    echo "Titulo " . ui_input("vender_titulo",_F_form_cache("vender_titulo"),"","","width:50ex","MAXLENGTH='50'")."<br />";
+    echo "Titulo " . ui_input("titulo",@$Buffer["titulo"],"","","width:50ex","MAXLENGTH='50'")."<br />";
     echo "<li>Descripción corta de la publicación</li>";
     echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 200 carácteres. No se admite código HTML.</span><br />";
-    echo "Descripción corta<br />" . ui_textarea("vender_descripcion_corta",_F_form_cache("vender_descripcion_corta"),"","width:50em;height:4em;") . "<br />";
+    echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Buffer["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
-    echo "Descripción larga<br />" . ui_textarea("vender_descripcion_larga",_F_form_cache("vender_descripcion_larga"),"","width:50em;height:20em;")."<br />";
+    echo "Descripción larga<br />" . ui_textarea("descripcion",@$Buffer["descripcion"],"","width:50em;height:20em;")."<br />";
     if (in_array($tipoVenta, array("articulo","automotor")))
     {
         echo "<li>Características del artículo</li>";
@@ -142,7 +149,7 @@ function CONTENIDO_VENDER()
     }
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
-    echo "Précio " . ui_input("vender_precio",_F_form_cache("vender_precio"),"","","width:30ex","MAXLENGTH='30'")."<br />";
+    echo "Précio " . ui_input("precio",@$Buffer["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
     echo db_ui_checkboxes("vender_opcionespago_chkFlags[]", "ventas_flags_pago", "nombre", "nombrep", "descripcion",$_POST["vender_opcionespago_chkFlags"]);

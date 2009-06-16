@@ -424,4 +424,33 @@ function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
     $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, 1);
     return $image->writeImage($Destino);
 }
+function CargarDatos($id_articulo,$id_usuario)
+{
+    $id_articulo = db_codex($id_articulo);
+    $id_usuario = db_codex($id_usuario);
+
+    if (@!is_array($_POST)) return false;
+
+    $datos["id_articulo"] = $id_articulo;
+    $datos["tipo"] = _A_temporal;
+    $datos["fecha_ini"] = mysql_datetime();
+    $datos["fecha_fin"] = mysql_datetime();
+    $datos["id_categoria"] = _F_form_cache("id_categoria");
+    $datos["id_usuario"] = $id_usuario;
+    $datos["precio"] = _F_form_cache("precio");
+    $datos["titulo"] = _F_form_cache("titulo");
+    $datos["descripcion_corta"] = _F_form_cache("descripcion_corta");
+    $datos["descripcion"] = _F_form_cache("descripcion");
+    return db_reemplazar_datos("ventas_articulos",$datos);
+}
+function ObtenerDatos($id_articulo)
+{
+    $id_articulo = db_codex($id_articulo);
+
+    if (@!is_array($_POST)) return false;
+    $c = "SELECT * FROM ventas_articulos WHERE id_articulo='$id_articulo' LIMIT 1";
+    $r = db_consultar($c);
+
+    return mysql_fetch_array($r);
+}
 ?>
