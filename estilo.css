@@ -172,6 +172,7 @@ margin:0;
 background-color:none;
 color:#fff;
 width:102px;
+min-width:102px;
 height:102px;
 padding:1px;
 margin:0;
