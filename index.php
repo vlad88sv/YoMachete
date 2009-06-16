@@ -102,7 +102,7 @@ function GENERAR_ARTICULOS()
             $data .= "<h1>Mostrando artículos de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
             $data .= "Ubicación: " . join(" > ", get_path($categoria)) . "<br />";
             $data .= "<hr />";
-            $data .= "Deseo publicar una <a href=\"./vender-en-$categoria\">venta</a> en esta categoría<br />";
+            $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
             $data .= "<hr />";
             // Mostrar todos los articulos en la categoría
             $c = "SELECT (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE id_categoria='$categoria'";

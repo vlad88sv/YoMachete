@@ -1,8 +1,6 @@
 RewriteEngine on
 RewriteRule ^categoria-([0-9].*?)-.*$ index.php?categoria=$1 [L]
-RewriteRule ^vender_(.+)$ index.php?peticion=vender&op=$1 [L]
-RewriteRule ^vender-en-(.+)$ index.php?peticion=vender&op=categoria&cat=$1 [L]
-RewriteRule ^(iniciar|finalizar|registrar|perfil|vender|comprar|buscar|ayuda|ayuda|vip|admin)$ index.php?peticion=$1 [L]
+RewriteRule ^(iniciar|finalizar|registrar|perfil|vender|comprar|buscar|ayuda|ayuda|vip|admin)$ index.php?peticion=$1&%{QUERY_STRING} [L]
 RewriteRule ^registro_(.+)_existe:(.*)$ PHP/traductor.php?peticion=registro_usuarios_$1&op=$2 [L]
 RewriteRule ^admin_(.+)$ index.php?peticion=admin&op=$1 [L]
 RewriteRule ^imagen_([0-9]+)$ PHP/traductor.php?peticion=imagen&op=$1 [L]
