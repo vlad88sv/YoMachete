@@ -118,8 +118,16 @@ function GENERAR_ARTICULOS()
     else
     {
         $data .= "<h1>Artículos mas recientes</h1>";
-
+        // Mostrar todos los articulos en la categoría
+        $c = "SELECT (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a ORDER by fecha_fin ASC LIMIT 10";
+        $r = db_consultar($c);
+        while ($f = mysql_fetch_array($r))
+        {
+            $data .= VISTA_ArticuloEnLista(ui_href("titulo","#",$f['titulo']),$f['precio'],substr($f['descripcion_corta'],0,200),"<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>");
+        }
     }
+
+    $data .= JS_onload('$("a[rel=\'lightbox\']").lightBox();');
     return $data;
 }
 
