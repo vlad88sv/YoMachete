@@ -14,7 +14,9 @@ require_once ("PHP/vital.php");
     <meta name="keywords" content="El Salvador, Comprar, Vender, Clasificados" />
     <meta name="robots" content="index, follow" />
     <link rel="stylesheet" type="text/css" href="estilo.css" />
+    <link rel="stylesheet" type="text/css" href="CSS/jquery.lightbox-0.5.css" media="screen" />
     <script src="JS/jquery-1.3.1.min.js" type="text/javascript"></script>
+    <script src="JS/jquery.lightbox-0.5.pack.js" type="text/javascript"></script>
 </head>
 
 <body>

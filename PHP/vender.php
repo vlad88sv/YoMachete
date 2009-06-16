@@ -104,10 +104,11 @@ function CONTENIDO_VENDER()
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['vender_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<img src=\"./imagen_".@$imagenes[0]."m\" />");
+        echo VISTA_ArticuloEnLista(ui_href("titulo","#",$_POST['vender_titulo']),$_POST['vender_precio'],substr($_POST['vender_descripcion_corta'],0,200),"<a href=\"./imagen_".@$imagenes[0]."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".@$imagenes[0]."m\" /></a>");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
+
 
     echo "<form action=\"vender\" method=\"POST\" enctype=\"multipart/form-data\">";
     echo ui_input("op",$tipoVenta,"hidden");
@@ -116,7 +117,7 @@ function CONTENIDO_VENDER()
     {
         echo "<span class='explicacion'>\"Editar\" le dará la oportunidad de realizar cambios a su publicación. \"Enviar\" realiza la publicación.</span><br />";
         echo ui_input("vender_previsualizar", "Editar", "submit");
-        echo ui_input("vender_previsualizar", "Enviar", "submit");
+        echo ui_input("vender_enviar", "Enviar", "submit");
         return;
     }
     echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
@@ -184,7 +185,7 @@ function CONTENIDO_VENDER()
     {
     foreach($imagenes as $archivo)
     {
-        echo "<div style='display:inline-block'><img src=\"./imagen_".$archivo."m\" /><br />".ui_input("vender_deshabilitar[]",$archivo,"checkbox")."&nbsp;Eliminar</div>";
+        echo "<div style='display:inline-block'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"lightbox\"><img src=\"./imagen_".$archivo."m\" /></a><br />".ui_input("vender_deshabilitar[]",$archivo,"checkbox")."&nbsp;Eliminar</div>";
     }
     echo "<div style=\"clear:both\"></div>";
     }
@@ -206,6 +207,7 @@ function CONTENIDO_VENDER()
     echo ui_input("vender_cancelar", "Cancelar", "submit");
     echo "</center>";
     echo "</form>";
+    echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
 }
 
 function MANEJAR_VENTA()
