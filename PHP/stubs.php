@@ -267,8 +267,8 @@ function ObtenerTicketTMP($id_usuario)
  * DestruirTicketTMP()
  * Destruye un ticket temporal e imagenes relacionados.
  * La diferencia con DestruirArticulo() radica en que esta funcion esta
- * limitada a articulos con estado _A_temporal y no toca las tablas de
- * FLAGS. Esto como medida extra de seguridad ante algún exploit.
+ * limitada a articulos con estado _A_temporal.
+ * Esto como medida extra de seguridad ante algún exploit.
  * Retorna 0 si no pudo borrar nada por algun motivo
 */
 function DestruirTicketTMP($id_usuario, $id_articulo)
@@ -286,9 +286,12 @@ function DestruirTicketTMP($id_usuario, $id_articulo)
     {
         //Borrar los archivos de imagenes relacionadas
         EliminarArchivosArr(ObtenerImagenesArr($id_articulo));
+        EliminarArchivosArr(ObtenerMiniImagenesArr($id_articulo));
         $c = "DELETE FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
         $r = db_consultar($c);
     }
+    $c = "DELETE FROM ventas_flags_art WHERE id_articulo='$id_articulo'";
+    $r = db_consultar($c);
     return $ret;
 }
 /*
@@ -316,6 +319,24 @@ function ObtenerImagenesArr($id_articulo,$preDir="RCS/IMG/")
     $r = db_consultar($c);
     while ($f = mysql_fetch_array($r)) {
         $arrImg[] = $preDir.$f[0];
+    }
+    return $arrImg;
+}
+/*
+ * ObtenerMiniImagenesArr()
+ * Devuelve un array con las rutas (relativas) a las imagenes miniaturas de cierto articulo
+*/
+function ObtenerMiniImagenesArr($id_articulo,$preDir="RCS/IMG/")
+{
+    $arrImg = array();
+    $id_articulo = db_codex($id_articulo);
+    $c = "SELECT id_img FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
+    $r = db_consultar($c);
+    while ($f = mysql_fetch_array($r)) {
+        if ( file_exists($preDir.$f[0]."m") )
+        {
+            $arrImg[] = $preDir.$f[0]."m";
+        }
     }
     return $arrImg;
 }

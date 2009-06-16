@@ -34,7 +34,7 @@ function CONTENIDO_VENDER()
             echo "<ul>";
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [ELIMINAR] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
             }
             echo "</ul>";
         }
@@ -70,6 +70,16 @@ function CONTENIDO_VENDER()
         }
         $Buffer = ObtenerDatos($ticket);
         $imagenes = ObtenerImagenesArr($ticket,"");
+    }
+
+    if(isset($_GET['eliminar']))
+    {
+        if (!empty($_GET['ticket']))
+        {
+            DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_GET['ticket']);
+        }
+        echo "La publicación cancelada y eliminada.<br />";
+        return;
     }
 
     // --------------------------CATEGORIA-------------------------------
