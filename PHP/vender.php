@@ -27,7 +27,7 @@ function CONTENIDO_VENDER()
 
         $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_temporal."'";
         $r = db_consultar($c);
-        if ( mysql_num_rows($r) > 1 )
+        if ( mysql_num_rows($r) > 0 )
         {
             echo "<hr />";
             echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación. Puede continuarlas si lo desea<br />";
