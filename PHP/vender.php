@@ -1,6 +1,7 @@
 <?php
 function CONTENIDO_VENDER()
 {
+    print_r($_POST);
     // Comprobamos que ya haya ingresado al sistema
     if (!S_iniciado())
     {
@@ -163,19 +164,19 @@ function CONTENIDO_VENDER()
     {
         echo "<li>Características del artículo</li>";
         echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span><br />";
-        echo db_ui_checkboxes("vender_chkFlags[]", "ventas_flags_ventas", "nombre", "nombrep", "descripcion",$_POST["vender_chkFlags"]);
+        echo db_ui_checkboxes("flags_ventas[]", "ventas_flags_ventas", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_ventas"));
     }
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
     echo "Précio " . ui_input("precio",@$Buffer["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
-    echo db_ui_checkboxes("vender_opcionespago_chkFlags[]", "ventas_flags_pago", "nombre", "nombrep", "descripcion",$_POST["vender_opcionespago_chkFlags"]);
+    echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"));
     if (in_array($tipoVenta, array("articulo")))
     {
         echo "<li>Formas de entrega admitidas</li>";
         echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span><br />";
-        echo db_ui_checkboxes("vender_opcionesentrega_chkFlags[]", "ventas_flags_entrega", "nombre", "nombrep", "descripcion",$_POST["vender_opcionesentrega_chkFlags"]);
+        echo db_ui_checkboxes("flags_entrega[]", "ventas_flags_entrega", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_entrega"));
     }
     switch($tipoVenta)
     {

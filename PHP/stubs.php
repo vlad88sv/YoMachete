@@ -116,7 +116,7 @@ while ($row = mysql_fetch_array($r)) {
 return $arbol;
 }
 
-function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, &$default = array())
+function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default = array())
 {
     $c = "SELECT $valor, $texto, $explicacion FROM $tabla";
     $r = db_consultar($c);
@@ -441,16 +441,53 @@ function CargarDatos($id_articulo,$id_usuario)
     $datos["titulo"] = _F_form_cache("titulo");
     $datos["descripcion_corta"] = _F_form_cache("descripcion_corta");
     $datos["descripcion"] = _F_form_cache("descripcion");
-    return db_reemplazar_datos("ventas_articulos",$datos);
+    $ret = db_reemplazar_datos("ventas_articulos",$datos);
+    unset($datos);
+
+    // Flags
+
+    // Hay que eliminar los flags antes que nada.
+    $c = "DELETE FROM ventas_flags_art WHERE id_articulo='$id_articulo'";
+    $r = db_consultar($c);
+
+    $datos['id'] = NULL;
+    $datos['id_articulo'] = $id_articulo;
+
+    foreach(array("flags_ventas", "flags_pago", "flags_entrega") as $campo)
+    {
+        if (is_array($_POST[$campo]))
+        {
+            foreach($_POST[$campo] as $llave => $valor)
+            {
+                $datos['id_flag'] = $valor;
+                $datos['id_tabla'] = $campo;
+                db_agregar_datos("ventas_flags_art", $datos);
+            }
+        }
+    }
 }
 function ObtenerDatos($id_articulo)
 {
     $id_articulo = db_codex($id_articulo);
 
-    if (@!is_array($_POST)) return false;
     $c = "SELECT * FROM ventas_articulos WHERE id_articulo='$id_articulo' LIMIT 1";
     $r = db_consultar($c);
 
     return mysql_fetch_array($r);
+}
+function ObtenerFlags($id_articulo, $id_tabla)
+{
+    $id_articulo = db_codex($id_articulo);
+    $id_tabla = db_codex($id_tabla);
+
+    $c = "SELECT id_flag FROM ventas_flags_art WHERE id_articulo='$id_articulo' AND id_tabla='$id_tabla'";
+    $r = db_consultar($c);
+
+    $arr = array();
+    while ($f = mysql_fetch_array($r))
+    {
+        $arr[] = $f['id_flag'];
+    }
+    return $arr;
 }
 ?>
