@@ -216,7 +216,7 @@ function validEmail($email)
    return $isValid;
 }
 
-function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="normal")
+function VISTA_ArticuloEnLista($titulo,$lnkTitulo,$precio,$descripcion,$imagen,$tipo="normal")
 {
     $data = '';
     $data .= '<table class="articulo">';
@@ -226,11 +226,11 @@ function VISTA_ArticuloEnLista($titulo,$precio,$descripcion,$imagen,$tipo="norma
     $data .= '<td class="detalle">';
     $data .= '<table class="titular">';
     $data .= '<tr>';
-    $data .= '<td class="titulo">'.$titulo.'</td>';
+    $data .= '<td class="titulo"><a id="titulo" href="'.$lnkTitulo.'">'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '</table>';
-    $data .= '<br class="desc">'.$descripcion.'</br>';
+    $data .= '<br class="desc">'.htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</br>';
     $data .= '</td>';
     $data .= '</tr>';
     $data .= '</tbody>';
@@ -449,8 +449,6 @@ function CargarDatos($id_articulo,$id_usuario)
 {
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
-
-    if (@!is_array($_POST)) return false;
 
     $datos["id_articulo"] = $id_articulo;
     $datos["tipo"] = _A_temporal;
