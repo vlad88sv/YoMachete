@@ -1,3 +1,5 @@
+php_flag magic_quotes_gpc Off
+
 RewriteEngine on
 RewriteRule ^categoria-([0-9].*?)-.*$ index.php?categoria=$1 [L]
 RewriteRule ^(iniciar|finalizar|registrar|perfil|vender|comprar|buscar|ayuda|ayuda|vip|admin)$ index.php?peticion=$1&%{QUERY_STRING} [L]
