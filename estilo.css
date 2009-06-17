@@ -217,6 +217,12 @@ padding:0.1%;
 font-weight:bolder;
 }
 
+.articulo .titular .ubicacion {
+text-align:left;
+font-weight:bolder;
+background-color:#CCC;
+}
+
 .articulo .desc {
 float:left;
 background-color:#DDD;
