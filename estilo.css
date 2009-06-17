@@ -231,3 +231,18 @@ width:99.8%;
 padding:0.1%;
 height:100%;
 }
+
+.ancha {
+width:100%;
+border-collapse:collapse;
+}
+
+.ancha th {
+text-align:left;
+}
+
+.ancha td {
+text-align:left;
+border:1px solid #111;
+padding:3px;
+}
