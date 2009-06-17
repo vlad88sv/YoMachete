@@ -12,9 +12,9 @@ function CONTENIDO_VENDER()
 
     // --------------------------VARIABLES----------------------------
     $op = !isset($_GET['op']) ? "" : $_GET['op'];
-    $flag_habilitar_publicar = false;
-    $flag_habilitar_publicando = isset($_POST['vender_publicar']);
-    $flag_modo_escritura = isset($_POST['vender_publicar']) || isset($_POST['vender_previsualizar']);
+    $flag_enviar = isset($_POST['vender_enviar']);
+    $flag_publicar = isset($_POST['vender_publicar']);
+    $flag_modo_escritura = (isset($_POST['vender_publicar']) || isset($_POST['vender_previsualizar'])) && !isset($_POST['vender_editar']);
 
     // --------------------------CATEGORIA-------------------------------
     if ( $op === "" )
@@ -30,11 +30,27 @@ function CONTENIDO_VENDER()
         if ( mysql_num_rows($r) > 0 )
         {
             echo "<hr />";
-            echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación. Puede continuarlas si lo desea<br />";
+            echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación.<br />";
             echo "<ul>";
             while ($f = mysql_fetch_array($r))
             {
                 echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+            }
+            echo "</ul>";
+        }
+
+        // Mostrar las ventas esperando aprobación
+
+        $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_esp_activacion."'";
+        $r = db_consultar($c);
+        if ( mysql_num_rows($r) > 0 )
+        {
+            echo "<hr />";
+            echo "Se han encontrado las siguientes ventas que estan esperando aprobación de un administrador:<br />";
+            echo "<ul>";
+            while ($f = mysql_fetch_array($r))
+            {
+                echo "<li>Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
             }
             echo "</ul>";
         }
@@ -67,6 +83,23 @@ function CONTENIDO_VENDER()
             DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
             CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
             CargarDatos($ticket,_F_usuario_cache('id_usuario'));
+        }
+
+        if ($flag_enviar)
+        {
+            // Al fin lo terminó de editar y lo esta enviando... Aleluya!
+            $c = "UPDATE ventas_articulos SET tipo='"._A_esp_activacion."' WHERE id_articulo=$ticket LIMIT 1";
+            $r = db_consultar($c);
+            if ( db_afectados() == 1 )
+            {
+                echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
+            }
+            else
+            {
+                echo Mensaje ("Su venta ha NO a sido enviada para aprobación, sucedió algún error", _M_ERROR);
+            }
+            echo "Continuar a: " . ui_href("","vender","publicar otra venta") . " / " . ui_href("","./","página principal")."<br />";
+            return;
         }
         $Buffer = ObtenerDatos($ticket);
         $imagenes = ObtenerImagenesArr($ticket,"");
@@ -130,7 +163,6 @@ function CONTENIDO_VENDER()
 
     if($flag_modo_escritura)
     {
-        $flag_habilitar_publicar = true;
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['id_categoria']),false))."</b><br/><br/>";
@@ -144,6 +176,16 @@ function CONTENIDO_VENDER()
     // Inicio de formulario
 
     echo "<form action=\"vender?ticket=$ticket&op=$op\" method=\"POST\" enctype=\"multipart/form-data\">";
+    if( $flag_publicar )
+    {
+        echo "<span class='explicacion'>Esta a punto de enviar su publicación a revisión. Puede seguir editando su publicación presionando el botón <b>Editar</b> o finalizar presionando el botón <b>Enviar</b>.<br />No podrá editar su publicación de nuevo hasta que esta sea esta sea revisada y aprobada.</span>";
+        echo "<br />";
+        echo "<center>";
+        echo ui_input("vender_enviar","Enviar","submit");
+        echo ui_input("vender_editar","Editar","submit");
+        echo "</center>";
+        return;
+    }
     echo ui_input("op",$tipoVenta,"hidden");
     echo ui_input("ticket",$ticket,"hidden");
     echo "<ol class=\"ventas\">";
@@ -219,7 +261,7 @@ function CONTENIDO_VENDER()
     echo "<br />";
     echo "<center>";
     echo ui_input("vender_previsualizar", "Previsualizar", "submit");
-    if ($flag_habilitar_publicar) echo ui_input("vender_publicar", "Publicar", "submit");
+    echo ui_input("vender_publicar", "Publicar", "submit");
     echo ui_input("vender_cancelar", "Cancelar", "submit");
     echo "</center>";
     echo "</form>";
