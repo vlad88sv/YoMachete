@@ -104,19 +104,19 @@ function GENERAR_ARTICULOS()
             $data .= "<hr />";
             $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
             $data .= "<hr />";
-            $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE id_categoria='$categoria' ORDER by fecha_fin ASC LIMIT 10";
+            $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE id_categoria='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.") ORDER by fecha_fin ASC LIMIT 10";
         }
         else
         {
             $data .= "<h1>Mostrando artículos recientes de la categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
-            $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE (SELECT padre FROM ventas_categorias AS b where b.id_categoria=a.id_categoria)='$categoria' ORDER by fecha_fin ASC LIMIT 10";
+            $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE (SELECT padre FROM ventas_categorias AS b where b.id_categoria=a.id_categoria)='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.") ORDER by fecha_fin ASC LIMIT 10";
         }
     }
     else
     {
         $data .= "<h1>Artículos mas recientes</h1>";
         // Mostrar todos los articulos en la categoría
-        $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a ORDER by fecha_fin ASC LIMIT 10";
+        $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE tipo IN ("._A_aceptado . ","._A_promocionado.")  ORDER by fecha_fin ASC LIMIT 10";
     }
     $r = db_consultar($c);
     while ($f = mysql_fetch_array($r))
