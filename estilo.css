@@ -146,15 +146,15 @@ font-weight:bold;
 }
 
 #error
-	{background-color:#F00;border:2px solid #000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#FFF;text-align:center}
+	{background-color:#F00;border:2px solid #000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#FFF;text-align:center;margin-top:5px;margin-bottom:5px;}
 #error:before
 	{content:'Error: '}
 #info
-	{background-color:#F4F4F4;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000;text-align:center}
+	{background-color:#F4F4F4;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000;text-align:center;margin-top:5px;margin-bottom:5px;}
 #info:before
 	{content:"Información: "}
 #nota
-	{background-color:#CCCCFF;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000	;text-align:center}
+	{display:block;background-color:#CCCCFF;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000;text-align:center;margin-top:5px;margin-bottom:5px;}
 #nota:before
 	{content:"Nota: "}
 
