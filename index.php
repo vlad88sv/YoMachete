@@ -76,7 +76,7 @@ function GENERAR_CABEZA()
     else
     {
         if(_F_usuario_cache('nivel') == _N_administrador) echo ui_href("cabecera_link_admin","admin","Administración","");
-        echo ui_href("cabecera_link_cuenta","perfil",_F_usuario_cache("nombre"),"");
+        echo ui_href("cabecera_link_cuenta","perfil",_F_usuario_cache("usuario"),"");
         echo ui_href("cabecera_link_vender","vender","Vender","");
         echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
         echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
