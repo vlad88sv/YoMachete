@@ -44,7 +44,7 @@ function INTEFAZ__ACTIVACION_USUARIOS()
 {
     if (!empty($_GET['activar']))
     {
-        $c = "UPDATE ventas_usuarios SET estado=NULL WHERE id_usuario='" . db_codex($_GET['activar'])."' LIMIT 1";
+        $c = "UPDATE ventas_usuarios SET estado=NULL WHERE estado='"._N_esp_activacion."' AND id_usuario='" . db_codex($_GET['activar'])."' LIMIT 1";
         $r = db_consultar($c);
         $ret = db_afectados();
         if ($ret == 1)
@@ -54,6 +54,20 @@ function INTEFAZ__ACTIVACION_USUARIOS()
         else
         {
             echo Mensaje("Usuario NO PUDO ser activado",_M_ERROR);
+        }
+    }
+    if (!empty($_GET['cancelar']))
+    {
+        $c = "DELETE FROM ventas_usuarios WHERE estado='"._N_esp_activacion."' AND id_usuario='" . db_codex($_GET['cancelar'])."' LIMIT 1";
+        $r = db_consultar($c);
+        $ret = db_afectados();
+        if ($ret == 1)
+        {
+            echo Mensaje("Usuario exitosamente eliminado",_M_INFO);
+        }
+        else
+        {
+            echo Mensaje("Usuario NO PUDO ser eliminado",_M_ERROR);
         }
     }
     $c = "SELECT id_usuario, usuario, email, telefono1, notas, ultimo_acceso FROM ventas_usuarios WHERE estado="._N_esp_activacion;
