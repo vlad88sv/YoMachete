@@ -28,7 +28,6 @@ if (!isset($_GET['peticion']))
     echo '
 		<div id="secc_categorias">'. GENERAR_CATEGORIAS() .' </div>
 		<div id="secc_articulos">'. GENERAR_ARTICULOS() .' </div>
-		<div id="secc_destacados">'. GENERAR_DESTACADOS() .' </div>
         ';
 }
 else
@@ -141,15 +140,6 @@ function GENERAR_CATEGORIAS()
         $r = mysql_fetch_row($resultado);
         $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
     }
-    return $data;
-}
-
-// Columna Der.
-function GENERAR_DESTACADOS()
-{
-    $data = '';
-    $data .= "<h1>Destacados</h1>";
-    $data .= "<center>".ui_href("columna3_productos_promocionados","","¡Promocionate aquí!")."</center>";
     return $data;
 }
 function GENERAR_PIE()
