@@ -71,9 +71,12 @@ img {
 }
 
 #menu {
+    display:inline-block;
     float:right;
     padding-bottom:1px;
     padding-left:1px;
+    width:auto;
+    white-space: nowrap;
 }
 
 #menu a {
@@ -138,7 +141,7 @@ img {
 #secc_categorias #ver_categorias {
     float:right;
 }
-#secc_articulos {
+#secc_articulos, #secc_general {
     border:5px solid #DAF5FC;
     background-color:#FFF;
     padding:10px;

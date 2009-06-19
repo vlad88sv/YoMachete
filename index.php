@@ -32,7 +32,9 @@ if (!isset($_GET['peticion']))
 }
 else
 {
+    echo '<div id="secc_general">';
     require_once('PHP/traductor.php');
+    echo '</div>';
 }
 ?>
 </div>
