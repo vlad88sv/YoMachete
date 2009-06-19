@@ -3,7 +3,7 @@ html, body {
     padding:0;
     border:0;
     width:98%;
-    background:#FFFFFF;
+    background:#F3FCFE;
     font-size:90%;
     font-family: Verdana, Helvetica, "Lucida Grande", Arial, sans-serif;
 	height: 100%;
@@ -102,10 +102,14 @@ img {
 }
 
 #secc_categorias {
+    display:block;
+    border:5px solid #DAF5FC;
+    background-color:#FFF;
     text-align:center;
     font-size:90%;
-    border-bottom:1px solid #CCCCCC;
-    margin:5px;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:5px;
 }
 
 #secc_categorias a {
@@ -131,8 +135,12 @@ img {
     clear:both;
 }
 
+#secc_categorias #ver_categorias {
+    float:right;
+}
 #secc_articulos {
-    background-color:#eeeef8;
+    border:5px solid #DAF5FC;
+    background-color:#FFF;
     padding:10px;
 }
 
