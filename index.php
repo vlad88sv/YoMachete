@@ -37,6 +37,7 @@ else
 ?>
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
+<?php echo JS('$("#ver_categorias").click(function() {$("#contenedor_categorias").toggle("slow");});'); ?>
 </body>
 </html>
 
@@ -131,15 +132,18 @@ function GENERAR_ARTICULOS()
 function GENERAR_CATEGORIAS()
 {
     $data = '';
+    $data .= "<div id=\"ver_categorias\">[<a>ocultar</a>]</div>";
     $data .= (isset($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
     $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
     $resultado = db_consultar($c);
     $n_campos = mysql_num_rows($resultado);
+    $data .= "<div id=\"contenedor_categorias\">";
     for ($i = 0; $i < $n_campos; $i++) {
         $r = mysql_fetch_row($resultado);
         $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
     }
+    $data .= "</div>";
     return $data;
 }
 function GENERAR_PIE()
