@@ -134,12 +134,13 @@ function CONTENIDO_VENDER()
             $tipoVenta="automotor";
         break;
         default:
-        $c = "SELECT rubro FROM ventas_categorias WHERE id_categoria='".db_codex($op)."' LIMIT 1";
+        $c = "SELECT rubro, id_categoria FROM ventas_categorias WHERE id_categoria='".db_codex($op)."' LIMIT 1";
         $r = db_consultar($c);
         $f = mysql_fetch_row($r);
         if (!empty($f[0]))
         {
             $tipoVenta = $f[0];
+            $Buffer["id_categoria"] = $f[1];
         }
         else
         {
