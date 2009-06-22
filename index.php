@@ -53,7 +53,7 @@ function GENERAR_CABEZA()
      * 2. resto el menú.
      */
     // Cargamos el logo.
-    echo "<div id='logotipo' style='width:115px;float:left;'>";
+    echo "<div id='logotipo'>";
     echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.png"));
     echo "</div>";
     /*

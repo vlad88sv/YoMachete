@@ -1,5 +1,5 @@
 html, body {
-    margin:auto;
+    margin:0 auto;
     padding:0;
     border:0;
     width:98%;
@@ -40,21 +40,27 @@ p {
     padding:0;
 }
 img {
-    margin:10px 0 5px;
     border:0;
-}
-#header {
-    height:auto;
-    width:100%;
-    padding: 0px;
-    margin: 0px;
-    margin-bottom: 10px;
-    border-bottom:1px solid #CCCCCC;
 }
 
 #wrapper {
 	height: auto;
 	min-height: 90%;
+}
+
+#header {
+    min-height: 10%;
+    width:100%;
+    top:0px;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 10px;
+    border-bottom:1px solid transparent;
+}
+
+#header #logotipo {
+    width:115px;
+    float:left;
 }
 
 #footer {
@@ -70,16 +76,14 @@ img {
     font-size:0.8em
 }
 
-#menu {
-    display:inline-block;
+#header #menu {
     float:right;
-    padding-bottom:1px;
     padding-left:1px;
     width:auto;
     white-space: nowrap;
 }
 
-#menu a {
+#header #menu a {
     background:transparent url(IMG/fmenu.gif) repeat-x scroll left bottom;
     background-attachment: scroll;
     background-color: transparent;
@@ -100,7 +104,8 @@ img {
     width: 40px;
 
 }
-#menu a.izq {
+
+#header #menu a.izq {
    border-left:1px solid #CCCCCC;
 }
 
@@ -236,12 +241,10 @@ background-color:#CCC;
 }
 
 .articulo .desc {
-float:left;
 background-color:#DDD;
 color:#000;
-width:99.8%;
+text-align:left;
 padding:0.1%;
-height:100%;
 }
 
 .ancha {

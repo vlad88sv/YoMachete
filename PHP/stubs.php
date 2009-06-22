@@ -230,8 +230,8 @@ function VISTA_ArticuloEnLista($titulo,$lnkTitulo,$precio,$descripcion,$imagen,$
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="ubicacion">Ubicación: ' . $ubicacion.'</td></tr>';
+    $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
     $data .= '</table>';
-    $data .= '<br class="desc">'.htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</br>';
     $data .= '</td>';
     $data .= '</tr>';
     $data .= '</tbody>';
