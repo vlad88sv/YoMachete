@@ -11,13 +11,14 @@ function CONTENIDO_VENDER()
     }
 
     // --------------------------VARIABLES----------------------------
-    $op = !isset($_GET['op']) ? "" : $_GET['op'];
+    $flag_op_y_saltar = false;
     $flag_enviar = isset($_POST['vender_enviar']);
     $flag_publicar = isset($_POST['vender_publicar']);
+    $flag_modo_previsualizacion = isset($_POST['vender_previsualizar']);
     $flag_modo_escritura = (isset($_POST['vender_publicar']) || isset($_POST['vender_previsualizar'])) && !isset($_POST['vender_editar']);
 
     // --------------------------CATEGORIA-------------------------------
-    if ( $op === "" )
+    if ( !isset($_GET['op']) && !isset($_GET['ticket']))
     {
         // No ha escogido categoría, le mostramos las opciones.
         echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
@@ -25,7 +26,7 @@ function CONTENIDO_VENDER()
 
         // Mostrar las ventas incompletas:
 
-        $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_temporal."'";
+        $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_temporal."'";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
@@ -34,7 +35,7 @@ function CONTENIDO_VENDER()
             echo "<ul>";
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] : Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] > ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b></li>";
             }
             echo "</ul>";
         }
@@ -56,54 +57,72 @@ function CONTENIDO_VENDER()
         }
         return;
     }
+    elseif (isset($_GET['op']))
+    {
+        $op = $_GET['op'];
+        if (!is_numeric($op))
+        {
+            $c = "SELECT id_categoria FROM ventas_categorias WHERE rubro='".db_codex($op)."' LIMIT 1";
+        }
+        else
+        {
+            $c = "SELECT id_categoria FROM ventas_categorias WHERE id_categoria='".db_codex($op)."' LIMIT 1";
+        }
+        $r = db_consultar($c);
+        $f = mysql_fetch_row($r);
+        if (!empty($f[0]))
+        {
+            $_POST["id_categoria"] =  $f[0];
+            $flag_modo_escritura=true;
+            $flag_op_y_saltar=true;
+        }
+    }
 
     // --------------------------TICKET-------------------------------
     // Creamos el Ticket Temporal de venta si no lo tenemos o validamos el actual
-    if (empty($_GET['ticket']))
+    $ticket = empty($_GET['ticket']) ?  ObtenerTicketTMP(_F_usuario_cache('id_usuario')) : $_GET['ticket'];
+
+    if (!ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$ticket))
     {
-        $ticket = ObtenerTicketTMP(_F_usuario_cache('id_usuario'));
-        header("location: ./vender?ticket=$ticket&op=$op");
-        echo "Ticket...$ticket<br />";
+        echo "La validación de su Ticket ha fallado.<br />";
+        echo "Esto podría bien ser una falla del sistema o un error en su navegador<br />";
+        echo "Lo sentimos, por seguridad esta operación no continuará";
+        return;
     }
-    else
+
+    // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
+
+    if ($flag_modo_escritura)
     {
-        $ticket = $_GET['ticket'];
-        if (!ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$ticket))
-        {
-            echo "La validación de su Ticket ha fallado.<br />";
-            echo "Esto podría bien ser una falla del sistema o un error en su navegador<br />";
-            echo "Lo sentimos, por seguridad esta operación no continuará";
-            return;
-        }
-
-        // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
-
-        if ($flag_modo_escritura)
-        {
-            DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
-            CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
-            CargarDatos($ticket,_F_usuario_cache('id_usuario'));
-        }
-
-        if ($flag_enviar)
-        {
-            // Al fin lo terminó de editar y lo esta enviando... Aleluya!
-            $c = "UPDATE ventas_articulos SET tipo='"._A_esp_activacion."' WHERE id_articulo=$ticket LIMIT 1";
-            $r = db_consultar($c);
-            if ( db_afectados() == 1 )
-            {
-                echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
-            }
-            else
-            {
-                echo Mensaje ("Su venta ha NO a sido enviada para aprobación, sucedió algún error", _M_ERROR);
-            }
-            echo "Continuar a: " . ui_href("","vender","publicar otra venta") . " / " . ui_href("","./","página principal")."<br />";
-            return;
-        }
-        $Buffer = ObtenerDatos($ticket);
-        $imagenes = ObtenerImagenesArr($ticket,"");
+        DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
+        CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
+        CargarDatos($ticket,_F_usuario_cache('id_usuario'));
     }
+
+    if ($flag_op_y_saltar)
+    {
+        header("location: ./vender?ticket=$ticket");
+    }
+
+    if ($flag_enviar)
+    {
+        // Al fin lo terminó de editar y lo esta enviando... Aleluya!
+        $c = "UPDATE ventas_articulos SET tipo='"._A_esp_activacion."' WHERE id_articulo=$ticket LIMIT 1";
+        $r = db_consultar($c);
+        if ( db_afectados() == 1 )
+        {
+            echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
+        }
+        else
+        {
+            echo Mensaje ("Su venta ha NO a sido enviada para aprobación, sucedió algún error", _M_ERROR);
+        }
+        echo "Continuar a: " . ui_href("","vender","publicar otra venta") . " / " . ui_href("","./","página principal")."<br />";
+        return;
+    }
+
+    $Buffer = ObtenerDatos($ticket);
+    $imagenes = ObtenerImagenesArr($ticket,"");
 
     if(isset($_GET['eliminar']))
     {
@@ -114,38 +133,6 @@ function CONTENIDO_VENDER()
         echo "La publicación ha sido cancelada y eliminada.<br />";
         echo ui_href("","./","Regresar a la página principal") . " / " . ui_href("","./vender", "Regresar a ventas") ;
         return;
-    }
-
-    // --------------------------CATEGORIA-------------------------------
-
-    // Ya escogió categoría?
-    switch( $op )
-    {
-        case "servicio":
-            $tipoVenta="servicio";
-        break;
-        case "articulo":
-            $tipoVenta="articulo";
-        break;
-        case "inmueble":
-            $tipoVenta="inmueble";
-        break;
-        case "automotor":
-            $tipoVenta="automotor";
-        break;
-        default:
-        $c = "SELECT rubro, id_categoria FROM ventas_categorias WHERE id_categoria='".db_codex($op)."' LIMIT 1";
-        $r = db_consultar($c);
-        $f = mysql_fetch_row($r);
-        if (!empty($f[0]))
-        {
-            $tipoVenta = $f[0];
-            $Buffer["id_categoria"] = $f[1];
-        }
-        else
-        {
-            $tipoVenta="articulo";
-        }
     }
 
     if(isset($_POST['vender_cancelar']))
@@ -159,14 +146,13 @@ function CONTENIDO_VENDER()
         return;
     }
 
-    echo "<b>Nota:</b> Esta utilizando una cuenta gratuita, actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
-    echo "<b>Nota:</b> Si desea regresar a la pantalla de selección de opciones de venta ".ui_href("vender_regresar","vender","presione aquí").". Perderá cualquier información ingresada.<br /><br />";
+    echo "Ud. se encuentra utilizando una cuenta gratuita, ¡actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
 
-    if($flag_modo_escritura)
+    if($flag_modo_previsualizacion)
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
-        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex($_POST['id_categoria']),false))."</b><br/><br/>";
+        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex(@$Buffer['id_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
         echo VISTA_ArticuloEnLista(@$Buffer['titulo'],"#",@$Buffer['precio'],substr(@$Buffer['descripcion_corta'],0,200),"<a href=\"./imagen_".@$imagenes[0]."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".@$imagenes[0]."m\" /></a>",join(" > ", get_path(@$Buffer['id_categoria'],false)));
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
@@ -176,7 +162,7 @@ function CONTENIDO_VENDER()
     // -----------------------------------------------------------------
     // Inicio de formulario
 
-    echo "<form action=\"vender?ticket=$ticket&op=$op\" method=\"POST\" enctype=\"multipart/form-data\">";
+    echo "<form action=\"vender?ticket=$ticket\" method=\"POST\" enctype=\"multipart/form-data\">";
     if( $flag_publicar )
     {
         echo "<span class='explicacion'>Esta a punto de enviar su publicación a revisión. Puede seguir editando su publicación presionando el botón <b>Editar</b> o finalizar presionando el botón <b>Enviar</b>.<br />No podrá editar su publicación de nuevo hasta que esta sea esta sea revisada y aprobada.</span>";
@@ -187,12 +173,10 @@ function CONTENIDO_VENDER()
         echo "</center>";
         return;
     }
-    echo ui_input("op",$tipoVenta,"hidden");
-    echo ui_input("ticket",$ticket,"hidden");
     echo "<ol class=\"ventas\">";
     echo "<li>Selección de categoría</li>";
     echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span><br />";
-    echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",$tipoVenta)), @$Buffer["id_categoria"])."<br />";
+    echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",@$Buffer["rubro"])), @$Buffer["id_categoria"])."<br />";
 
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
@@ -203,7 +187,7 @@ function CONTENIDO_VENDER()
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
     echo "Descripción larga<br />" . ui_textarea("descripcion",@$Buffer["descripcion"],"","width:50em;height:20em;")."<br />";
-    if (in_array($tipoVenta, array("articulo","automotor")))
+    if (in_array(@$Buffer["rubro"], array("articulo","automotor")))
     {
         echo "<li>Características del artículo</li>";
         echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span><br />";
@@ -215,13 +199,13 @@ function CONTENIDO_VENDER()
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
     echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"));
-    if (in_array($tipoVenta, array("articulo")))
+    if (in_array(@$Buffer["rubro"], array("articulo")))
     {
         echo "<li>Formas de entrega admitidas</li>";
         echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span><br />";
         echo db_ui_checkboxes("flags_entrega[]", "ventas_flags_entrega", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_entrega"));
     }
-    switch($tipoVenta)
+    switch(@$Buffer["rubro"])
     {
         case "articulo":
             echo "<li>Fotografías del artículo</li>";
@@ -250,7 +234,7 @@ function CONTENIDO_VENDER()
     }
 
 
-    $NoMaxImg = (in_array($tipoVenta, array("servicio"))) ? 1 : 5;
+    $NoMaxImg = (in_array(@$Buffer["rubro"], array("servicio"))) ? 1 : 5;
     $inicio = isset($imagenes) ? count($imagenes) : 0;
     for ($i = $inicio; $i < $NoMaxImg; $i++)
     {

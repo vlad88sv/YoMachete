@@ -256,7 +256,7 @@ function ObtenerTicketTMP($id_usuario)
     $datos["tipo"] = _A_temporal;
     $datos["fecha_ini"] = mysql_datetime();
     $datos["fecha_fin"] = mysql_datetime();
-    $datos["id_categoria"] = "0";
+    $datos["id_categoria"] = @$_POST['id_categoria'];
     $datos["id_usuario"] = $id_usuario;
     $datos["precio"] = "0";
     $datos["titulo"] = "";
@@ -490,7 +490,7 @@ function ObtenerDatos($id_articulo)
 {
     $id_articulo = db_codex($id_articulo);
 
-    $c = "SELECT * FROM ventas_articulos WHERE id_articulo='$id_articulo' LIMIT 1";
+    $c = "SELECT id_articulo, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_articulos AS a WHERE id_articulo='$id_articulo' LIMIT 1";
     $r = db_consultar($c);
 
     return mysql_fetch_array($r);
