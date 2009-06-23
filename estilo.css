@@ -247,6 +247,14 @@ text-align:left;
 padding:0.1%;
 }
 
+.articulo .adm {
+background-color:#000;
+color:#FFF;
+font-weight:bolder;
+text-align:left;
+padding:0.1%;
+}
+
 .ancha {
 width:100%;
 border-collapse:collapse;
