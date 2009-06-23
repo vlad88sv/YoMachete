@@ -27,4 +27,11 @@ Constantes para mensajes
 define("_M_INFO", 0);
 define("_M_ERROR", 1);
 define("_M_NOTA",2);
+
+/*
+Tipos de mensajes
+*/
+define('_MC_broadcast',0);
+define('_MC_ventas',1);
+define('_MC_privado',2);
 ?>

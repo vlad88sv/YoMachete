@@ -510,4 +510,30 @@ function ObtenerFlags($id_articulo, $id_tabla)
     }
     return $arr;
 }
+
+/*
+ * EnviarNota()
+ * Envia un mensaje de diferentes posibles tipos a uno o mas destinatarios
+ * Devuelve 1 en exito y 0 en error
+*/
+function EnviarNota($Mensaje,$Usuario=NULL,$Tipo=_M_INFO,$Contexto=_MC_broadcast)
+{
+    // Solo los administradores pueden enviar mensajes a TODOS los usuarios.
+    if (_F_usuario_cache('nivel') != _N_administrador && !$Usuario)
+    {
+        return 1;
+    }
+    // Solo los administradores pueden enviar mensajes "BroadCast"
+    if (_F_usuario_cache('nivel') != _N_administrador && $Contexto=_MC_broadcast)
+    {
+        return 1;
+    }
+    $datos['id_usuario_rmt'] = _F_usuario_cache('id_usuario');
+    $datos['mensaje'] = $Mensaje;
+    $datos['tipo'] = $Tipo;
+    $datos['contexto'] = $Contexto;
+    $datos['id_usuario_dst'] = $Usuario;
+    $ret = db_agregar_datos("ventas_mensajes",$datos);
+    return db_afectados();
+}
 ?>
