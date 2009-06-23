@@ -265,22 +265,21 @@ function ObtenerTicketTMP($id_usuario)
     return db_agregar_datos("ventas_articulos",$datos);
 }
 /*
- * DestruirTicketTMP()
- * Destruye un ticket temporal e imagenes relacionados.
- * La diferencia con DestruirArticulo() radica en que esta funcion esta
- * limitada a articulos con estado _A_temporal.
- * Esto como medida extra de seguridad ante algún exploit.
- * Retorna 0 si no pudo borrar nada por algun motivo
+ * DestruirTicket()
+ * Destruye un ticket con sus imagenes y flags relacionados.
+ * Retorna 0 si no pudo borrar nada por algun motivo, idealmente 1 si fue exitosa.
+ * Mas de 1 significa que se pasió en todo :P
 */
-function DestruirTicketTMP($id_usuario, $id_articulo)
+function DestruirTicket($id_articulo,$tipo=_A_temporal)
 {
-    if (!_F_usuario_existe($id_usuario,"id_usuario"))
+    $AND_usuario = '';
+    if (_F_usuario_cache('nivel') != _N_administrador)
     {
-        return 0;
+        $id_usuario =  _F_usuario_cache('id_usuario');
+        $AND_usuario = "AND id_usuario='$id_usuario'";
     }
     $id_articulo = db_codex($id_articulo);
-    $id_usuario = db_codex($id_usuario);
-    $c = "DELETE FROM ventas_articulos WHERE id_usuario='$id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."'";
+    $c = "DELETE FROM ventas_articulos WHERE id_articulo='$id_articulo' $AND_usuario AND tipo='".$tipo."' LIMIT 1";
     $r = db_consultar($c);
     $ret = db_afectados();
     if ($ret)
@@ -290,11 +289,12 @@ function DestruirTicketTMP($id_usuario, $id_articulo)
         EliminarArchivosArr(ObtenerMiniImagenesArr($id_articulo));
         $c = "DELETE FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
         $r = db_consultar($c);
+        $c = "DELETE FROM ventas_flags_art WHERE id_articulo='$id_articulo'";
+        $r = db_consultar($c);
     }
-    $c = "DELETE FROM ventas_flags_art WHERE id_articulo='$id_articulo'";
-    $r = db_consultar($c);
     return $ret;
 }
+
 /*
  * ComprobarTicketTMP()
  * Comprueba que un ticket corresponda al usuario especificado

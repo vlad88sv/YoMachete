@@ -108,9 +108,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
     }
     if (!empty($_GET['cancelar']))
     {
-        $c = "DELETE FROM ventas_articulos WHERE tipo='"._A_esp_activacion."' AND id_articulo='" . db_codex($_GET['cancelar'])."' LIMIT 1";
-        $r = db_consultar($c);
-        $ret = db_afectados();
+        $ret = DestruirTicket($_GET['cancelar'],_A_esp_activacion);
         if ($ret == 1)
         {
             echo Mensaje("Publicación exitosamente eliminada",_M_INFO);

@@ -128,7 +128,7 @@ function CONTENIDO_VENDER()
     {
         if (!empty($_GET['ticket']))
         {
-            DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_GET['ticket']);
+            DestruirTicket($_GET['ticket']);
         }
         echo "La publicación ha sido cancelada y eliminada.<br />";
         echo ui_href("","./","Regresar a la página principal") . " / " . ui_href("","./vender", "Regresar a ventas") ;
@@ -140,7 +140,7 @@ function CONTENIDO_VENDER()
         header("location: ./");
         if (!empty($_GET['ticket']))
         {
-            DestruirTicketTMP(_F_usuario_cache('id_usuario'),$_GET['ticket']);
+            DestruirTicket($_GET['ticket']);
         }
         echo "Cancelando venta...";
         return;
