@@ -92,32 +92,43 @@ function INTERFAZ__ACTIVACION_USUARIOS()
 }
 function INTERFAZ__PUBLICACIONES_ACTIVACION()
 {
-    if (!empty($_GET['activar']))
+    if (!empty($_GET['operacion']) && !empty($_GET['id_articulo']) && !empty($_GET['id_usuario']))
     {
-        $c = "UPDATE ventas_articulos SET tipo="._A_aceptado." WHERE tipo='"._A_esp_activacion."' AND id_articulo='" . db_codex($_GET['activar'])."' LIMIT 1";
-        $r = db_consultar($c);
-        $ret = db_afectados();
+        $id_articulo = db_codex($_GET['id_articulo']);
+        $id_usuario = db_codex($_GET['id_usuario']);
+
+        switch ($_GET['operacion'])
+        {
+            case "activar":
+                $c = "UPDATE ventas_articulos SET tipo="._A_aceptado." WHERE tipo='"._A_esp_activacion."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
+                $r = db_consultar($c);
+                $ret = db_afectados();
+                $msjNota="¡Su publicación ha sido aprobada! [".ui_href("","publicacion_".$id_articulo,"ver")."]";
+            break;
+            case "rechazar":
+                $ret = DestruirTicket($_GET['cancelar'],_A_esp_activacion);
+                $msjNota="¡Su publicación [$id_articulo] ha sido rechazada y eliminada, esto significa que su publicación era ilegal!";
+            break;
+            case "retornar":
+                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo='"._A_esp_activacion."' AND id_articulo='" . db_codex($_GET['editar'])."' LIMIT 1";
+                $r = db_consultar($c);
+                $ret = db_afectados();
+                $msjNota="¡Su publicación ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]";
+            break;
+        }
         if ($ret == 1)
         {
-            echo Mensaje("Publicación exitosamente aprobada",_M_INFO);
+            echo Mensaje("Operación exitosa: ".$_GET['operacion'],_M_INFO);
+            EnviarNota($msjNota,$id_usuario,$Tipo=_M_INFO,$Contexto=_MC_ventas);
         }
         else
         {
-            echo Mensaje("Publicación NO PUDO ser aprobada",_M_ERROR);
+            echo Mensaje("Operación erronea: ".$_GET['operacion'],_M_ERROR);
         }
     }
-    if (!empty($_GET['cancelar']))
-    {
-        $ret = DestruirTicket($_GET['cancelar'],_A_esp_activacion);
-        if ($ret == 1)
-        {
-            echo Mensaje("Publicación exitosamente eliminada",_M_INFO);
-        }
-        else
-        {
-            echo Mensaje("Publicación NO PUDO ser eliminada",_M_ERROR);
-        }
-    }
+
+    // Obtenemos las publicaciones pendientes
+
     $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE tipo='"._A_esp_activacion."' ORDER by fecha_ini";
     $r = db_consultar($c);
     if (mysql_num_rows($r) == 0)
@@ -128,7 +139,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
 
     while ($f = mysql_fetch_array($r))
     {
-        echo "[".ui_href("","./admin_publicaciones_activacion?activar=".$f['id_articulo'],"ACTIVAR") . "] / [".ui_href("","./admin_publicaciones_activacion?cancelar=".$f['id_articulo'],"CANCELAR") . "]";
+        echo "[".ui_href("","./admin_publicaciones_activacion?operacion=activar&id_articulo=".$f['id_articulo']."&id_usuario=".$f['id_usuario'],"ACTIVAR") . "] / [".ui_href("","./admin_publicaciones_activacion?operacion=rechazar&id_articulo=".$f['id_articulo']."&id_usuario=".$f['id_usuario'],"RECHAZAR") . "] / [".ui_href("","./admin_publicaciones_activacion?operacion=retornar&id_articulo=".$f['id_articulo']."&id_usuario=".$f['id_usuario'],"RETORNAR") . "]";
         echo VISTA_ArticuloEnLista($f['titulo'],"publicacion_".$f['id_articulo'],$f['precio'],substr($f['descripcion_corta'],0,200),"<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>",join(" > ", get_path($f['id_categoria'])));
         echo "<br />";
     }
