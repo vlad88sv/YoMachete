@@ -35,7 +35,7 @@ function CONTENIDO_VENDER()
             echo "<ul>";
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] > ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b></li>";
+                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&eliminar=proceder","ELIMINAR") . "] > ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b></li>";
             }
             echo "</ul>";
         }
@@ -97,6 +97,28 @@ function CONTENIDO_VENDER()
 
     // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
 
+    if(isset($_GET['eliminar']))
+    {
+        if (!empty($_GET['ticket']))
+        {
+            DestruirTicket($_GET['ticket']);
+        }
+        echo "La publicación ha sido cancelada y eliminada.<br />";
+        echo ui_href("","./","Regresar a la página principal") . " / " . ui_href("","./vender", "Regresar a ventas") ;
+        return;
+    }
+
+    if(isset($_POST['vender_cancelar']))
+    {
+        header("location: ./");
+        if (!empty($_GET['ticket']))
+        {
+            DestruirTicket($_GET['ticket']);
+        }
+        echo "Cancelando venta...";
+        return;
+    }
+
     if ($flag_modo_escritura)
     {
         DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
@@ -128,28 +150,6 @@ function CONTENIDO_VENDER()
 
     $Buffer = ObtenerDatos($ticket);
     $imagenes = ObtenerImagenesArr($ticket,"");
-
-    if(isset($_GET['eliminar']))
-    {
-        if (!empty($_GET['ticket']))
-        {
-            DestruirTicket($_GET['ticket']);
-        }
-        echo "La publicación ha sido cancelada y eliminada.<br />";
-        echo ui_href("","./","Regresar a la página principal") . " / " . ui_href("","./vender", "Regresar a ventas") ;
-        return;
-    }
-
-    if(isset($_POST['vender_cancelar']))
-    {
-        header("location: ./");
-        if (!empty($_GET['ticket']))
-        {
-            DestruirTicket($_GET['ticket']);
-        }
-        echo "Cancelando venta...";
-        return;
-    }
 
     echo "Ud. se encuentra utilizando una cuenta gratuita, ¡actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
 
