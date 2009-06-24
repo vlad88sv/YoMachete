@@ -121,7 +121,7 @@ function GENERAR_ARTICULOS()
         $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
     }
 
-    $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by fecha_fin ASC LIMIT 10","indice","");
+    $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by fecha_fin DESC LIMIT 10","indice","");
 
     $data .= JS_onload('$("a[rel=\'lightbox\']").lightBox();');
     return $data;
