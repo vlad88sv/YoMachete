@@ -111,7 +111,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                 $msjNota="¡Su publicación [$id_articulo] ha sido rechazada y eliminada, esto significa que su publicación era ilegal!";
             break;
             case "retornar":
-                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo='"._A_esp_activacion."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
+                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo='"._A_aceptado."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
                 $msjNota="¡Su publicación ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]";
