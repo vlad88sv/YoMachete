@@ -35,7 +35,7 @@ function CONTENIDO_VENDER()
             echo "<ul>";
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo']."&op=".$f['id_categoria'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] > ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b></li>";
+                echo "<li>[".ui_href("","vender?ticket=".$f['id_articulo'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_articulo']."&op=zap&eliminar=proceder","ELIMINAR") . "] > ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b></li>";
             }
             echo "</ul>";
         }
@@ -57,7 +57,7 @@ function CONTENIDO_VENDER()
         }
         return;
     }
-    elseif (isset($_GET['op']))
+    elseif (isset($_GET['op']) && !isset($_GET['ticket']))
     {
         $op = $_GET['op'];
         if (!is_numeric($op))
@@ -76,6 +76,11 @@ function CONTENIDO_VENDER()
             $flag_modo_escritura=true;
             $flag_op_y_saltar=true;
         }
+    }
+    elseif (isset($_GET['op']) && isset($_GET['ticket']))
+    {
+        $flag_modo_escritura=false;
+        $flag_op_y_saltar=true;
     }
 
     // --------------------------TICKET-------------------------------
@@ -156,6 +161,11 @@ function CONTENIDO_VENDER()
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
         echo VISTA_ArticuloEnLista("id_articulo=$ticket","","previsualizacion","Woops!, ¡problemas intentando cargar la previsualización!");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
+        echo "<div id=\"prev_pub\">";
+        require_once ("PHP/contenido.php");
+        $_GET['publicacion'] = $ticket;
+        CONTENIDO_PUBLICACION();
+        echo "</div>";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
 

@@ -24,6 +24,10 @@ switch ($_GET['peticion'])
         require_once("PHP/vender.php");
         CONTENIDO_VENDER();
     break;
+    case 'publicacion':
+        require_once ("PHP/contenido.php");
+        CONTENIDO_PUBLICACION();
+    break;
     case 'vip':
         require_once ("PHP/contenido.php");
         CONTENIDO_VIP();
