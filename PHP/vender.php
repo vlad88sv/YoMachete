@@ -148,7 +148,7 @@ function CONTENIDO_VENDER()
 
     echo "Ud. se encuentra utilizando una cuenta gratuita, ¡actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
 
-    if($flag_modo_previsualizacion)
+    if($flag_modo_previsualizacion || $flag_publicar)
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
