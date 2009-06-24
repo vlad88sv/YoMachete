@@ -255,6 +255,10 @@ text-align:left;
 padding:0.1%;
 }
 
+.articulo .adm a {
+color:#ff0;
+}
+
 .ancha {
 width:100%;
 border-collapse:collapse;

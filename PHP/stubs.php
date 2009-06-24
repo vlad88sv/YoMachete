@@ -216,9 +216,22 @@ function validEmail($email)
    return $isValid;
 }
 
-function VISTA_ArticuloEnLista($titulo,$lnkTitulo,$precio,$descripcion,$imagen,$ubicacion,$tipo="normal")
+function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron articulos")
 {
     $data = '';
+    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
+    $r = db_consultar($c);
+    while ($f = mysql_fetch_array($r))
+    {
+    $titulo=$f['titulo'];
+    $lnkTitulo="publicacion_".$f['id_articulo'];
+    $precio=$f['precio'];
+    $descripcion=substr($f['descripcion_corta'],0,200);
+    $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
+    $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion")));
+    $id_articulo = $f['id_articulo'];
+    $id_usuario = $f['id_usuario'];
+    // ->
     $data .= '<table class="articulo">';
     $data .= '<tbody>';
     $data .= '<tr>';
@@ -226,20 +239,36 @@ function VISTA_ArticuloEnLista($titulo,$lnkTitulo,$precio,$descripcion,$imagen,$
     $data .= '<td class="detalle">';
     $data .= '<table class="titular">';
     $data .= '<tr>';
-    $data .= '<td class="titulo"><a id="titulo" href="'.$lnkTitulo.'">'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
+    if ($tipo != "previsualizacion")
+    {
+        $data .= '<td class="titulo"><a id="titulo" href="'.$lnkTitulo.'">'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
+    }
+    else
+    {
+        $data .= '<td class="titulo"><a id="titulo">'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
+    }
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="ubicacion">Ubicación: ' . $ubicacion.'</td></tr>';
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
     if (_F_usuario_cache('nivel') == _N_administrador)
     {
-        $data .= '<tr><td colspan="2" class="adm">[EDITAR] / [ELIMINAR] / [DESAPROBAR] / [RETORNAR]</td></tr>';
+        if ($tipo != "admin")
+        {
+            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","admin_publicaciones_activacion?operacion=editar&id_articulo=$id_articulo&id_usuario=$id_usuario","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+        }
+        else
+        {
+            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","admin_publicaciones_activacion?operacion=editar&id_articulo=$id_articulo&id_usuario=$id_usuario","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+        }
     }
     $data .= '</table>';
     $data .= '</td>';
     $data .= '</tr>';
     $data .= '</tbody>';
     $data .= '</table>';
+    $data .= '<br />';
+    }
     return $data;
 }
 

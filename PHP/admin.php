@@ -45,7 +45,7 @@ function CONTENIDO_ADMIN()
 
 function INTERFAZ__ACTIVACION_USUARIOS()
 {
-    if (!empty($_GET['activar']))
+    if (!empty($_GET['aprobar']))
     {
         $c = "UPDATE ventas_usuarios SET estado=NULL WHERE estado='"._N_esp_activacion."' AND id_usuario='" . db_codex($_GET['activar'])."' LIMIT 1";
         $r = db_consultar($c);
@@ -96,10 +96,11 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
     {
         $id_articulo = db_codex($_GET['id_articulo']);
         $id_usuario = db_codex($_GET['id_usuario']);
+        $ret = 0;
 
         switch ($_GET['operacion'])
         {
-            case "activar":
+            case "aprobar":
                 $c = "UPDATE ventas_articulos SET tipo="._A_aceptado." WHERE tipo='"._A_esp_activacion."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
@@ -110,10 +111,17 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                 $msjNota="¡Su publicación [$id_articulo] ha sido rechazada y eliminada, esto significa que su publicación era ilegal!";
             break;
             case "retornar":
-                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo='"._A_esp_activacion."' AND id_articulo='" . db_codex($_GET['editar'])."' LIMIT 1";
+                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo='"._A_esp_activacion."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
                 $msjNota="¡Su publicación ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]";
+            break;
+            // Esta opción tiene logica si la ejecutan una vez aprobada la publicación, Ej. desde una VISTA__articulos()
+            case "desaprobar":
+                $c = "UPDATE ventas_articulos SET tipo="._A_esp_activacion." WHERE tipo='"._A_aceptado."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
+                $r = db_consultar($c);
+                $ret = db_afectados();
+                $msjNota="¡La publicación ha sido desaprobada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]";
             break;
         }
         if ($ret == 1)
@@ -128,21 +136,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
     }
 
     // Obtenemos las publicaciones pendientes
-
-    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE tipo='"._A_esp_activacion."' ORDER by fecha_ini";
-    $r = db_consultar($c);
-    if (mysql_num_rows($r) == 0)
-    {
-        echo Mensaje("No hay publicaciones esperando activación",_M_INFO);
-        return;
-    }
-
-    while ($f = mysql_fetch_array($r))
-    {
-        echo "[".ui_href("","./admin_publicaciones_activacion?operacion=activar&id_articulo=".$f['id_articulo']."&id_usuario=".$f['id_usuario'],"ACTIVAR") . "] / [".ui_href("","./admin_publicaciones_activacion?operacion=rechazar&id_articulo=".$f['id_articulo']."&id_usuario=".$f['id_usuario'],"RECHAZAR") . "] / [".ui_href("","./admin_publicaciones_activacion?operacion=retornar&id_articulo=".$f['id_articulo']."&id_usuario=".$f['id_usuario'],"RETORNAR") . "]";
-        echo VISTA_ArticuloEnLista($f['titulo'],"publicacion_".$f['id_articulo'],$f['precio'],substr($f['descripcion_corta'],0,200),"<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>",join(" > ", get_path($f['id_categoria'])));
-        echo "<br />";
-    }
+    echo VISTA_ArticuloEnLista("tipo='"._A_esp_activacion."'","ORDER by fecha_ini","admin","No hay publicaciones esperando activación");
 
     echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
 }

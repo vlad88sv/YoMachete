@@ -154,7 +154,7 @@ function CONTENIDO_VENDER()
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex(@$Buffer['id_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
-        echo VISTA_ArticuloEnLista(@$Buffer['titulo'],"#",@$Buffer['precio'],substr(@$Buffer['descripcion_corta'],0,200),"<a href=\"./imagen_".@$imagenes[0]."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".@$imagenes[0]."m\" /></a>",join(" > ", get_path(@$Buffer['id_categoria'],false)));
+        echo VISTA_ArticuloEnLista("id_articulo=$ticket","","previsualizacion","Woops!, ¡problemas intentando cargar la previsualización!");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
