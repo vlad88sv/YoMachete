@@ -251,15 +251,15 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="ubicacion">Ubicación: ' . $ubicacion.'</td></tr>';
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
-    if (_F_usuario_cache('nivel') == _N_administrador)
+    if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
     {
         if ($tipo != "admin")
         {
-            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","admin_publicaciones_activacion?operacion=editar&id_articulo=$id_articulo&id_usuario=$id_usuario","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
         else
         {
-            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","admin_publicaciones_activacion?operacion=editar&id_articulo=$id_articulo&id_usuario=$id_usuario","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
     }
     $data .= '</table>';
@@ -329,15 +329,23 @@ function DestruirTicket($id_articulo,$tipo=_A_temporal)
 }
 
 /*
- * ComprobarTicketTMP()
+ * ComprobarTicket()
  * Comprueba que un ticket corresponda al usuario especificado
  * Retorna true si corresponde, false de lo contrario
 */
-function ComprobarTicketTMP($id_usuario,$id_articulo)
+function ComprobarTicket($id_articulo)
 {
     $id_articulo = db_codex($id_articulo);
-    $id_usuario = db_codex($id_usuario);
-    $c = "SELECT id_articulo FROM ventas_articulos WHERE id_usuario='$id_usuario' AND id_articulo='$id_articulo' AND tipo='"._A_temporal."' LIMIT 1";
+    $AND_usuario = '';
+    $AND_tipo = '';
+    if (_F_usuario_cache('nivel') != _N_administrador)
+    {
+        $id_usuario =  _F_usuario_cache('id_usuario');
+        $AND_usuario = "AND id_usuario='$id_usuario'";
+        $AND_tipo = "AND tipo="._A_temporal;
+    }
+
+    $c = "SELECT id_articulo FROM ventas_articulos WHERE id_articulo='$id_articulo' $AND_usuario $AND_tipo LIMIT 1";
     $r = db_consultar($c);
     return (mysql_num_rows($r) == 1);
 }
@@ -406,7 +414,7 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
-	if (!ComprobarTicketTMP($id_usuario,$id_articulo))
+	if (!ComprobarTicket($id_articulo))
 	{
 		return false;
 	}
@@ -450,7 +458,7 @@ function DescargarArchivos($input,$id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
-	if (!ComprobarTicketTMP($id_usuario,$id_articulo))
+	if (!ComprobarTicket($id_articulo))
 	{
 		return false;
 	}

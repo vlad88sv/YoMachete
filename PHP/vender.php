@@ -82,7 +82,7 @@ function CONTENIDO_VENDER()
     // Creamos el Ticket Temporal de venta si no lo tenemos o validamos el actual
     $ticket = empty($_GET['ticket']) ?  ObtenerTicketTMP(_F_usuario_cache('id_usuario')) : $_GET['ticket'];
 
-    if (!ComprobarTicketTMP(_F_usuario_cache('id_usuario'),$ticket))
+    if (!ComprobarTicket($ticket))
     {
         echo "La validación de su Ticket ha fallado.<br />";
         echo "Esto podría bien ser una falla del sistema o un error en su navegador<br />";
