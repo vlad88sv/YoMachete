@@ -13,15 +13,30 @@ function CONTENIDO_PUBLICACION()
 {
     if (!isset($_GET['publicacion']))
     {
-        echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
+        echo Mensaje("PUBLICACION: ERROR INTERNO", _M_ERROR);
         return;
     }
     $ticket = db_codex($_GET['publicacion']);
     $Buffer = ObtenerDatos($ticket);
+    if (!$Buffer)
+    {
+        echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
+        return;
+    }
+    $Vendedor = _F_usuario_datos(@$Buffer['id_usuario']);
     $imagenes = ObtenerImagenesArr($ticket,"");
 
-    echo "<b>Ubicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']))."<hr />";
     echo "<h1>".@$Buffer['titulo']."</h1>";
+    echo "<hr />";
+    echo "<b>Ubicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
+    echo "<br />";
+    echo "<b>Vendedor:</b> " . $Vendedor['nombre'] ." [<a id=\"ver_mas_vendedor\" >más..</a>]";
+    echo "<div id=\"detalle_vendedor\">";
+    echo "<ul>";
+    echo "<li>Registrado desde: " .  @$Vendedor['registro'] . "</li>";
+    echo "<li>Ultima actividad: " . fechatiempo_desde_mysql_datetime(@$Vendedor['ultimo_acceso']) . "</li>";
+    echo "</ul>";
+    echo "</div>";
     if (isset($imagenes) && is_array($imagenes))
     {
         echo "<hr /><center>";
@@ -35,6 +50,6 @@ function CONTENIDO_PUBLICACION()
     echo "<div class=\"publicacion_descripcion\">";
     echo @$Buffer['descripcion'];
     echo "</div>";
-    echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
+    echo JS_onload('$("#detalle_vendedor").hide();$("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});$("a[rel=\'lightbox\']").lightBox();');
 }
 ?>

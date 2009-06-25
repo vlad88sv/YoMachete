@@ -97,6 +97,7 @@ function CONTENIDO_REGISTRAR()
         {
             $datos["estado"] = _N_esp_activacion;
             $datos["ultimo_acceso"] = mysql_datetime();
+            $datos["registro"]= mysql_datetime();
             db_agregar_datos("ventas_usuarios",$datos);
             echo "¡Su solicitud de registro ha sido procesada!<br />Sin embargo su registro será efectivo hasta el momento que un Administrador de el aval a su nueva cuenta.<br />Un mensaje será enviado al correo electrónico especificado al registrarse en el que se le confirmará que su cuenta esta activa.<br />Este proceso puede tardar entre 10 minutos y 2 horas en llevarse a cabo, gracias por su espera.<br />";
             echo "Le invitamos a seguir navegando en nuestro sitio mientras su cuenta es activada. ". ui_href("registrar_continuar","./", "Continuar") ."<br />";

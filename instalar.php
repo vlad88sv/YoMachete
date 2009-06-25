@@ -12,16 +12,17 @@
 <body>
 <?php
 // Tabla de usuarios
-$campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) not null, clave VARCHAR(32) not null, nombre VARCHAR(32) not null, email VARCHAR(50) not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, FLAGS LONGTEXT";
+$campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) not null, clave VARCHAR(32) not null, nombre VARCHAR(32) not null, email VARCHAR(50) not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, registro DATETIME, FLAGS LONGTEXT";
 echo db_crear_tabla("ventas_usuarios", $campos, true);
 
 // Agregamos al usuario Admin
 $usuario['usuario']	= 'admin';
-$usuario['clave'] 	= md5('clave');
+$usuario['clave'] 	= md5('admin');
 $usuario['nombre'] 	= 'Administrador';
 $usuario['email'] 	= 'admin@localhost.com';
 $usuario['nivel'] 	= _N_administrador;
 $usuario['ultimo_acceso']= mysql_datetime();
+$usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
 
 // Agregamos al usuario Usuario
@@ -31,6 +32,7 @@ $usuario['nombre'] 	= 'Ejemplo';
 $usuario['email'] 	= 'usuario@localhost.com';
 $usuario['nivel'] 	= _N_usuario;
 $usuario['ultimo_acceso']= mysql_datetime();
+$usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
 unset ($usuario);
 
