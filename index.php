@@ -66,12 +66,12 @@ function GENERAR_CABEZA()
      * 5. Ayuda.
     */
     echo "<div id='menu'>";
-        echo ui_href("cabecera_link_Categorias","./","Categorías","izq");
+        echo ui_href("cabecera_link_Categorias","./","Comprar","izq");
+        echo ui_href("cabecera_link_vender","vender","Vender","");
     if (!S_iniciado())
     {
         echo ui_href("cabecera_link_sesion","iniciar","Ingresar","");
         echo ui_href("cabecera_link_cuenta","registrar","Registrarse","");
-        echo ui_href("cabecera_link_vender","vender","Vender","");
         echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
         echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
     }
@@ -79,7 +79,6 @@ function GENERAR_CABEZA()
     {
         if(_F_usuario_cache('nivel') == _N_administrador) echo ui_href("cabecera_link_admin","admin","Administración","");
         echo ui_href("cabecera_link_cuenta","perfil",_F_usuario_cache("usuario"),"");
-        echo ui_href("cabecera_link_vender","vender","Vender","");
         echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
         echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
         echo ui_href("cabecera_link_sesion","finalizar","Salir","");
