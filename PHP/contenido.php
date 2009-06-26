@@ -39,7 +39,7 @@ function CONTENIDO_PUBLICACION()
     echo "</div>";
     if (isset($imagenes) && is_array($imagenes))
     {
-        echo "<hr /><center>";
+        echo "<hr /><h1>Fotografías y/o ilustraciones</h1><center>";
         foreach($imagenes as $archivo)
         {
             echo "<div style='display:inline-block'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"lightbox\"><img src=\"./imagen_".$archivo."m\" /></a><br /></div>";
@@ -47,9 +47,9 @@ function CONTENIDO_PUBLICACION()
         echo "<div style=\"clear:both\"></div>";
         echo "</center><hr />";
     }
-    echo "<div class=\"publicacion_descripcion\">";
+    echo "<h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
     echo @$Buffer['descripcion'];
-    echo "</div>";
+    echo "</div></center>";
     echo JS_onload('$("#detalle_vendedor").hide();$("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});$("a[rel=\'lightbox\']").lightBox();');
 }
 ?>

@@ -276,15 +276,13 @@ padding:3px;
 
 .publicacion_descripcion {
     display:block;
-    margin: 0 auto;
+    margin:0 auto;
     border:5px solid #DAF5FC;
     background-color:#FFF;
     text-align:left;
     font-size:90%;
-    margin-top:5px;
-    margin-bottom:5px;
     padding:5px;
-    width:90%;
+    width:98%;
 }
 
 #prev_pub {
