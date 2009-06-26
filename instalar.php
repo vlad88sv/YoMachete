@@ -401,6 +401,9 @@ echo db_crear_tabla("ventas_flags_art", $campos, true);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, id_usuario_dst INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT";
 echo db_crear_tabla("ventas_mensajes", $campos, true);
+
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_articulo INT, consulta VARCHAR(1000), respuesta VARCHAR(1000)";
+echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, true);
 ?>
 </body>
 </html>
