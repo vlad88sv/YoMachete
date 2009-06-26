@@ -77,4 +77,9 @@ function _F_usuario_cache($campo){
 		return NULL;
 	}
 }
+
+function _autenticado()
+{
+	return (isset($_SESSION['autenticado']) && $_SESSION['autenticado'] = true);
+}
 ?>
