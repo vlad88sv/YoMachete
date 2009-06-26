@@ -221,6 +221,10 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $data = '';
     $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
     $r = db_consultar($c);
+    if (mysql_num_rows($r) < 1)
+    {
+        return Mensaje($SiVacio, _M_INFO);
+    }
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
@@ -414,21 +418,21 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
-	if (!ComprobarTicket($id_articulo))
-	{
-		return false;
-	}
+    if (!ComprobarTicket($id_articulo))
+    {
+        return false;
+    }
 
     if (@!is_array($_FILES[$input]['tmp_name']))
     {
         //echo "No hay archivos!";
         return false;
     }
-	if (!is_writable("RCS/IMG/"))
-	{
-		echo Mensaje("lo sentimos, parece que hay un problema técnico con la carga de imagenes",_M_ERROR);
-		return false;
-	}
+    if (!is_writable("RCS/IMG/"))
+    {
+        echo Mensaje("lo sentimos, parece que hay un problema técnico con la carga de imagenes",_M_ERROR);
+        return false;
+    }
     foreach ($_FILES[$input]['tmp_name'] as $llave => $valor)
     {
         if (!$valor) continue;
@@ -458,10 +462,10 @@ function DescargarArchivos($input,$id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
-	if (!ComprobarTicket($id_articulo))
-	{
-		return false;
-	}
+    if (!ComprobarTicket($id_articulo))
+    {
+        return false;
+    }
 
     if (@!is_array($_POST[$input])) return false;
 
