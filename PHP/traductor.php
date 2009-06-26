@@ -109,6 +109,19 @@ switch ($_GET['peticion'])
             echo file_get_contents($archivo);
         }
     break;
+    case "correo":
+    if (!empty($_GET['op']))
+    {
+        header("Content-type: image/png");
+        $string = $_GET['op'];
+        $im    = ImageCreate((int)(strlen($string) * 6.25), 12);
+        $background_color = ImageColorAllocate ($im, 243, 252, 254);
+        $text_color = ImageColorAllocate ($im, 0, 0, 0);
+        ImageString ($im, 2, 0, 0, "$string", $text_color);
+        ImagePNG($im);
+        ImageDestroy($im);
+    }
+    break;
     default:
     echo "Petición erronea: ". $_GET['peticion'] .". Abortando";
 

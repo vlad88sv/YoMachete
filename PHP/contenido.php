@@ -30,7 +30,7 @@ function CONTENIDO_PUBLICACION()
     echo "<hr />";
     echo "<b>Ubicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
     echo "<br />";
-    echo "<b>Vendedor:</b> " . $Vendedor['nombre'] ." [<a id=\"ver_mas_vendedor\" >más..</a>]";
+    echo "<b>Vendedor:</b> " . $Vendedor['nombre'] . ", <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." [<a id=\"ver_mas_vendedor\" >más..</a>]";
     echo "<div id=\"detalle_vendedor\">";
     echo "<ul>";
     echo "<li>Registrado desde: " .  @$Vendedor['registro'] . "</li>";

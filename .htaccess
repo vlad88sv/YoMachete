@@ -6,4 +6,5 @@ RewriteRule ^registro_(.+)_existe:(.*)$ PHP/traductor.php?peticion=registro_usua
 RewriteRule ^admin_(.+)$ index.php?peticion=admin&op=$1&%{QUERY_STRING} [L]
 RewriteRule ^imagen_([0-9]+)$ PHP/traductor.php?peticion=imagen&op=$1 [L]
 RewriteRule ^imagen_([0-9]+m)$ PHP/traductor.php?peticion=imagen&op=$1&miniatura=si [L]
+RewriteRule ^imagen_c_(.+)$ PHP/traductor.php?peticion=correo&op=$1 [L]
 
