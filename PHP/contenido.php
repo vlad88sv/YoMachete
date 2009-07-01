@@ -31,7 +31,7 @@ function CONTENIDO_PUBLICACION()
         // Consulta publica
         $datos['id_usuario'] = _F_usuario_cache('id_usuario');
         $datos['id_articulo'] = $ticket;
-        $datos['consulta'] = strip_tags(db_codex($_POST['consulta']));
+        $datos['consulta'] = substr(strip_tags(db_codex($_POST['consulta'])),0,300);
         $datos['tipo'] = isset($_POST['tipo_consulta']) ? _MeP_Publico : _MeP_Privado;
         $datos['fecha_consulta'] = mysql_datetime();
         db_agregar_datos("ventas_mensajes_publicaciones",$datos);
@@ -44,7 +44,7 @@ function CONTENIDO_PUBLICACION()
     {
         foreach ($_POST['txtEnviarRespuesta'] as $id => $respuesta)
         {
-            $respuesta = strip_tags(db_codex($respuesta));
+            $respuesta = substr(strip_tags(db_codex($respuesta)),0,300);
             $id = db_codex($id);
             $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta', fecha_respuesta='".mysql_datetime()."' WHERE id='$id' AND id_articulo='$ticket' LIMIT 1";
             $r = db_consultar($c);
@@ -101,7 +101,7 @@ function CONTENIDO_PUBLICACION()
             // Si es el dueño de la venta y no ha respondido la consulta le damos la opción de hacerlo.
             if ( !$f['respuesta'] && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
             {
-                $f['respuesta'] = ui_input("txtEnviarRespuesta[".$f['id']."]","","input","txtRespuesta");
+                $f['respuesta'] = ui_input("txtEnviarRespuesta[".$f['id']."]","","input","txtRespuesta",'MAXLENGTH="300"');
                 $flag_activar_enviar_respuestas = true;
             }
             // Si no es el dueño de la venta y la consulta no ha sido contestada
@@ -123,7 +123,7 @@ function CONTENIDO_PUBLICACION()
     if (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
     {
         echo "<hr /><h1>Contactar al vendedor</h1>";
-        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'">' . ui_input("consulta","","input","","width:100%;") . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp;<- marquelo si desea hacer pública esta consulta.</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
+        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'">' . ui_input("consulta","","input","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp;<- marquelo si desea hacer pública esta consulta.</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
     }
     else
     {
