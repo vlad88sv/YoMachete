@@ -318,16 +318,16 @@ padding:3px;
     width:10%;
 }
 
-#tabla_consultas .respuesta .col1{
+#tabla_consultas .col2{
+    width:90%;
+}
+
+#tabla_consultas .respuesta .col1, #tabla_consultas .respuesta_privada .col1 {
     font-weight:bolder;
 }
 
 #tabla_consultas .respuesta_privada{
     background-color:#E0E6FF;
-}
-
-#tabla_consultas .col2{
-    width:90%;
 }
 
 #tabla_consultas .pregunta{
