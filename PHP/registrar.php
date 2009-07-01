@@ -117,7 +117,6 @@ echo ui_tr(ui_td("<acronym title='Número de contacto principal. Le llamaremos a
 echo "</table>";
 echo ui_input("registrar_proceder", "Proceder", "submit")."<br />";
 echo "</form>";
-echo ui_href("registrar_cancelar","./","Cancelar registro")."<br />";
 echo JS_onload('
 $("#registrar_campo_email").keyup(function(){$("#registrar_respuesta_email").load("./registro_correo_existe:"+$("#registrar_campo_email").val());});
 $("#registrar_campo_usuario").keyup(function(){$("#registrar_respuesta_usuario").load("./registro_usuario_existe:"+$("#registrar_campo_usuario").val());});

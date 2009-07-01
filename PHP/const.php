@@ -34,4 +34,10 @@ Tipos de mensajes
 define('_MC_broadcast',0);
 define('_MC_ventas',1);
 define('_MC_privado',2);
+
+/*
+Tipos de mensajes en publicaciones
+*/
+define('_MeP_Publico',0);
+define('_MeP_Privado',1);
 ?>

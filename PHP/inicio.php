@@ -36,6 +36,5 @@ echo ui_tr(ui_td("Constraseña") . ui_td(ui_input("iniciar_campo_clave","","pass
 echo "</table>";
 echo ui_input("iniciar_proceder", "Iniciar sesión", "submit")."<br />";
 echo "</form>";
-echo ui_href("iniciar_cancelar","./","Cancelar inicio");
 }
 ?>

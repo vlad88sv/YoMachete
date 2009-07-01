@@ -28,9 +28,11 @@ function CONTENIDO_PUBLICACION()
     // Grabamos cualquier consulta enviada
     if ( _autenticado() && isset($_POST['consulta']) && isset($_POST['enviar_consulta']) && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'] )
     {
+        // Consulta publica
         $datos['id_usuario'] = _F_usuario_cache('id_usuario');
         $datos['id_articulo'] = $ticket;
         $datos['consulta'] = db_codex($_POST['consulta']);
+        $datos['tipo'] = isset($_POST['tipo_consulta']) ? _MeP_Publico : _MeP_Privado;
         db_agregar_datos("ventas_mensajes_publicaciones",$datos);
         unset($datos);
     }
@@ -72,7 +74,7 @@ function CONTENIDO_PUBLICACION()
     echo @$Buffer['descripcion'];
     echo "</div></center>";
 
-    $c = "SELECT id, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
+    $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
     $r = db_consultar($c);
     if (mysql_num_rows($r) > 0)
     {
@@ -82,22 +84,31 @@ function CONTENIDO_PUBLICACION()
         $flag_activar_enviar_respuestas = false;
         while ($f = mysql_fetch_array($r))
         {
-            echo '<tr class="pregunta"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td></tr>";
+            // Si es consulta privada solo se muestra si corresponde al usuario actual o al vendedor
+            if ($f['tipo'] == _MeP_Privado && _F_usuario_cache('id_usuario') != $f['id_usuario'] && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
+            {
+                continue;
+            }
+            // Determinamos si es pregunta privada o publica
+            $Privada = $f['tipo'] == _MeP_Privado ? "_privada" : "";
+            echo '<tr class="pregunta'.$Privada.'"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td></tr>";
             // Si es el dueño de la venta y no ha respondido la consulta le damos la opción de hacerlo.
             if ( !$f['respuesta'] && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
             {
                 $f['respuesta'] = ui_input("txtEnviarRespuesta[".$f['id']."]","","input","txtRespuesta");
                 $flag_activar_enviar_respuestas = true;
             }
+            // Si no es el dueño de la venta y la consulta no ha sido contestada
             elseif ( !$f['respuesta'] )
             {
                 $f['respuesta'] = htmlentities('<el vendedor aún no dado respuesta a esta consulta>',ENT_QUOTES,"utf-8");
             }
+            // Si la consulta ha sido contestada
             else
             {
                 $f['respuesta'] = htmlentities($f['respuesta'],ENT_QUOTES,"utf-8");
             }
-            echo '<tr class="respuesta"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta']."</td></tr>";
+            echo '<tr class="respuesta'.$Privada.'"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta']."</td></tr>";
         }
         if ($flag_activar_enviar_respuestas) echo '<tr><td id="envio" colspan="2">'.ui_input("cmdEnviarRespuesta","Enviar todas las respuestas","submit").'</td></tr>';
         echo '</table>';

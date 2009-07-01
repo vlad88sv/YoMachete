@@ -16,21 +16,21 @@ $campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(1
 echo db_crear_tabla("ventas_usuarios", $campos, true);
 
 // Agregamos al usuario Admin
-$usuario['usuario']	= 'admin';
-$usuario['clave'] 	= md5('admin');
-$usuario['nombre'] 	= 'Administrador';
-$usuario['email'] 	= 'admin@localhost.com';
-$usuario['nivel'] 	= _N_administrador;
+$usuario['usuario'] = 'admin';
+$usuario['clave']   = md5('admin');
+$usuario['nombre']  = 'Administrador';
+$usuario['email']   = 'admin@localhost.com';
+$usuario['nivel']   = _N_administrador;
 $usuario['ultimo_acceso']= mysql_datetime();
 $usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
 
 // Agregamos al usuario Usuario
 $usuario['usuario'] = 'usuario';
-$usuario['clave'] 	= md5('usuario');
-$usuario['nombre'] 	= 'Ejemplo';
-$usuario['email'] 	= 'usuario@localhost.com';
-$usuario['nivel'] 	= _N_usuario;
+$usuario['clave']   = md5('usuario');
+$usuario['nombre']  = 'Ejemplo';
+$usuario['email']   = 'usuario@localhost.com';
+$usuario['nivel']   = _N_usuario;
 $usuario['ultimo_acceso']= mysql_datetime();
 $usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
@@ -402,7 +402,7 @@ echo db_crear_tabla("ventas_flags_art", $campos, true);
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, id_usuario_dst INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT";
 echo db_crear_tabla("ventas_mensajes", $campos, true);
 
-$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_articulo INT, consulta VARCHAR(1000), respuesta VARCHAR(1000)";
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_articulo INT, consulta VARCHAR(1000), respuesta VARCHAR(1000), tipo INT";
 echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, true);
 ?>
 </body>
