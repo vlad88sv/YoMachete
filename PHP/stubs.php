@@ -45,6 +45,15 @@ function fechatiempo_desde_mysql_datetime($tiempo){
     return date( 'd-m-Y H:i:s',strtotime($tiempo) );
 }
 
+//MYSQL DATETIME a fecha y hora (mas humana)
+function fechatiempo_h_desde_mysql_datetime($tiempo){
+    if (!$tiempo)
+    {
+        return "";
+    }
+    return date( 'd-m-Y h:i:sa',strtotime($tiempo) );
+}
+
 function suerte($una, $dos){
     if (rand(0,1)) {
         return $una;

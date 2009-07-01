@@ -314,12 +314,21 @@ padding:3px;
     text-align:right;
 }
 
+#tabla_consultas{
+    table-layout: fixed;
+}
+
 #tabla_consultas .col1{
     width:10%;
 }
 
 #tabla_consultas .col2{
-    width:90%;
+    width:70%;
+    overflow:hidden;
+}
+
+#tabla_consultas .col3{
+    width:20%;
 }
 
 #tabla_consultas .respuesta .col1, #tabla_consultas .respuesta_privada .col1 {

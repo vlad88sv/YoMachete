@@ -28,6 +28,10 @@ switch ($_GET['peticion'])
         require_once ("PHP/contenido.php");
         CONTENIDO_PUBLICACION();
     break;
+    case 'perfil':
+        require_once ("PHP/perfil.php");
+        CONTENIDO_PERFIL();
+    break;
     case 'vip':
         require_once ("PHP/contenido.php");
         CONTENIDO_VIP();

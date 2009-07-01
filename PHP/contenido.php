@@ -31,26 +31,32 @@ function CONTENIDO_PUBLICACION()
         // Consulta publica
         $datos['id_usuario'] = _F_usuario_cache('id_usuario');
         $datos['id_articulo'] = $ticket;
-        $datos['consulta'] = db_codex($_POST['consulta']);
+        $datos['consulta'] = strip_tags(db_codex($_POST['consulta']));
         $datos['tipo'] = isset($_POST['tipo_consulta']) ? _MeP_Publico : _MeP_Privado;
+        $datos['fecha_consulta'] = mysql_datetime();
         db_agregar_datos("ventas_mensajes_publicaciones",$datos);
         unset($datos);
+        // Enviamos un mensaje al vendedor
     }
 
+    // Grabamos cualquier respuesta enviada
     if ( _autenticado() && isset($_POST['cmdEnviarRespuesta']) && is_array($_POST['txtEnviarRespuesta']) && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
     {
         foreach ($_POST['txtEnviarRespuesta'] as $id => $respuesta)
         {
-            $respuesta = db_codex($respuesta);
+            $respuesta = strip_tags(db_codex($respuesta));
             $id = db_codex($id);
-            $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta' WHERE id='$id' AND id_articulo='$ticket' LIMIT 1";
+            $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta', fecha_respuesta='".mysql_datetime()."' WHERE id='$id' AND id_articulo='$ticket' LIMIT 1";
             $r = db_consultar($c);
+            // Enviamos un mensaje al comprador
         }
     }
 
 
     echo "<h1>".@$Buffer['titulo']."</h1>";
     echo "<hr />";
+    echo "<b>Precio:</b> $" . @$Buffer['precio'];
+    echo "<br />";
     echo "<b>Ubicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
     echo "<br />";
     echo "<b>Vendedor:</b> " . $Vendedor['nombre'] . ", <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." [<a id=\"ver_mas_vendedor\" >más..</a>]";
@@ -74,7 +80,7 @@ function CONTENIDO_PUBLICACION()
     echo @$Buffer['descripcion'];
     echo "</div></center>";
 
-    $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
+    $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo, fecha_consulta, fecha_respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
     $r = db_consultar($c);
     if (mysql_num_rows($r) > 0)
     {
@@ -91,7 +97,7 @@ function CONTENIDO_PUBLICACION()
             }
             // Determinamos si es pregunta privada o publica
             $Privada = $f['tipo'] == _MeP_Privado ? "_privada" : "";
-            echo '<tr class="pregunta'.$Privada.'"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td></tr>";
+            echo '<tr class="pregunta'.$Privada.'"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td><td class=\"col3\">".fechatiempo_h_desde_mysql_datetime($f['fecha_consulta'])."</td></tr>";
             // Si es el dueño de la venta y no ha respondido la consulta le damos la opción de hacerlo.
             if ( !$f['respuesta'] && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
             {
@@ -108,7 +114,7 @@ function CONTENIDO_PUBLICACION()
             {
                 $f['respuesta'] = htmlentities($f['respuesta'],ENT_QUOTES,"utf-8");
             }
-            echo '<tr class="respuesta'.$Privada.'"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta']."</td></tr>";
+            echo '<tr class="respuesta'.$Privada.'"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta']."</td><td>".fechatiempo_h_desde_mysql_datetime($f['fecha_respuesta'])."</td></tr>";
         }
         if ($flag_activar_enviar_respuestas) echo '<tr><td id="envio" colspan="2">'.ui_input("cmdEnviarRespuesta","Enviar todas las respuestas","submit").'</td></tr>';
         echo '</table>';
@@ -117,7 +123,7 @@ function CONTENIDO_PUBLICACION()
     if (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
     {
         echo "<hr /><h1>Contactar al vendedor</h1>";
-        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'">' . ui_textarea("consulta","","","width:100%;") . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp;<- marquelo si desea hacer pública esta consulta.</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
+        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'">' . ui_input("consulta","","input","","width:100%;") . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp;<- marquelo si desea hacer pública esta consulta.</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
     }
     else
     {
