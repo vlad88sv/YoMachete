@@ -339,12 +339,20 @@ padding:3px;
     background-color:#E0E6FF;
 }
 
+#tabla_consultas .respuesta_privada td{
+    border-bottom:3px solid #AB464E;
+}
+
 #tabla_consultas .pregunta{
     background-color:#F3FCFE;
 }
 
 #tabla_consultas .pregunta_privada{
     background-color:#DAF5FC;
+}
+
+#tabla_consultas .pregunta_privada td{
+    border-top:3px solid #AB464E;
 }
 
 #tabla_consultas tr{
