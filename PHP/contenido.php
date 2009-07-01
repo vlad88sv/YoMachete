@@ -9,13 +9,14 @@ function CONTENIDO_VIP()
     echo "</ul>";
 }
 
-function CONTENIDO_PUBLICACION()
+function CONTENIDO_PUBLICACION($op="")
 {
     if (!isset($_GET['publicacion']))
     {
         echo Mensaje("PUBLICACION: ERROR INTERNO", _M_ERROR);
         return;
     }
+
     $ticket = db_codex($_GET['publicacion']);
     $Buffer = ObtenerDatos($ticket);
     if (!$Buffer)
@@ -23,6 +24,34 @@ function CONTENIDO_PUBLICACION()
         echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
         return;
     }
+
+    // Preprocesamos cualquier codigo de operación
+    if (isset($_GET['op']) && isset($_GET['id']) && _F_usuario_cache('nivel') == _N_administrador)
+    {
+        $id = db_codex($_GET['id']);
+        switch ($_GET['op'])
+        {
+            case "eliminar":
+                $c = "DELETE FROM ventas_mensajes_publicaciones WHERE id='$id' LIMIT 1";
+            break;
+            case "privado":
+                $c = "UPDATE ventas_mensajes_publicaciones SET tipo='"._MeP_Privado."' WHERE id='$id' LIMIT 1";
+            break;
+            case "publico":
+                $c = "UPDATE ventas_mensajes_publicaciones SET tipo='"._MeP_Publico."' WHERE id='$id' LIMIT 1";
+            break;
+        }
+        $r = db_consultar($c);
+        if ( db_afectados() == 1 )
+        {
+            echo Mensaje("Operación exitosa.", _M_INFO);
+        }
+        else
+        {
+            echo Mensaje("Operación erronea.", _M_ERROR);
+        }
+    }
+
     $Vendedor = _F_usuario_datos(@$Buffer['id_usuario']);
     $imagenes = ObtenerImagenesArr($ticket,"");
     // Grabamos cualquier consulta enviada
@@ -52,7 +81,6 @@ function CONTENIDO_PUBLICACION()
         }
     }
 
-
     echo "<h1>".@$Buffer['titulo']."</h1>";
     echo "<hr />";
     echo "<b>Precio:</b> $" . @$Buffer['precio'];
@@ -77,15 +105,17 @@ function CONTENIDO_PUBLICACION()
         echo "</center>";
     }
     echo "<hr /><h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
-    echo @$Buffer['descripcion'];
+    echo nl2br(@$Buffer['descripcion']);
     echo "</div></center>";
 
+    if ($op != "previsualizacion")
+    {
     $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo, fecha_consulta, fecha_respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
     $r = db_consultar($c);
     if (mysql_num_rows($r) > 0)
     {
         echo "<hr /><h1>Consultas realizadas</h1>";
-        echo '<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">';
+        echo '<form method="POST" action="publicacion_'.$ticket.'">';
         echo '<table id="tabla_consultas" class="ancha">';
         $flag_activar_enviar_respuestas = false;
         while ($f = mysql_fetch_array($r))
@@ -97,7 +127,9 @@ function CONTENIDO_PUBLICACION()
             }
             // Determinamos si es pregunta privada o publica
             $Privada = $f['tipo'] == _MeP_Privado ? "_privada" : "";
-            echo '<tr class="pregunta'.$Privada.'"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td><td class=\"col3\">".fechatiempo_h_desde_mysql_datetime($f['fecha_consulta'])."</td></tr>";
+            $ControlesAdmin = "";
+            if (_F_usuario_cache('nivel') == _N_administrador) $ControlesAdmin = " [".ui_href("","./publicacion_$ticket?op=eliminar&id=".$f['id'],"X")."]". ($f['tipo'] == _MeP_Publico ? "[".ui_href("","publicacion_$ticket?op=privado&id=".$f['id'],"p")."]" : "[".ui_href("","publicacion_$ticket?op=publico&id=".$f['id'],"P")."]");
+            echo '<tr class="pregunta'.$Privada.'"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td><td class=\"col3\">".fechatiempo_h_desde_mysql_datetime($f['fecha_consulta']).$ControlesAdmin."</td></tr>";
             // Si es el dueño de la venta y no ha respondido la consulta le damos la opción de hacerlo.
             if ( !$f['respuesta'] && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
             {
@@ -116,7 +148,7 @@ function CONTENIDO_PUBLICACION()
             }
             echo '<tr class="respuesta'.$Privada.'"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta']."</td><td>".fechatiempo_h_desde_mysql_datetime($f['fecha_respuesta'])."</td></tr>";
         }
-        if ($flag_activar_enviar_respuestas) echo '<tr><td id="envio" colspan="2">'.ui_input("cmdEnviarRespuesta","Enviar todas las respuestas","submit").'</td></tr>';
+        if ($flag_activar_enviar_respuestas) echo '<tr><td id="envio" colspan="3">'.ui_input("cmdEnviarRespuesta","Enviar todas las respuestas","submit").'</td></tr>';
         echo '</table>';
         echo '</form>';
     }
@@ -135,6 +167,7 @@ function CONTENIDO_PUBLICACION()
             CONTENIDO_INICIAR_SESION();
             echo '</div>';
         }
+    }
     }
     echo JS_onload('$("#detalle_vendedor").hide();$("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});$("a[rel=\'lightbox\']").lightBox();');
 }

@@ -164,7 +164,7 @@ function CONTENIDO_VENDER()
         echo "<div id=\"prev_pub\">";
         require_once ("PHP/contenido.php");
         $_GET['publicacion'] = $ticket;
-        CONTENIDO_PUBLICACION();
+        CONTENIDO_PUBLICACION("previsualizacion");
         echo "</div>";
         echo "<hr style=\"margin-bottom:50px\" />";
     }
