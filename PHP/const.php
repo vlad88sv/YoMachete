@@ -2,7 +2,7 @@
 // Niveles
 define('_N_administrador',      9);
 define('_N_moderador',          7);
-define('_N_empresa',            4);
+define('_N_tienda',            4);
 define('_N_vendedor',           3);
 define('_N_usuario',            2);
 

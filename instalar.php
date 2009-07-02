@@ -50,7 +50,7 @@ $usuario['usuario'] = 'tienda';
 $usuario['clave']   = md5('tienda');
 $usuario['nombre']  = 'Tienda Ejemplo';
 $usuario['email']   = 'tienda@localhost.com';
-$usuario['nivel']   = _N_usuario;
+$usuario['nivel']   = _N_tienda;
 $usuario['ultimo_acceso']= mysql_datetime();
 $usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
