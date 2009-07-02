@@ -203,7 +203,7 @@ $resultado = db_consultar($c);
 
 }
 
-function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default = array())
+function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default = array(), $extra="")
 {
     $c = "SELECT $valor, $texto, $explicacion FROM $tabla";
     $r = db_consultar($c);
@@ -211,7 +211,7 @@ function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default 
     if (is_array($default)) $arr = array_flip($default); else $arr = array();
     while ($row = mysql_fetch_array($r)) {
         $strDefault = isset($arr[$row[$valor]]) ? "checked=\"checked\"" : "";
-        $html .= "<span title='".$row[$explicacion]."'>" . ui_input($guid, $row[$valor], "checkbox","","",$strDefault) . $row[$texto] . "</span><br />";
+        $html .= "<span title='".$row[$explicacion]."'>" . ui_input($guid, $row[$valor], "checkbox","","",$strDefault. " " . $extra) . $row[$texto] . "</span><br />";
     }
     return $html;
 }
