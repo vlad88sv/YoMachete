@@ -83,7 +83,10 @@ function CONTENIDO_PUBLICACION($op="")
 
     echo "<h1>".@$Buffer['titulo']."</h1>";
     echo "<hr />";
-    echo "<b>Precio:</b> $" . @$Buffer['precio'];
+    echo "<b>Precio:</b> $" . @$Buffer['precio'] ." [<a id=\"ver_mas_precio\" >más..</a>]";;
+    echo "<div id=\"detalle_precio\">";
+    echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"),'disabled="disabled"');
+    echo "</div>";
     echo "<br />";
     echo "<b>Ubicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
     echo "<br />";
@@ -169,6 +172,6 @@ function CONTENIDO_PUBLICACION($op="")
         }
     }
     }
-    echo JS_onload('$("#detalle_vendedor").hide();$("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});$("a[rel=\'lightbox\']").lightBox();');
+    echo JS_onload('$("#detalle_precio").hide();$("#detalle_vendedor").hide();$("#ver_mas_precio").click(function() {$("#detalle_precio").toggle("fast");});$("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});$("a[rel=\'lightbox\']").lightBox();');
 }
 ?>
