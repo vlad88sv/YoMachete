@@ -125,19 +125,6 @@ while ($row = mysql_fetch_array($r)) {
 return $arbol;
 }
 
-function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default = array())
-{
-    $c = "SELECT $valor, $texto, $explicacion FROM $tabla";
-    $r = db_consultar($c);
-    $html = '';
-    if (is_array($default)) $arr = array_flip($default); else $arr = array();
-    while ($row = mysql_fetch_array($r)) {
-        $strDefault = isset($arr[$row[$valor]]) ? "checked=\"checked\"" : "";
-        $html .= "<span title='".$row[$explicacion]."'>" . ui_input($guid, $row[$valor], "checkbox","","",$strDefault) . $row[$texto] . "</span><br />";
-    }
-    return $html;
-}
-
 function Truncar($cadena, $largo) {
     if (strlen($cadena) > $largo) {
         $cadena = substr($cadena,0,($largo -3));
