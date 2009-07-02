@@ -134,7 +134,10 @@ function CONTENIDO_VENDER()
     if ($flag_enviar)
     {
         // Al fin lo terminó de editar y lo esta enviando... Aleluya!
-        $c = "UPDATE ventas_articulos SET tipo='"._A_esp_activacion."' WHERE id_articulo=$ticket LIMIT 1";
+        //-
+        // Si es Admin entonces aprobar automaticamente, si no pues mandarlo a esperar activacion
+        $tipo = ( _F_usuario_cache('nivel') == _N_administrador ) ? _A_aceptado : _A_esp_activacion;
+        $c = "UPDATE ventas_articulos SET tipo=$tipo WHERE id_articulo=$ticket LIMIT 1";
         $r = db_consultar($c);
         if ( db_afectados() == 1 )
         {
@@ -175,7 +178,8 @@ function CONTENIDO_VENDER()
     echo "<form action=\"vender?ticket=$ticket\" method=\"POST\" enctype=\"multipart/form-data\">";
     if( $flag_publicar )
     {
-        echo "<span class='explicacion'>Esta a punto de enviar su publicación a revisión. Puede seguir editando su publicación presionando el botón <b>Editar</b> o finalizar presionando el botón <b>Enviar</b>.<br />No podrá editar su publicación de nuevo hasta que esta sea esta sea revisada y aprobada.</span>";
+        $Aprobacion = (_F_usuario_cache('nivel') == _N_administrador) ? "Ud. es administrador, su publicación será aprobada automaticamente" : "No podrá editar su publicación de nuevo hasta que esta sea esta sea revisada y aprobada.";
+        echo "<span class='explicacion'>Esta a punto de enviar su publicación a revisión. Puede seguir editando su publicación presionando el botón <b>Editar</b> o finalizar presionando el botón <b>Enviar</b>.<br />$Aprobacion</span>";
         echo "<br />";
         echo "<center>";
         echo ui_input("vender_enviar","Enviar","submit");
