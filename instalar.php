@@ -28,12 +28,33 @@ _F_usuario_agregar ($usuario);
 // Agregamos al usuario Usuario
 $usuario['usuario'] = 'usuario';
 $usuario['clave']   = md5('usuario');
-$usuario['nombre']  = 'Ejemplo';
+$usuario['nombre']  = 'Uusuario Ejemplo';
 $usuario['email']   = 'usuario@localhost.com';
 $usuario['nivel']   = _N_usuario;
 $usuario['ultimo_acceso']= mysql_datetime();
 $usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
+
+// Agregamos al usuario Vendedor
+$usuario['usuario'] = 'vendedor';
+$usuario['clave']   = md5('vendedor');
+$usuario['nombre']  = 'Vendedor Ejemplo';
+$usuario['email']   = 'vendedor@localhost.com';
+$usuario['nivel']   = _N_usuario;
+$usuario['ultimo_acceso']= mysql_datetime();
+$usuario['registro']= mysql_datetime();
+_F_usuario_agregar ($usuario);
+
+// Agregamos al usuario Tienda
+$usuario['usuario'] = 'tienda';
+$usuario['clave']   = md5('tienda');
+$usuario['nombre']  = 'Tienda Ejemplo';
+$usuario['email']   = 'tienda@localhost.com';
+$usuario['nivel']   = _N_usuario;
+$usuario['ultimo_acceso']= mysql_datetime();
+$usuario['registro']= mysql_datetime();
+_F_usuario_agregar ($usuario);
+
 unset ($usuario);
 
 // Tabla de categorias
