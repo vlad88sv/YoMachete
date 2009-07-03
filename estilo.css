@@ -365,3 +365,7 @@ padding:3px;
 #tabla_consultas #envio{
     text-align:right;
 }
+
+.auto_mostrar{
+display:none;
+}

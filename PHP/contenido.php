@@ -83,20 +83,42 @@ function CONTENIDO_PUBLICACION($op="")
 
     echo "<h1>".@$Buffer['titulo']."</h1>";
     echo "<hr />";
-    echo "<b>Precio:</b> $" . @$Buffer['precio'] ." [<a id=\"ver_mas_precio\" >más..</a>]";;
-    echo "<div id=\"detalle_precio\">";
+
+    // Categoria en la que se encuentra ubicado el producto
+    echo "<b>Categoría de la publicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
+    echo "<br />";
+
+    // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.
+    echo "<b>Formas de entrega:</b>" ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_entrega\">ver...</a>]</span>";
+    echo "<div id=\"detalle_entrega\" class=\"auto_ocultar\">";
+    echo db_ui_checkboxes("flags_entrega[]", "ventas_flags_entrega", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_entrega"),'disabled="disabled"');
+    //echo db_ui_checkboxes("flags_ventas[]", "ventas_flags_ventas", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_ventas"),'disabled="disabled"');
+    echo "</div>";
+    echo "<br />";
+
+    // Caracteristicas adicionales:
+    echo "<b>Características adicionales:</b>" ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_adicional\">ver...</a>]</span>";
+    echo "<div id=\"detalle_adicional\" class=\"auto_ocultar\">";
+    echo db_ui_checkboxes("flags_ventas[]", "ventas_flags_ventas", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_ventas"),'disabled="disabled"');
+    echo "</div>";
+    echo "<br />";
+
+    // Precio y formas de pago aceptadas
+    echo "<b>Precio:</b> $" . @$Buffer['precio'] ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
+    echo "<div id=\"detalle_precio\" class=\"auto_ocultar\">";
     echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"),'disabled="disabled"');
     echo "</div>";
     echo "<br />";
-    echo "<b>Ubicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
-    echo "<br />";
-    echo "<b>Vendedor:</b> " . $Vendedor['nombre'] . ", <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." [<a id=\"ver_mas_vendedor\" >más..</a>]";
-    echo "<div id=\"detalle_vendedor\">";
+
+    // Datos sobre el vendedor
+    echo "<b>Vendedor:</b> " . $Vendedor['nombre'] . ", <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
+    echo "<div id=\"detalle_vendedor\" class=\"auto_ocultar\">";
     echo "<ul>";
     echo "<li>Registrado desde: " .  @$Vendedor['registro'] . "</li>";
     echo "<li>Ultima actividad: " . fechatiempo_desde_mysql_datetime(@$Vendedor['ultimo_acceso']) . "</li>";
     echo "</ul>";
     echo "</div>";
+
     if (isset($imagenes) && is_array($imagenes))
     {
         echo "<hr /><h1>Fotografías y/o ilustraciones</h1><center>";
@@ -172,6 +194,13 @@ function CONTENIDO_PUBLICACION($op="")
         }
     }
     }
-    echo JS_onload('$("#detalle_precio").hide();$("#detalle_vendedor").hide();$("#ver_mas_precio").click(function() {$("#detalle_precio").toggle("fast");});$("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});$("a[rel=\'lightbox\']").lightBox();');
+    echo JS_onload('
+    $(".auto_ocultar").hide();
+    $(".auto_mostrar").show();
+    $("#ver_mas_precio").click(function() {$("#detalle_precio").toggle("fast");});
+    $("#ver_mas_entrega").click(function() {$("#detalle_entrega").toggle("fast");});
+    $("#ver_mas_adicional").click(function() {$("#detalle_adicional").toggle("fast");});
+    $("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});
+    $("a[rel=\'lightbox\']").lightBox();');
 }
 ?>
