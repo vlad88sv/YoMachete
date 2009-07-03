@@ -399,7 +399,6 @@ db_agregar_datos("ventas_flags_ventas",array("nombre" => "cambalache", "nombrep"
 db_agregar_datos("ventas_flags_ventas",array("nombre" => "facturas", "nombrep" => "Entrega factura", "descripcion" => "Marque esta opción si Ud. puede entregar una factura *legal* sobre esta venta"));
 db_agregar_datos("ventas_flags_ventas",array("nombre" => "credito_fiscal", "nombrep" => "Acepta Crédito Físcal", "descripcion" => "Marque esta opción si Ud. puede aceptar esta compra con crédito físcal"));
 db_agregar_datos("ventas_flags_ventas",array("nombre" => "credito", "nombrep" => "Ofrece Crédito", "descripcion" => "Marque esta opción si Ud. puede ofrecer crédito o alguna otra forma de pago a plazos para esta venta"));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "envoltorio_regalos", "nombrep" => "Envuelve para regalo", "descripcion" => "Marque esta opción si Ud. puede 'envolver en regalo' el artículo de esta venta"));
 
 // Tabla FLAGS pagos
 $campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
