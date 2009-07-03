@@ -116,6 +116,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<ul>";
     echo "<li>Registrado desde: " .  @$Vendedor['registro'] . "</li>";
     echo "<li>Ultima actividad: " . fechatiempo_desde_mysql_datetime(@$Vendedor['ultimo_acceso']) . "</li>";
+    echo "<li>Cantidad de publicaciones: " . ObtenerEstadisticasUsuario(@$Vendedor['id_usuario'],_EST_CANT_PUB_ACEPT). "</li>";
     echo "</ul>";
     echo "</div>";
 
