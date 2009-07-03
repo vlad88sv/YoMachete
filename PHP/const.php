@@ -40,4 +40,10 @@ Tipos de mensajes en publicaciones
 */
 define('_MeP_Publico',0);
 define('_MeP_Privado',1);
+
+/*
+Estadisticas de usuarios
+*/
+define('_EST_CANT_PUB',0); //Cantidad de publicaciones (totales)
+define('_EST_CANT_PUB_ACEPT',1); //Cantidad de publicaciones (aprobadas)
 ?>

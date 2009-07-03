@@ -577,4 +577,22 @@ function EnviarNota($Mensaje,$Usuario=NULL,$Tipo=_M_INFO,$Contexto=_MC_broadcast
     $ret = db_agregar_datos("ventas_mensajes",$datos);
     return db_afectados();
 }
+
+function ObtenerEstadisticasUsuario($id_usuario, $tipo)
+{
+    switch ($tipo)
+    {
+        case _EST_CANT_PUB:
+            $c = "SELECT COUNT(*) AS cuenta FROM ventas_articulos WHERE id_usuario='$id_usuario'";
+        break;
+        case _EST_CANT_PUB_ACEPT:
+            $c = "SELECT COUNT(*) AS cuenta FROM ventas_articulos WHERE id_usuario='$id_usuario' AND tipo='"._A_aceptado."'";
+        break;
+        default:
+        return "#ERROR# constante _EST_ '$tipo' no registrada";
+    }
+    $r = db_consultar($c);
+    $f = mysql_fetch_array($r);
+    return @$f['cuenta'];
+}
 ?>
