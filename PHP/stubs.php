@@ -506,7 +506,7 @@ function DescargarArchivos($input,$id_articulo,$id_usuario)
 */
 function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
 {
-    $image = new Imagick($Origen); // $filepath is a path to a TIFF file
+    $image = new Imagick($Origen);
     $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, 1);
     return $image->writeImage($Destino);
 }
