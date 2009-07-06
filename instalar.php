@@ -65,6 +65,9 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Alquiler de apartamentos", "descripcion" => "", "rubro" => "inmueble"));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Alquiler de apartamentos amueblados", "descripcion" => "", "rubro" => "inmueble"));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Alquiler de casas", "descripcion" => "", "rubro" => "inmueble"));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Alquiler de casas amuebladas", "descripcion" => "", "rubro" => "inmueble"));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Venta de casas", "descripcion" => "", "rubro" => "inmueble"));
+    db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Venta de casas amuebladas", "descripcion" => "", "rubro" => "inmueble"));
 $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => "Automotores", "descripcion" => "", "rubro" => "automotor"));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Autos Sedan", "descripcion" => "", "rubro" => "automotor"));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Vehiculos Utilitarios", "descripcion" => "", "rubro" => "automotor"));
