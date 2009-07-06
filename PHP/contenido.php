@@ -210,8 +210,8 @@ function CONTENIDO_PUBLICACION($op="")
     // Mostrar "Productos similares". Escoger de la misma categoria los
     // productos que esten en el rango de +/-25% del precio actual
 
-    $PrecioMin = (double) (@$Publicacion['precio']) * 0.75; // -25%
-    $PrecioMax = (double) (@$Publicacion['precio']) * 1.25; // +25%
+    $PrecioMin = (double) (@$Publicacion['precio']) * 0.50; // -50%
+    $PrecioMax = (double) (@$Publicacion['precio']) * 1.50; // +50%
 
         echo '<hr />';
         echo '<div class="cuadro_importante">';
