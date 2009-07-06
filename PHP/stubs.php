@@ -458,7 +458,7 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
         $datos['id_img'] = NULL;
         $datos['id_articulo'] = $id_articulo;
         $datos['mime'] = $_FILES[$input]['type'][$llave];
-        if (!in_array($datos['mime'],array("image/jpeg")))
+        if (!in_array($datos['mime'],array("image/jpeg","image/png")))
         {
             echo "La imagen \"" . $_FILES[$input]['name'][$llave] . "\" no es un tipo de imagen admitida; la imagen ha sido descartada.<br />";
             continue;
