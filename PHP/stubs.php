@@ -515,7 +515,6 @@ function CargarDatos($id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
-    $datos["id_articulo"] = $id_articulo;
     $datos["tipo"] = _A_temporal;
     $datos["fecha_ini"] = mysql_datetime();
     $datos["fecha_fin"] = mysql_datetime();
@@ -525,7 +524,7 @@ function CargarDatos($id_articulo,$id_usuario)
     $datos["titulo"] = _F_form_cache("titulo");
     $datos["descripcion_corta"] = _F_form_cache("descripcion_corta");
     $datos["descripcion"] = _F_form_cache("descripcion");
-    $ret = db_reemplazar_datos("ventas_articulos",$datos);
+    $ret = db_actualizar_datos("ventas_articulos",$datos,"id_articulo='$id_articulo'");
     unset($datos);
 
     // Flags
