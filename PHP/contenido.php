@@ -104,7 +104,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<br />";
 
     // Precio y formas de pago aceptadas
-    echo "<b>Precio:</b> $" . @$Publicacion['precio'] ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
+    echo "<b>Precio:</b> $" . number_format(@$Publicacion['precio'],2,".",",") ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
     echo "<div id=\"detalle_precio\" class=\"auto_ocultar\">";
     echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"),'disabled="disabled"');
     echo "</div>";
