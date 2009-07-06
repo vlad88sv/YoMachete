@@ -520,7 +520,7 @@ function CargarDatos($id_articulo,$id_usuario)
     $datos["fecha_ini"] = mysql_datetime();
     $datos["fecha_fin"] = mysql_datetime();
     $datos["id_categoria"] = _F_form_cache("id_categoria");
-    $datos["id_usuario"] = $id_usuario;
+    // $datos["id_usuario"] = $id_usuario; // No usar.
     $datos["precio"] = _F_form_cache("precio");
     $datos["titulo"] = _F_form_cache("titulo");
     $datos["descripcion_corta"] = _F_form_cache("descripcion_corta");
