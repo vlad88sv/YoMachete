@@ -272,6 +272,29 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     return $data;
 }
 
+function VISTA_ArticuloEnBarra($Where="1",$SiVacio="No se encontraron publicaciones")
+{
+    $data = '';
+    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, precio FROM ventas_articulos AS a WHERE $Where";
+    $r = db_consultar($c);
+    if (mysql_num_rows($r) < 1)
+    {
+        return Mensaje($SiVacio, _M_INFO);
+    }
+    while ($f = mysql_fetch_array($r))
+    {
+    $titulo=$f['titulo'];
+    $lnkTitulo="publicacion_".$f['id_articulo'];
+    $precio=$f['precio'];
+    $ubicacion=join(" > ", get_path($f['id_categoria']));
+    $id_articulo = $f['id_articulo'];
+    // ->
+    $data .= "<div style='display:inline-block'><a href=\"./publicacion_".$f['id_articulo']."\" target=\"_blank\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";
+    }
+    $data .= "<div style=\"clear:both\"></div>";
+    return $data;
+}
+
 /*
  * ObtenerTicketTMP()
  * Función encargada de conseguir un número (ticket) para almacenar
@@ -594,5 +617,42 @@ function ObtenerEstadisticasUsuario($id_usuario, $tipo)
     $r = db_consultar($c);
     $f = mysql_fetch_array($r);
     return @$f['cuenta'];
+}
+/**
+ * Remove HTML tags, including invisible text such as style and
+ * script code, and embedded objects.  Add line breaks around
+ * block-level tags to prevent word joining after tag removal.
+ * URL:http://nadeausoftware.com/articles/2007/09/php_tip_how_strip_html_tags_web_page
+ */
+function strip_html_tags( $text )
+{
+    $text = preg_replace(
+        array(
+          // Remove invisible content
+            '@<head[^>]*?>.*?</head>@siu',
+            '@<style[^>]*?>.*?</style>@siu',
+            '@<script[^>]*?.*?</script>@siu',
+            '@<object[^>]*?.*?</object>@siu',
+            '@<embed[^>]*?.*?</embed>@siu',
+            '@<applet[^>]*?.*?</applet>@siu',
+            '@<noframes[^>]*?.*?</noframes>@siu',
+            '@<noscript[^>]*?.*?</noscript>@siu',
+            '@<noembed[^>]*?.*?</noembed>@siu',
+          // Add line breaks before and after blocks
+            '@</?((address)|(blockquote)|(center)|(del))@iu',
+            '@</?((div)|(h[1-9])|(ins)|(isindex)|(p)|(pre))@iu',
+            '@</?((dir)|(dl)|(dt)|(dd)|(li)|(menu)|(ol)|(ul))@iu',
+            '@</?((table)|(th)|(td)|(caption))@iu',
+            '@</?((form)|(button)|(fieldset)|(legend)|(input))@iu',
+            '@</?((label)|(select)|(optgroup)|(option)|(textarea))@iu',
+            '@</?((frameset)|(frame)|(iframe))@iu',
+        ),
+        array(
+            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+            "\n\$0", "\n\$0", "\n\$0", "\n\$0", "\n\$0", "\n\$0",
+            "\n\$0", "\n\$0",
+        ),
+        $text );
+    return strip_tags( $text );
 }
 ?>

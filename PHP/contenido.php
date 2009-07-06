@@ -18,8 +18,8 @@ function CONTENIDO_PUBLICACION($op="")
     }
 
     $ticket = db_codex($_GET['publicacion']);
-    $Buffer = ObtenerDatos($ticket);
-    if (!$Buffer)
+    $Publicacion = ObtenerDatos($ticket);
+    if (!$Publicacion)
     {
         echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
         return;
@@ -52,7 +52,7 @@ function CONTENIDO_PUBLICACION($op="")
         }
     }
 
-    $Vendedor = _F_usuario_datos(@$Buffer['id_usuario']);
+    $Vendedor = _F_usuario_datos(@$Publicacion['id_usuario']);
     $imagenes = ObtenerImagenesArr($ticket,"");
     // Grabamos cualquier consulta enviada
     if ( _autenticado() && isset($_POST['consulta']) && isset($_POST['enviar_consulta']) && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'] )
@@ -81,11 +81,11 @@ function CONTENIDO_PUBLICACION($op="")
         }
     }
 
-    echo "<h1>".@$Buffer['titulo']."</h1>";
+    echo "<h1>".@$Publicacion['titulo']."</h1>";
     echo "<hr />";
 
     // Categoria en la que se encuentra ubicado el producto
-    echo "<b>Categoría de la publicación:</b> " . join(" > ", get_path(@$Buffer['id_categoria']));
+    echo "<b>Categoría de la publicación:</b> " . join(" > ", get_path(@$Publicacion['id_categoria']));
     echo "<br />";
 
     // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.
@@ -104,19 +104,20 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<br />";
 
     // Precio y formas de pago aceptadas
-    echo "<b>Precio:</b> $" . @$Buffer['precio'] ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
+    echo "<b>Precio:</b> $" . @$Publicacion['precio'] ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
     echo "<div id=\"detalle_precio\" class=\"auto_ocultar\">";
     echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"),'disabled="disabled"');
     echo "</div>";
     echo "<br />";
 
     // Datos sobre el vendedor
-    echo "<b>Vendedor:</b> " . $Vendedor['nombre'] . ", <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
+    echo "<b>Vendedor:</b> " . $Vendedor['usuario'] . " / <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
     echo "<div id=\"detalle_vendedor\" class=\"auto_ocultar\">";
     echo "<ul>";
     echo "<li>Registrado desde: " .  @$Vendedor['registro'] . "</li>";
     echo "<li>Ultima actividad: " . fechatiempo_desde_mysql_datetime(@$Vendedor['ultimo_acceso']) . "</li>";
-    echo "<li>Cantidad de publicaciones: " . ObtenerEstadisticasUsuario(@$Vendedor['id_usuario'],_EST_CANT_PUB_ACEPT). "</li>";
+    $Vendedor['cantidad_publicaciones'] = ObtenerEstadisticasUsuario(@$Vendedor['id_usuario'],_EST_CANT_PUB_ACEPT);
+    echo "<li>Cantidad de publicaciones: " . $Vendedor['cantidad_publicaciones']  . "</li>";
     echo "</ul>";
     echo "</div>";
 
@@ -131,7 +132,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "</center>";
     }
     echo "<hr /><h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
-    echo nl2br(@$Buffer['descripcion']);
+    echo nl2br(strip_html_tags(@$Publicacion['descripcion']));
     echo "</div></center>";
 
     if ($op != "previsualizacion")
@@ -194,6 +195,30 @@ function CONTENIDO_PUBLICACION($op="")
             echo '</div>';
         }
     }
+
+    // Mostrar "Otros productos de este vendedor". Si tiene mas de un producto claro :)
+
+    if ( $Vendedor['cantidad_publicaciones'] > 1 )
+    {
+        echo '<hr />';
+        echo '<div class="cuadro_importante">';
+        echo '<h1>Otras publicaciones de este vendedor</h1>';
+        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."'" );
+        echo '</div>';
+    }
+
+    // Mostrar "Productos similares". Escoger de la misma categoria los
+    // productos que esten en el rango de +/-25% del precio actual
+
+    $PrecioMin = @$Publicacion['precio'] * 0.75; // -25%
+    $PrecioMax = @$Publicacion['precio'] * 1.25; // +25%
+
+        echo '<hr />';
+        echo '<div class="cuadro_importante">';
+        echo '<h1>Publicaciones similares</h1>';
+        echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= $PrecioMin AND precio <= $PrecioMax AND id_articulo <> '".$Publicacion['id_articulo']."' LIMIT 6");
+        echo '</div>';
+
     }
     echo JS_onload('
     $(".auto_ocultar").hide();
