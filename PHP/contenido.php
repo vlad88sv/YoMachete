@@ -203,7 +203,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante">';
         echo '<h1>Otras publicaciones de este vendedor</h1>';
-        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' LIMIT 6" );
+        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_articulo <> '".$Publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' LIMIT 6" );
         echo '</div>';
     }
 
