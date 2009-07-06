@@ -289,7 +289,7 @@ function VISTA_ArticuloEnBarra($Where="1",$SiVacio="No se encontraron publicacio
     $ubicacion=join(" > ", get_path($f['id_categoria']));
     $id_articulo = $f['id_articulo'];
     // ->
-    $data .= "<div style='display:inline-block'><a href=\"./publicacion_".$f['id_articulo']."\" target=\"_blank\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";
+    $data .= "<div style='display:inline-block'><a href=\"./publicacion_".$f['id_articulo']."\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";
     }
     $data .= "<div style=\"clear:both\"></div>";
     return $data;

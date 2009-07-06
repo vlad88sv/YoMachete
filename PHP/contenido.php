@@ -203,20 +203,20 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante">';
         echo '<h1>Otras publicaciones de este vendedor</h1>';
-        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."'" );
+        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' LIMIT 6" );
         echo '</div>';
     }
 
     // Mostrar "Productos similares". Escoger de la misma categoria los
     // productos que esten en el rango de +/-25% del precio actual
 
-    $PrecioMin = @$Publicacion['precio'] * 0.75; // -25%
-    $PrecioMax = @$Publicacion['precio'] * 1.25; // +25%
+    $PrecioMin = (double) (@$Publicacion['precio']) * 0.75; // -25%
+    $PrecioMax = (double) (@$Publicacion['precio']) * 1.25; // +25%
 
         echo '<hr />';
         echo '<div class="cuadro_importante">';
         echo '<h1>Publicaciones similares</h1>';
-        echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= $PrecioMin AND precio <= $PrecioMax AND id_articulo <> '".$Publicacion['id_articulo']."' LIMIT 6");
+        echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$Publicacion['id_articulo']."' AND tipo='"._A_aceptado."' LIMIT 6");
         echo '</div>';
 
     }
