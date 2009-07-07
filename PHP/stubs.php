@@ -215,7 +215,7 @@ function validEmail($email)
 function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron articulos")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
+    $c = "SELECT id_categoria, id_articulo, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
@@ -232,7 +232,8 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $id_articulo = $f['id_articulo'];
     $id_usuario = $f['id_usuario'];
     // ->
-    $data .= '<table class="articulo">';
+    $promocionado = ($f['promocionado'] == "1") ? " promocionado" : "";
+    $data .= '<table class="articulo'.$promocionado.'">';
     $data .= '<tbody>';
     $data .= '<tr>';
     $data .= '<td class= "imagen">'.$imagen.'</td>';
@@ -253,13 +254,22 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
     if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
     {
-        if ($tipo != "admin")
+
+        if ($f['promocionado'] == "1")
         {
-            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_articulo=$id_articulo&id_usuario=$id_usuario&estado=0","DESPROMOCIONAR");
         }
         else
         {
-            $data .= '<tr><td colspan="2" class="adm">['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_articulo=$id_articulo&id_usuario=$id_usuario&estado=1","PROMOCIONAR");
+        }
+        if ($tipo != "admin")
+        {
+            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+        }
+        else
+        {
+            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
     }
     $data .= '</table>';
@@ -272,10 +282,10 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     return $data;
 }
 
-function VISTA_ArticuloEnBarra($Where="1",$SiVacio="No se encontraron publicaciones")
+function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se encontraron publicaciones")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, precio FROM ventas_articulos AS a WHERE $Where";
+    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, precio FROM ventas_articulos AS a WHERE $Where ORDER BY promocionado DESC, RAND() $Limite";
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
@@ -318,6 +328,7 @@ function ObtenerTicketTMP($id_usuario)
     $datos["titulo"] = "";
     $datos["descripcion_corta"] = "";
     $datos["descripcion"] = "";
+    $datos["promocionado"] = "0";
     return db_agregar_datos("ventas_articulos",$datos);
 }
 /*
@@ -653,5 +664,14 @@ function strip_html_tags( $text )
         ),
         $text );
     return strip_tags( $text );
+}
+function PromocionarPublicacion($id_articulo, $promocionado="1")
+{
+    $id_articulo = db_codex($id_articulo);
+    $promocionado = db_codex($promocionado);
+    $datos["promocionado"] = $promocionado;
+    $ret = db_actualizar_datos("ventas_articulos",$datos,"id_articulo='$id_articulo'");
+    unset($datos);
+    return db_afectados();
 }
 ?>

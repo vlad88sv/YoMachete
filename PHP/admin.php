@@ -38,6 +38,9 @@ function CONTENIDO_ADMIN()
         case "publicaciones_activacion":
             INTERFAZ__PUBLICACIONES_ACTIVACION();
         break;
+        case "publicaciones_admin":
+            INTERFAZ__PUBLICACIONES_ADMIN();
+        break;
         default:
             echo "ERROR: Interfaz '$op' no implementada";
     }
@@ -139,5 +142,32 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
     echo VISTA_ArticuloEnLista("tipo='"._A_esp_activacion."'","ORDER by fecha_ini","admin","No hay publicaciones esperando activación");
 
     echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
+}
+
+function INTERFAZ__PUBLICACIONES_ADMIN()
+{
+    if (!empty($_GET['operacion']) && !empty($_GET['id_articulo']) && !empty($_GET['id_usuario']))
+    {
+        $id_articulo = db_codex($_GET['id_articulo']);
+        $id_usuario = db_codex($_GET['id_usuario']);
+        $ret = 0;
+
+        switch ($_GET['operacion'])
+        {
+            case "promocionar":
+                if ($_GET['estado'] == 0 || $_GET['estado'] == 1 )
+                {
+                    if (PromocionarPublicacion($id_articulo, $_GET['estado']))
+                    {
+                        echo "Articulo promocionado!";
+                    }
+                    else
+                    {
+                        echo "Articulo NO pudo ser promocionado!";
+                    }
+                }
+            break;
+        }
+    }
 }
 ?>

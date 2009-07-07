@@ -185,6 +185,10 @@ padding:0;
 margin:0;
 }
 
+.promocionado {
+border:3px solid #f00;
+}
+
 .articulo .imagen {
 background-color:none;
 color:#fff;
