@@ -190,7 +190,7 @@ function CONTENIDO_PUBLICACION($op="")
     elseif (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
     {
 
-        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'">' . ui_input("consulta","","input","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp;<- marquelo si desea hacer pública esta consulta.</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
+        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'"><p>Realizar consulta al vendedor:</p>' . ui_input("consulta","","input","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp; marque esta opción si desea hacer pública esta consulta (<a title=\"Usela si Ud. cree que las demas personas deben leer esta pregunta y su respectiva respuesta\">?</a>).</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
     }
     echo '</div>';
 

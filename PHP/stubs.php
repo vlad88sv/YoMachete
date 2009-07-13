@@ -294,12 +294,12 @@ function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se enc
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_articulo'];
+    $lnkTitulo="publicacion_".$f['id_articulo']."_".urlencode($f['titulo']);
     $precio=$f['precio'];
     $ubicacion=join(" > ", get_path($f['id_categoria']));
     $id_articulo = $f['id_articulo'];
     // ->
-    $data .= "<div style='display:inline-block;margin:0 10px;'><a href=\"./publicacion_".$f['id_articulo']."\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";
+    $data .= "<div style='display:inline-block;margin:0 10px;'><a href=\"./$lnkTitulo\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";
     }
     $data .= "<div style=\"clear:both\"></div>";
     return $data;

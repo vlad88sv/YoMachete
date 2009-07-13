@@ -119,7 +119,7 @@ switch ($_GET['peticion'])
         header("Content-type: image/png");
         $string = $_GET['op'];
         $im    = ImageCreate((int)(strlen($string) * 6.25), 12);
-        $background_color = ImageColorAllocate ($im, 243, 252, 254);
+        $background_color = ImageColorAllocate ($im, 224, 230, 255);
         $text_color = ImageColorAllocate ($im, 0, 0, 0);
         ImageString ($im, 2, 0, 0, "$string", $text_color);
         ImagePNG($im);
