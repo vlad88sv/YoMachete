@@ -140,7 +140,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo '<hr /><div class="cuadro_importante">';
     $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo, fecha_consulta, fecha_respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
     $r = db_consultar($c);
-    if (mysql_num_rows($r) > 0)
+    if ($r && mysql_num_rows($r) > 0)
     {
         echo "<h1>Consultas</h1>";
         echo '<form method="POST" action="publicacion_'.$ticket.'">';
