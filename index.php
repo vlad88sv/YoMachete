@@ -40,7 +40,12 @@ else
 ?>
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
-<?php echo JS('$("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow");});'); ?>
+<?php
+echo JS('
+$("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow");});
+$("a[rel=\'lightbox\']").lightBox();
+');
+?>
 </body>
 </html>
 
@@ -122,8 +127,6 @@ function GENERAR_ARTICULOS()
     }
 
     $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","indice");
-
-    $data .= JS_onload('$("a[rel=\'lightbox\']").lightBox();');
     return $data;
 }
 

@@ -225,6 +225,6 @@ function CONTENIDO_PUBLICACION($op="")
     $("#ver_mas_entrega").click(function() {$("#detalle_entrega").toggle("fast");});
     $("#ver_mas_adicional").click(function() {$("#detalle_adicional").toggle("fast");});
     $("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});
-    $("a[rel=\'lightbox\']").lightBox();');
+    ');
 }
 ?>

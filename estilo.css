@@ -111,7 +111,7 @@ img {
 
 #secc_categorias {
     display:block;
-    border:5px solid #DAF5FC;
+    border:2px solid #80A0FF;
     background-color:#FFF;
     text-align:center;
     font-size:90%;
@@ -147,7 +147,7 @@ img {
     float:right;
 }
 #secc_articulos, #secc_general {
-    border:5px solid #DAF5FC;
+    border:2px solid #80A0FF;
     background-color:#FFF;
     padding:10px;
 }
@@ -180,13 +180,13 @@ font-weight:bold;
 width:100%;
 height:auto;
 border-collapse:collapse;
-border:1px solid #111;
+border:0;
 padding:0;
 margin:0;
 }
 
 .promocionado {
-border:3px solid #f00;
+border:2px dashed #80A0FF;
 }
 
 .articulo .imagen {
@@ -281,7 +281,7 @@ padding:3px;
 .publicacion_descripcion {
     display:block;
     margin:0 auto;
-    border:5px solid #DAF5FC;
+    border:2px solid #80A0FF;
     background-color:#FFF;
     text-align:left;
     font-size:90%;
@@ -292,7 +292,7 @@ padding:3px;
 .cuadro_importante {
     display:block;
     margin:10px auto;
-    border:5px solid #AB464E;
+    border:2px solid #AB464E;
     background-color:#FFF;
     text-align:left;
     font-size:90%;
@@ -339,12 +339,12 @@ padding:3px;
     font-weight:bolder;
 }
 
-#tabla_consultas .respuesta_privada{
-    background-color:#E0E6FF;
+#tabla_consultas .respuesta, #tabla_consultas .respuesta_privada {
+    border-bottom:2px solid #000;
 }
 
-#tabla_consultas .respuesta_privada td{
-    border-bottom:3px solid #AB464E;
+#tabla_consultas .respuesta_privada{
+    background-color:#E0E6FF;
 }
 
 #tabla_consultas .pregunta{
@@ -352,11 +352,7 @@ padding:3px;
 }
 
 #tabla_consultas .pregunta_privada{
-    background-color:#DAF5FC;
-}
-
-#tabla_consultas .pregunta_privada td{
-    border-top:3px solid #AB464E;
+    background-color:#80A0FF;
 }
 
 #tabla_consultas tr{
