@@ -26,6 +26,7 @@ require_once ("PHP/vital.php");
 if (!isset($_GET['peticion']))
 {
     echo '
+        <div id="ver_categorias">[<a>ocultar categorías</a>]</div>
         <div id="secc_categorias">'. GENERAR_CATEGORIAS() .' </div>
         <div id="secc_articulos">'. GENERAR_ARTICULOS() .' </div>
         ';
@@ -39,7 +40,7 @@ else
 ?>
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
-<?php echo JS('$("#ver_categorias").click(function() {$("#contenedor_categorias").toggle("slow");});'); ?>
+<?php echo JS('$("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow");});'); ?>
 </body>
 </html>
 
@@ -130,7 +131,6 @@ function GENERAR_ARTICULOS()
 function GENERAR_CATEGORIAS()
 {
     $data = '';
-    $data .= "<div id=\"ver_categorias\">[<a>ocultar</a>]</div>";
     $data .= (isset($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
     $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";

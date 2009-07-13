@@ -252,7 +252,7 @@ padding:0.1%;
 }
 
 .articulo .adm {
-background-color:#000;
+background-color:#CCC;
 color:#FFF;
 font-weight:bolder;
 text-align:left;
@@ -260,7 +260,7 @@ padding:0.1%;
 }
 
 .articulo .adm a {
-color:#ff0;
+color:#FFF;
 }
 
 .ancha {
@@ -372,4 +372,8 @@ padding:3px;
 
 .auto_mostrar{
 display:none;
+}
+
+.centrado{
+text-align:center;
 }

@@ -126,7 +126,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "<hr /><h1>Fotografías y/o ilustraciones</h1><center>";
         foreach($imagenes as $archivo)
         {
-            echo "<div style='display:inline-block'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"lightbox\"><img src=\"./imagen_".$archivo."m\" /></a><br /></div>";
+            echo "<div style='display:inline-block;margin:0 10px;'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"lightbox\"><img src=\"./imagen_".$archivo."m\" /></a><br /></div>";
         }
         echo "<div style=\"clear:both\"></div>";
         echo "</center>";
@@ -137,11 +137,12 @@ function CONTENIDO_PUBLICACION($op="")
 
     if ($op != "previsualizacion")
     {
+    echo '<hr /><div class="cuadro_importante">';
     $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo, fecha_consulta, fecha_respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
     $r = db_consultar($c);
     if (mysql_num_rows($r) > 0)
     {
-        echo "<hr /><h1>Consultas realizadas</h1>";
+        echo "<h1>Consultas realizadas</h1>";
         echo '<form method="POST" action="publicacion_'.$ticket.'">';
         echo '<table id="tabla_consultas" class="ancha">';
         $flag_activar_enviar_respuestas = false;
@@ -179,29 +180,26 @@ function CONTENIDO_PUBLICACION($op="")
         echo '</table>';
         echo '</form>';
     }
-    if (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
+
+    if (!S_iniciado())
     {
-        echo "<hr /><h1>Contactar al vendedor</h1>";
+        echo "Necesitas iniciar sesión para poder <b>realizar consultas</b>.<br />";
+        require_once("PHP/inicio.php");
+        CONTENIDO_INICIAR_SESION();
+    }
+    elseif (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
+    {
+
         echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'">' . ui_input("consulta","","input","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp;<- marquelo si desea hacer pública esta consulta.</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
     }
-    else
-    {
-        if (!S_iniciado())
-        {
-            echo '<div class="cuadro_importante">';
-            echo "Necesitas iniciar sesión para poder <b>realizar consultas</b>.<br />";
-            require_once("PHP/inicio.php");
-            CONTENIDO_INICIAR_SESION();
-            echo '</div>';
-        }
-    }
+    echo '</div>';
 
     // Mostrar "Otros productos de este vendedor". Si tiene mas de un producto claro :)
 
     if ( $Vendedor['cantidad_publicaciones'] > 1 )
     {
         echo '<hr />';
-        echo '<div class="cuadro_importante">';
+        echo '<div class="cuadro_importante centrado">';
         echo '<h1>Otras publicaciones de este vendedor</h1>';
         echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_articulo <> '".$Publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."'");
         echo '</div>';
@@ -214,7 +212,7 @@ function CONTENIDO_PUBLICACION($op="")
     $PrecioMax = (double) (@$Publicacion['precio']) * 1.50; // +50%
 
         echo '<hr />';
-        echo '<div class="cuadro_importante">';
+        echo '<div class="cuadro_importante centrado">';
         echo '<h1>Publicaciones similares</h1>';
         echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$Publicacion['id_articulo']."' AND tipo='"._A_aceptado."'");
         echo '</div>';
