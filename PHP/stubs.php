@@ -224,7 +224,7 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_articulo'];
+    $lnkTitulo="publicacion_".$f['id_articulo']."_".urlencode($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,200);
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
