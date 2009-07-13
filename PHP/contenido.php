@@ -142,7 +142,7 @@ function CONTENIDO_PUBLICACION($op="")
     $r = db_consultar($c);
     if (mysql_num_rows($r) > 0)
     {
-        echo "<h1>Consultas realizadas</h1>";
+        echo "<h1>Consultas</h1>";
         echo '<form method="POST" action="publicacion_'.$ticket.'">';
         echo '<table id="tabla_consultas" class="ancha">';
         $flag_activar_enviar_respuestas = false;
@@ -183,7 +183,7 @@ function CONTENIDO_PUBLICACION($op="")
 
     if (!S_iniciado())
     {
-        echo "Necesitas iniciar sesión para poder <b>realizar consultas</b>.<br />";
+        echo "<hr />Necesitas iniciar sesión para poder <b>realizar consultas</b>.<br />";
         require_once("PHP/inicio.php");
         CONTENIDO_INICIAR_SESION();
     }

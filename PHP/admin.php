@@ -136,6 +136,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
         {
             echo Mensaje("Operación erronea: ".$_GET['operacion'],_M_ERROR);
         }
+        echo '<br /><a href="'.$_SERVER['HTTP_REFERER'].'">Regresar</a>';
     }
 
     // Obtenemos las publicaciones pendientes
@@ -159,7 +160,7 @@ function INTERFAZ__PUBLICACIONES_ADMIN()
                 {
                     if (PromocionarPublicacion($id_articulo, $_GET['estado']))
                     {
-                        echo "Articulo promocionado!";
+                        echo 'Estado de promoción alternado.';
                     }
                     else
                     {
@@ -168,6 +169,7 @@ function INTERFAZ__PUBLICACIONES_ADMIN()
                 }
             break;
         }
+        echo '<br /><a href="'.$_SERVER['HTTP_REFERER'].'">Regresar</a>';
     }
 }
 ?>
