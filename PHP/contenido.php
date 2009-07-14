@@ -82,6 +82,7 @@ function CONTENIDO_PUBLICACION($op="")
     }
 
     echo "<h1>".@$Publicacion['titulo']."</h1>";
+    echo "<hr /><div id=\"pub_descripcion_corta\">".@$Publicacion['descripcion_corta']."</div>";
     echo "<hr />";
 
     // Categoria en la que se encuentra ubicado el producto
@@ -114,10 +115,10 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<b>Vendedor:</b> " . ui_href("","perfil?id=".$Vendedor['id_usuario'],$Vendedor['usuario']) . " / <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
     echo "<div id=\"detalle_vendedor\" class=\"auto_ocultar\">";
     echo "<ul>";
-    echo "<li>Registrado desde: " .  @$Vendedor['registro'] . "</li>";
+    echo "<li>Registrado desde: " .  fechatiempo_desde_mysql_datetime(@$Vendedor['registro']) . "</li>";
     echo "<li>Ultima actividad: " . fechatiempo_desde_mysql_datetime(@$Vendedor['ultimo_acceso']) . "</li>";
     $Vendedor['cantidad_publicaciones'] = ObtenerEstadisticasUsuario(@$Vendedor['id_usuario'],_EST_CANT_PUB_ACEPT);
-    echo "<li>Cantidad de publicaciones: " . $Vendedor['cantidad_publicaciones']  . "</li>";
+    echo "<li>Cantidad de publicaciones: " . $Vendedor['cantidad_publicaciones']  . " (" . ui_href("","tienda_".(empty($Vendedor['tienda']) ? $Vendedor['id_usuario'] : $Vendedor['tienda']), "ver tienda") . ")</li>";
     echo "</ul>";
     echo "</div>";
 

@@ -12,7 +12,7 @@ function JS_onload($script){
 
 // Genera un pequeño GROWL
 function JS_growl($mensaje){
-    return JS_onload("$.jGrowl('".addslashes($mensaje)."', {theme: 'aviso',life:5000})");
+    return "$.jGrowl('".addslashes($mensaje)."', {theme: 'aviso',life:5000})";
 }
 
 //Timestamp to MYSQL DATETIME
@@ -606,6 +606,7 @@ function EnviarNota($Mensaje,$Usuario=NULL,$Tipo=_M_INFO,$Contexto=_MC_broadcast
     $datos['mensaje'] = $Mensaje;
     $datos['tipo'] = $Tipo;
     $datos['contexto'] = $Contexto;
+    $datos['fecha'] = mysql_datetime();
     $id_msj = db_agregar_datos("ventas_mensajes",$datos);
     unset($datos);
 

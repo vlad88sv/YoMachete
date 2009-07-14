@@ -15,9 +15,14 @@ require_once ("PHP/vital.php");
     <meta name="robots" content="index, follow" />
     <link rel="stylesheet" type="text/css" href="estilo.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.lightbox-0.5.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="CSS/jquery.jgrowl.css" />
     <script src="JS/jquery-1.3.1.min.js" type="text/javascript"></script>
     <script src="JS/jquery.cookie.js" type="text/javascript"></script>
     <script src="JS/jquery.lightbox-0.5.pack.js" type="text/javascript"></script>
+    <script src="JS/jquery.jgrowl.js" type="text/javascript"></script>
+    <style>
+    div.jGrowl div.aviso {z-index:50;background-color: #FFF;color: #000;-moz-border-radius:0px;-webkit-border-radius:0px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
+    </style>
 </head>
 
 <body>
@@ -42,9 +47,19 @@ else
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
 <?php
+
+$mensaje="";
+
+if (_F_usuario_cache('nivel') == _N_administrador)
+{
+    $mensaje.= db_contar("ventas_articulos","tipo='"._A_esp_activacion."'"). " publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
+    $mensaje.= db_contar("ventas_usuarios","estado='"._N_esp_activacion."'"). " usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+}
 echo JS('
 $("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow");});
 $("a[rel=\'lightbox\']").lightBox();
+$.jGrowl.defaults.position = "bottom-right";
+'.($mensaje ? JS_growl($mensaje) : "").'
 ');
 ?>
 </body>
