@@ -422,8 +422,11 @@ db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nom
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_articulo INT";
 echo db_crear_tabla("ventas_flags_art", $campos, true);
 
-$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, id_usuario_dst INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT";
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT, fecha DATETIME";
 echo db_crear_tabla("ventas_mensajes", $campos, true);
+
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_msj INT, id_usuario_dst INT, leido TINYINT(1), eliminado TINYINT(1)";
+echo db_crear_tabla("ventas_mensajes_dst", $campos, true);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_articulo INT, consulta VARCHAR(1000), respuesta VARCHAR(1000), tipo INT, fecha_consulta DATETIME, fecha_respuesta DATETIME";
 echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, true);

@@ -606,9 +606,16 @@ function EnviarNota($Mensaje,$Usuario=NULL,$Tipo=_M_INFO,$Contexto=_MC_broadcast
     $datos['mensaje'] = $Mensaje;
     $datos['tipo'] = $Tipo;
     $datos['contexto'] = $Contexto;
+    $id_msj = db_agregar_datos("ventas_mensajes",$datos);
+    unset($datos);
+
     $datos['id_usuario_dst'] = $Usuario;
-    $ret = db_agregar_datos("ventas_mensajes",$datos);
-    return db_afectados();
+    $datos['id_msj'] = $id_msj;
+    $datos['leido'] = 0;
+    $datos['eliminado'] = 0;
+    $ret = db_agregar_datos("ventas_mensajes_dst",$datos);
+
+    return true;
 }
 
 function ObtenerEstadisticasUsuario($id_usuario, $tipo)
