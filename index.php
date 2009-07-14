@@ -52,8 +52,13 @@ $mensaje="";
 
 if (_F_usuario_cache('nivel') == _N_administrador)
 {
-    $mensaje.= db_contar("ventas_articulos","tipo='"._A_esp_activacion."'"). " publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
-    $mensaje.= db_contar("ventas_usuarios","estado='"._N_esp_activacion."'"). " usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+    $PPA = db_contar("ventas_articulos","tipo='"._A_esp_activacion."'");
+    $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
+    if ($PPA || $UPA)
+    {
+        $mensaje.= " publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
+        $mensaje.= " usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+    }
 }
 echo JS('
 $("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow");});
