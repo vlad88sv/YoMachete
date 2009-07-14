@@ -230,4 +230,12 @@ function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default 
     return $html;
 }
 
+function db_contar($tabla,$where="1")
+{
+    $c = "SELECT COUNT(*) AS cuenta FROM $tabla WHERE $where";
+    $r = db_consultar($c);
+    $f = mysql_fetch_array($r);
+    return $f['cuenta'];
+}
+
 ?>
