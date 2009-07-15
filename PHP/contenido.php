@@ -112,7 +112,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<br />";
 
     // Datos sobre el vendedor
-    echo "<b>Vendedor:</b> " . ui_href("","perfil?id=".$Vendedor['id_usuario'],$Vendedor['usuario']) . " / <b>contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />' ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
+    echo "<b>Vendedor:</b> " . ui_href("","perfil?id=".$Vendedor['id_usuario'],$Vendedor['usuario']) . " / <b>e-mail de contacto:</b> ". '<img src="imagen_c_'.$Vendedor['email'].'" />'." / enviar un <b>". ui_href("","mp?id=".$Vendedor['id_usuario'],"Mensaje Privado")."</b> "."<span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
     echo "<div id=\"detalle_vendedor\" class=\"auto_ocultar\">";
     echo "<ul>";
     echo "<li>Registrado desde: " .  fechatiempo_desde_mysql_datetime(@$Vendedor['registro']) . "</li>";
