@@ -32,7 +32,7 @@ require_once ("PHP/vital.php");
 if (!isset($_GET['peticion']))
 {
     echo '
-        <div id="ver_categorias">[<a>ocultar categorías</a>]</div>
+        [<a><span id="ver_categorias">ocultar categorías</span></a>]
         <div id="secc_categorias">'. GENERAR_CATEGORIAS() .' </div>
         <div id="secc_articulos">'. GENERAR_ARTICULOS() .' </div>
         ';
@@ -61,7 +61,9 @@ if (_F_usuario_cache('nivel') == _N_administrador)
     }
 }
 echo JS('
-$("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow");});
+var hCat = $.cookie("hCat");
+function CheckCat(){if(hCat==1){$("#secc_categorias").hide();$("#ver_categorias").text("mostrar categorías");}else{$("#ver_categorias").text("ocultar categorías");}};CheckCat();
+$("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow",function(){$.cookie("hCat",hCat ^= true);CheckCat();});});
 $("a[rel=\'lightbox\']").lightBox();
 $.jGrowl.defaults.position = "bottom-right";
 '.($mensaje ? JS_growl($mensaje) : "").'
