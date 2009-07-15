@@ -92,7 +92,7 @@ function get_path($node,$url=true) {
        // the last part of the path to $node, is the name of the parent of $node
         if ($url)
         {
-            $path[] = ui_href("principal_ubicacion_link[]","categoria-".$row['id_categoria']."-".urlencode($row['nombre']), $row['nombre']);
+            $path[] = ui_href("principal_ubicacion_link[]","categoria-".$row['id_categoria']."-".SEO($row['nombre']), $row['nombre']);
         }
         else
         {
@@ -224,7 +224,7 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_articulo']."_".urlencode($f['titulo']);
+    $lnkTitulo="publicacion_".$f['id_articulo']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,200);
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
@@ -294,7 +294,7 @@ function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se enc
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_articulo']."_".urlencode($f['titulo']);
+    $lnkTitulo="publicacion_".$f['id_articulo']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $ubicacion=join(" > ", get_path($f['id_categoria']));
     $id_articulo = $f['id_articulo'];
@@ -681,5 +681,13 @@ function PromocionarPublicacion($id_articulo, $promocionado="1")
     $ret = db_actualizar_datos("ventas_articulos",$datos,"id_articulo='$id_articulo'");
     unset($datos);
     return db_afectados();
+}
+function SEO($URL){
+	$URL = preg_replace("`\[.*\]`U","",$URL);
+	$URL = preg_replace('`&(amp;)?#?[a-z0-9]+;`i','-',$URL);
+	$URL = htmlentities($URL, ENT_COMPAT, 'utf-8');
+	$URL = preg_replace( "`&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig|quot|rsquo);`i","\\1", $URL );
+	$URL = preg_replace( array("`[^a-z0-9]`i","`[-]+`") , "-", $URL);
+	return strtolower(trim($URL, '-'));
 }
 ?>

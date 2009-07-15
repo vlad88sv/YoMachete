@@ -163,7 +163,7 @@ function GENERAR_CATEGORIAS()
     $data .= "<div id=\"contenedor_categorias\">";
     for ($i = 0; $i < $n_campos; $i++) {
         $r = mysql_fetch_row($resultado);
-        $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.urlencode($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
+        $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
     }
     $data .= "</div>";
     return $data;
