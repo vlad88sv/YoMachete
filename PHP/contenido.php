@@ -228,4 +228,9 @@ function CONTENIDO_PUBLICACION($op="")
     $("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});
     ');
 }
+
+function CONTENIDO_MP()
+{
+
+}
 ?>
