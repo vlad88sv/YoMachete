@@ -181,6 +181,10 @@ function CONTENIDO_PUBLICACION($op="")
         echo '</table>';
         echo '</form>';
     }
+    else
+    {
+        echo Mensaje("No hay consultas realizadas por el momento", _M_INFO);
+    }
 
     if (!S_iniciado())
     {
