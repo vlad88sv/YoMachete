@@ -125,7 +125,11 @@ switch ($_GET['peticion'])
     if (!empty($_GET['op']))
     {
         header("Content-type: image/png");
-        $string = $_GET['op'];
+        // Encontramos el correo respectivo
+        $c = "SELECT email FROM ventas_usuarios WHERE id_usuario = '".db_codex($_GET['op'])."' LIMIT 1";
+        $r = mysql_query($c);
+        $f = mysql_fetch_array($r);
+        $string = $f['email'];
         $im    = ImageCreate((int)(strlen($string) * 6.25), 12);
         $background_color = ImageColorAllocate ($im, 224, 230, 255);
         $text_color = ImageColorAllocate ($im, 0, 0, 0);
