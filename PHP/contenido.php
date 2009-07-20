@@ -235,14 +235,13 @@ function CONTENIDO_MP()
 }
 function CONTENIDO_TIENDA()
 {
+$data = '';
 $Vendedor = _F_usuario_datos($_GET['tienda']);
 echo "Viendo tienda de: <b>".$Vendedor['usuario']."</b><hr /><br />";
-$nivel = (!empty($_GET['categoria'])) ? "padre='".$_GET['categoria']."' AND " : "";
+$nivel = (!empty($_GET['categoria'])) ? "padre='".db_codex($_GET['categoria'])."' AND " : "";
 $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE $nivel id_categoria IN (SELECT padre FROM ventas_categorias WHERE id_categoria IN (SELECT id_categoria FROM ventas_articulos WHERE id_usuario='".$Vendedor['id_usuario']."')) ORDER BY nombre";
 $resultado = db_consultar($c);
 $n_campos = mysql_num_rows($resultado);
-if ($n_campos > 1) {
-$data = '';
 $data = ' <div id="secc_categorias">';
 $data .= (!empty($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./tienda_'.$Vendedor['id_usuario'].'.html">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
 $data .= "<div id=\"contenedor_categorias\">";
@@ -251,8 +250,34 @@ for ($i = 0; $i < $n_campos; $i++) {
     $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="tienda_'.$Vendedor['id_usuario'].'_dpt-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
 }
 $data .= '</div></div>';
-echo $data;
+
+$categoria = !empty($_GET['categoria']) ? db_codex($_GET['categoria']) : 0;
+if ($categoria)
+{
+    $c = "SELECT * FROM ventas_categorias WHERE id_categoria='$categoria'";
+    $resultado = db_consultar($c);
+
+
+    if (db_resultado($resultado, 'padre') > 0)
+    {
+        $data .= "<hr />";
+        $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
+        $data .= "<hr />";
+        $WHERE = "id_categoria='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
+    }
+    else
+    {
+        $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=a.id_categoria)='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
+    }
 }
-echo VISTA_ArticuloEnLista("id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."'","LIMIT 10","tienda");
+else
+{
+    $data .= "<h1>Artículos mas recientes</h1>";
+    // Mostrar todos los articulos en la categoría
+    $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
+}
+
+$data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","tienda");
+echo $data;
 }
 ?>

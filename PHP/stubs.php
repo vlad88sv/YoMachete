@@ -79,7 +79,7 @@ function despachar_notificaciones_email($mensaje){
 }
 
 // http://www.sitepoint.com/article/hierarchical-data-database/
-function get_path($node,$url=true) {
+function get_path($node,$url=true,$prefijo="categoria-") {
    // look up the parent of this node
    $result = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE id_categoria='$node'");
    $row = mysql_fetch_array($result);
@@ -92,14 +92,14 @@ function get_path($node,$url=true) {
        // the last part of the path to $node, is the name of the parent of $node
         if ($url)
         {
-            $path[] = ui_href("principal_ubicacion_link[]","categoria-".$row['id_categoria']."-".SEO($row['nombre']), $row['nombre']);
+            $path[] = ui_href("principal_ubicacion_link[]",$prefijo.$row['id_categoria']."-".SEO($row['nombre']), $row['nombre']);
         }
         else
         {
             $path[] =  $row['nombre'];
         }
        // we should add the path to the parent of this node to the path
-       $path = array_merge(get_path($row['padre'],$url), $path);
+       $path = array_merge(get_path($row['padre'],$url,$prefijo), $path);
    }
    return $path;
 }
@@ -228,7 +228,7 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,200);
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
-    $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion")));
+    $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_articulo = $f['id_articulo'];
     $id_usuario = $f['id_usuario'];
     // ->
@@ -263,12 +263,12 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
         {
             $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_articulo=$id_articulo&id_usuario=$id_usuario&estado=1","PROMOCIONAR");
         }
-        if ($tipo != "admin")
+        switch ($tipo)
         {
-            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
-        }
-        else
-        {
+            case "admin":
+                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            break;
+            default:
             $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
     }
