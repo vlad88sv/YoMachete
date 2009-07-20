@@ -1,15 +1,8 @@
 <?php
 function CONTENIDO_PERFIL()
 {
-    if (!_autenticado())
-    {
-        echo "Necesitas iniciar sesión para poder <b>ver perfiles</b>.<br />";
-        require_once("PHP/inicio.php");
-        CONTENIDO_INICIAR_SESION();
-        return;
-    }
 
-    $usuario = empty($_GET['id']) ? $_SESSION['cache_datos_usuario'] : _F_usuario_datos($_GET['id']);
+    $usuario = empty($_GET['id']) && _autenticado() ? $_SESSION['cache_datos_usuario'] : _F_usuario_datos($_GET['id']);
     if(!is_array($usuario))
     {
         echo Mensaje("Lo sentimos, al parecer este usuario ya no forma parte de este sitio",_M_ERROR);
