@@ -25,6 +25,17 @@ function CONTENIDO_PUBLICACION($op="")
         return;
     }
 
+    // Ya venció el tiempo de publicación?.
+    if (strtotime($Publicacion['fecha_fin']) < time())
+    {
+        echo Mensaje("disculpe, la publicación solicitada ya no esta disponible.", _M_INFO);
+        if (_F_usuario_cache('id_usuario') == $Publicacion['id_usuario'])
+        {
+            echo ui_href("","servicios?op=atp&pub=$ticket","¿Desea ampliar el tiempo de su publicación?");
+        }
+        return;
+    }
+
     // Preprocesamos cualquier codigo de operación
     if (isset($_GET['op']) && isset($_GET['id']) && _F_usuario_cache('nivel') == _N_administrador)
     {
@@ -87,6 +98,10 @@ function CONTENIDO_PUBLICACION($op="")
 
     // Categoria en la que se encuentra ubicado el producto
     echo "<b>Categoría de la publicación:</b> " . join(" > ", get_path(@$Publicacion['id_categoria']));
+    echo "<br />";
+
+    // Categoria en la que se encuentra ubicado el producto
+    echo "<b>Fin de la publicación:</b> " . fechatiempo_h_desde_mysql_datetime(@$Publicacion['fecha_fin']);
     echo "<br />";
 
     // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.
@@ -194,7 +209,6 @@ function CONTENIDO_PUBLICACION($op="")
     }
     elseif (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
     {
-
         echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'"><p>Realizar consulta al vendedor:</p>' . ui_input("consulta","","input","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp; marque esta opción si desea hacer pública esta consulta (<a title=\"Usela si Ud. cree que las demas personas deben leer esta pregunta y su respectiva respuesta\">?</a>).</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
     }
     echo '</div>';
@@ -206,7 +220,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Otras publicaciones de este vendedor</h1>';
-        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_articulo <> '".$Publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."'");
+        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_articulo <> '".$Publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
     }
 
@@ -219,7 +233,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Publicaciones similares</h1>';
-        echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$Publicacion['id_articulo']."' AND tipo='"._A_aceptado."'");
+        echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$Publicacion['id_articulo']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
 
     }
@@ -280,7 +294,7 @@ else
     // Mostrar todos los articulos en la categoría
     $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
 }
-
+$WHERE .= " AND fecha_fin >= '" . mysql_datetime() . "'";
 $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","tienda");
 echo $data;
 }
