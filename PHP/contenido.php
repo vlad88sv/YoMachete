@@ -28,7 +28,7 @@ function CONTENIDO_PUBLICACION($op="")
     // Ya venció el tiempo de publicación?.
     if (strtotime($Publicacion['fecha_fin']) < time())
     {
-        echo Mensaje("disculpe, la publicación solicitada ya no esta disponible.", _M_INFO);
+        echo Mensaje("disculpe, el tiempo de publicación para la publicación solicitada ha caducado.", _M_INFO);
         if (_F_usuario_cache('id_usuario') == $Publicacion['id_usuario'])
         {
             echo ui_href("","servicios?op=atp&pub=$ticket","¿Desea ampliar el tiempo de su publicación?");
@@ -250,6 +250,49 @@ function CONTENIDO_PUBLICACION($op="")
 function CONTENIDO_MP()
 {
 
+// Comprobamos que ya haya ingresado al sistema
+if (!S_iniciado())
+{
+    echo "Necesitas iniciar sesión para poder <b>enviar Mensajes Privados</b>.<br />";
+    require_once("PHP/inicio.php");
+    CONTENIDO_INICIAR_SESION();
+    return;
+}
+
+// Si hay un id entonces quiere enviar un MP a ese ID
+if (!empty($_GET['id']))
+{
+    $id_usuario = db_codex($_GET['id']);
+
+    //No se estará enviando el mensaje a el mismo verdad? XD
+
+    if ($id_usuario == _F_usuario_cache('id_usuario'))
+    {
+        echo Mensaje("auto-enviarse mensajes privados no es permitido",_M_ERROR);
+        return;
+    }
+
+    //Existe el usuario al cual quiere enviar el mensaje?
+    if (_F_usuario_existe($id_usuario,'id_usuario'))
+    {
+        $usuario_destino = _F_usuario_datos($id_usuario);
+        echo '<form action="mp" method="POST">';
+        echo 'Este mensaje será enviado al usuario <b>'.$usuario_destino['usuario'].'</b><br />';
+        echo '<table>';
+        echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto","","","","width:100%")));
+        echo ui_tr(ui_td('Mensaje: '). ui_td(ui_textarea("mensaje","","","width:100%")));
+        echo '</table>';
+        echo ui_input("enviar_mp","Enviar","Button").'<br />';
+        echo '</form>';
+    }
+    else
+    {
+        echo Mensaje("ha especificado un usuario de destino no existente en el sitema",_M_ERROR);
+        return;
+    }
+}
+
+echo '<hr /><h1>Mensajes privados</h1>';
 }
 function CONTENIDO_TIENDA()
 {

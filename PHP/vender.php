@@ -55,6 +55,22 @@ function CONTENIDO_VENDER()
             }
             echo "</ul>";
         }
+
+        // Mostrar las ventas caducadas
+
+        $c = "SELECT id_articulo, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_articulos AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo = '"._A_aceptado."'AND fecha_fin <='".mysql_datetime()."'";
+        $r = db_consultar($c);
+        if ( mysql_num_rows($r) > 0 )
+        {
+            echo "<hr />";
+            echo "Se han encontrado las siguientes ventas que han caducado:<br />";
+            echo "<ul>";
+            while ($f = mysql_fetch_array($r))
+            {
+                echo "<li>Ticket: <b>" . htmlentities($f['id_articulo'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b> [". ui_href("","servicios?op=atp&pub=".$f['id_articulo'],"ampliar tiempo")."]</li>";
+            }
+            echo "</ul>";
+        }
         return;
     }
     elseif (isset($_GET['op']) && !isset($_GET['ticket']))

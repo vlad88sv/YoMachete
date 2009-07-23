@@ -10,7 +10,7 @@ function CONTENIDO_PERFIL()
     }
 
     echo "<p><b>Nombre de usuario:</b> " .  @$usuario['usuario']."</p>";
-    echo "<p><b>e-mail de contacto:</b> ". '<img src="imagen_c_'.$usuario['id_usuario'].'" />'." (enviar un ". ui_href("","mp?id=".$usuario['id_usuario'],"Mensaje Privado").")</p>";
+    echo "<p><b>e-mail de contacto:</b> ". '<img src="imagen_c_'.$usuario['id_usuario'].'" />'. (_F_usuario_cache('id_usuario') != $usuario['id_usuario'] ? " (enviar un ". ui_href("","mp?id=".$usuario['id_usuario'],"Mensaje Privado").")" : "")."</p>";
     echo "<p><b>Registrado desde:</b> " .  fechatiempo_desde_mysql_datetime(@$usuario['registro'])."</p>";
     echo "<p><b>Ultima actividad:</b> " . fechatiempo_desde_mysql_datetime(@$usuario['ultimo_acceso'])."</p>";
     $usuario['cantidad_publicaciones'] = ObtenerEstadisticasUsuario(@$usuario['id_usuario'],_EST_CANT_PUB_ACEPT) . " (" . ui_href("","tienda_".(empty($usuario['tienda']) ? $usuario['id_usuario'] : $usuario['tienda']).".html", "ver tienda") . ")";
