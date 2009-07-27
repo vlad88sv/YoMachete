@@ -282,11 +282,4 @@ function CONTENIDO_VENDER()
     echo "</form>";
     echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
 }
-
-function MANEJAR_VENTA()
-{
-    echo "Su publicación se ha enviado, sin embargo tiene que ser aprobada manualmente por un administrador para ser pública.<br />Dicha aprobación puede tardar entre 10 minutos y 2 horas; un correo de confirmación le será enviado cuando su publicación sea aceptada.<br />";
-    echo "Le invitamos a seguir navegando en nuestro sitio mientras su publicación es aceptada. ". ui_href("vender_continuar","./", "Continuar") ."<br />";
-    return;
-}
 ?>
