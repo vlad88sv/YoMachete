@@ -75,25 +75,10 @@ $.jGrowl.defaults.position = "bottom-right";
 <?php
 function GENERAR_CABEZA()
 {
-    /*
-     * Elementos en la cabecera:
-     * 0. Será "una" linea.
-     * 1. A la Izq. el Logo.
-     * 2. resto el menú.
-     */
     // Cargamos el logo.
     echo "<div id='logotipo'>";
     echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.png"));
     echo "</div>";
-    /*
-     * Mostramos los controles.
-     * Los controles a mostrar consisten en:
-     * 1. Link para Iniciar sesión -Si inicia sesión> Se convierte en Link para Finalizar Sesión
-     * 2. Link para Registrarse    -Si inicia sesión> nick+link hacia su perfil
-     * 3. Vender
-     * 4. Búsqueda
-     * 5. Ayuda.
-    */
     echo "<div id='menu'>";
         echo ui_href("cabecera_link_Categorias","./","Comprar","izq");
         echo ui_href("cabecera_link_vender","vender","Vender","");
