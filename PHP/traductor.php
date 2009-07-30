@@ -70,7 +70,7 @@ switch ($_GET['peticion'])
         CONTENIDO_ADMIN();
     break;
     case 'imagen':
-        if (!empty($_GET['op']))
+        if (isset($_GET['op']))
         {
             $flag_Abortar = false;
             $op =  db_codex($_GET['op']);

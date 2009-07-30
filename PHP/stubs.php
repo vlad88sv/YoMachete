@@ -478,6 +478,7 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
         if ($ret)
         {
             move_uploaded_file($valor, "RCS/IMG/$ret");
+            Imagen__Redimenzionar("RCS/IMG/$ret",600,468);
         }
     }
     return true;
@@ -510,6 +511,10 @@ function DescargarArchivos($input,$id_articulo,$id_usuario)
     }
 
     return true;
+}
+function Imagen__Redimenzionar($Origen,$Ancho,$Alto)
+{
+    return Imagen__CrearMiniatura($Origen,$Origen,$Ancho,$Alto);
 }
 /*
  * Imagen__CrearMiniatura()
