@@ -1,9 +1,6 @@
-<?php
-require_once ("PHP/vital.php");
-?>
+<?php require_once ("PHP/vital.php"); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
 <head>
     <title>Compra y Venta de articulos en El Salvador</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -24,7 +21,6 @@ require_once ("PHP/vital.php");
     div.jGrowl div.aviso {z-index:50;background-color: #FFF;color: #000;-moz-border-radius:0px;-webkit-border-radius:0px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
     </style>
 </head>
-
 <body>
 <div id="wrapper">
 <div id="header"><?php GENERAR_CABEZA(); ?><div style="clear:both"></div></div>
