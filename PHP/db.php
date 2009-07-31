@@ -204,10 +204,6 @@ function db_ui_tabla_vertical($resultado, $CSS="") {
  return $table;
  }
 
-function db_t_where($clave, $comparador, $valor, $prefijo = "", $sufijo = ""){
-    return " AND $clave $comparador '$prefijo".mysql_real_escape_string($valor)."$sufijo'";
-}
-
 //Obtiene TODA la tabla y dibuja la jerarquia.
 //No utilizar con tablas muy grandes.
 function db_ui_jerarquia($tabla, $padre, $dato)
