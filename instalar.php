@@ -12,7 +12,7 @@
 <body>
 <?php
 // Tabla de usuarios
-$campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) not null, clave VARCHAR(32) not null, nombre VARCHAR(32) not null, email VARCHAR(50) not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, registro DATETIME, FLAGS LONGTEXT";
+$campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) not null, clave VARCHAR(32) not null, nombre VARCHAR(32) not null, email VARCHAR(50) not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, registro DATETIME, FLAGS LONGTEXT, nDiasVigencia INT NOT NULL DEFAULT '7', nPubMax INT NOT NULL DEFAULT '5'";
 echo db_crear_tabla("ventas_usuarios", $campos, true);
 
 // Agregamos al usuario Admin
