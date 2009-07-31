@@ -50,9 +50,6 @@ function INTERFAZ__ACTIVACION_USUARIOS()
 {
     if (!empty($_GET['aprobar']))
     {
-        $c = "UPDATE ventas_usuarios SET estado=NULL WHERE estado='"._N_esp_activacion."' AND id_usuario='" . db_codex($_GET['activar'])."' LIMIT 1";
-        $r = db_consultar($c);
-        $ret = db_afectados();
         if ($ret == 1)
         {
             echo Mensaje("Usuario exitosamente activado",_M_INFO);
@@ -104,10 +101,14 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
         switch ($_GET['operacion'])
         {
             case "aprobar":
-                $c = "UPDATE ventas_articulos SET tipo="._A_aceptado." WHERE tipo='"._A_esp_activacion."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
-                $r = db_consultar($c);
-                $ret = db_afectados();
-                $msjNota="¡Su publicación ha sido aprobada! [".ui_href("","publicacion_".$id_articulo,"ver")."]";
+                $ret = Publicacion_Aprobar($id_articulo);
+                if($ret)
+                {
+                    $msjNota="¡Su publicación ha sido aprobada! [".ui_href("","publicacion_".$id_articulo,"ver")."]";
+                }
+                {
+                    $msjNota="Su publicación NO pudo ser aprobada";
+                }
             break;
             case "rechazar":
                 $ret = DestruirTicket($_GET['cancelar'],_A_esp_activacion);

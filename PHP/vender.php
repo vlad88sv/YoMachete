@@ -152,12 +152,19 @@ function CONTENIDO_VENDER()
         // Al fin lo terminó de editar y lo esta enviando... Aleluya!
         //-
         // Si es Admin entonces aprobar automaticamente, si no pues mandarlo a esperar activacion
-        $tipo = ( _F_usuario_cache('nivel') == _N_administrador ) ? _A_aceptado : _A_esp_activacion;
-        $c = "UPDATE ventas_articulos SET tipo=$tipo WHERE id_articulo=$ticket LIMIT 1";
+        $c = "UPDATE ventas_articulos SET tipo='"._A_esp_activacion."' WHERE id_articulo=$ticket LIMIT 1";
         $r = db_consultar($c);
         if ( db_afectados() == 1 )
         {
-            echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
+            if (_F_usuario_cache('nivel') == _N_administrador)
+            {
+                Publicacion_Aprobar($ticket);
+                echo Mensaje ("Su venta ha sido publicada", _M_INFO);
+            }
+            else
+            {
+                echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
+            }
         }
         else
         {
@@ -212,7 +219,7 @@ function CONTENIDO_VENDER()
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
     echo "Titulo " . ui_input("titulo",@$Buffer["titulo"],"","","width:50ex","MAXLENGTH='50'")."<br />";
     echo "<li>Descripción corta de la publicación</li>";
-    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 200 carácteres. No se admite código HTML.</span><br />";
+    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span><br />";
     echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Buffer["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";

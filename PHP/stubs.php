@@ -226,7 +226,7 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $titulo=$f['titulo'];
     $lnkTitulo="publicacion_".$f['id_articulo']."_".SEO($f['titulo']);
     $precio=$f['precio'];
-    $descripcion=substr($f['descripcion_corta'],0,200);
+    $descripcion=substr($f['descripcion_corta'],0,300);
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_articulo = $f['id_articulo'];
@@ -266,10 +266,10 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
         switch ($tipo)
         {
             case "admin":
-                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
             break;
             default:
-            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
     }
     $data .= '</table>';
