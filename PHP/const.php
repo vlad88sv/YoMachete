@@ -1,4 +1,10 @@
 <?php
+// Proyecto
+define('PROY_NOMBRE','Ventas.com');
+define('PROY_URL','http://localhost');
+define('PROY_MAIL_POSTMASTER','admin@localhost');
+define('PROY_MAIL_REPLYTO',PROY_MAIL_POSTMASTER);
+
 // Niveles
 define('_N_administrador',      9);
 define('_N_moderador',          7);
