@@ -1,7 +1,7 @@
 <?php
 // Proyecto
 define('PROY_NOMBRE','Ventas.com');
-define('PROY_URL','http://localhost');
+define('PROY_URL',"http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']));
 define('PROY_MAIL_POSTMASTER','admin@localhost');
 define('PROY_MAIL_REPLYTO',PROY_MAIL_POSTMASTER);
 
