@@ -11,6 +11,7 @@ require_once ("$base/const.php"); // Constantes
 require_once ("$base/sesion.php"); // Sesión
 require_once ("$base/secreto.php"); // Datos para la conexión a la base de datos
 require_once ("$base/db.php"); // Conexión hacia la base de datos [depende de secreto.php]
+require_once ("$base/db-stubs.php"); // Generación de objetos UI desde la base de datos [depende de ui.php]
 require_once ("$base/db-ui.php"); // Generación de objetos UI desde la base de datos [depende de ui.php]
 require_once ("$base/stubs.php"); // Funciones varias
 require_once ("$base/publicaciones.php"); // Gestión de publicaciones

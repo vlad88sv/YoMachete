@@ -15,45 +15,6 @@ function JS_growl($mensaje){
     return "$.jGrowl('".addslashes($mensaje)."', {theme: 'aviso',life:5000})";
 }
 
-//Timestamp to MYSQL DATETIME
-function mysql_datetime($tiempo = 'now'){
-    return date( 'Y-m-d H:i:s',strtotime($tiempo) );
-}
-
-//Timestamp to MYSQL DATE
-function mysql_date($tiempo = 'now'){
-    return date( 'Y-m-d',strtotime($tiempo) );
-}
-
-//Timestamp to MYSQL TIME
-function mysql_time($tiempo = 'now'){
-    return date( 'H:i:s',strtotime($tiempo) );
-}
-
-//MYSQL DATETIME a fecha normal (sin hora)
-function fecha_desde_mysql_datetime($tiempo){
-    return date( 'd-m-Y',strtotime($tiempo) );
-}
-
-//MYSQL DATETIME a hora (sin fecha)
-function tiempo_desde_mysql_datetime($tiempo){
-    return date( 'H:i:s',strtotime($tiempo) );
-}
-
-//MYSQL DATETIME a fecha y hora
-function fechatiempo_desde_mysql_datetime($tiempo){
-    return date( 'd-m-Y H:i:s',strtotime($tiempo) );
-}
-
-//MYSQL DATETIME a fecha y hora (mas humana)
-function fechatiempo_h_desde_mysql_datetime($tiempo){
-    if (!$tiempo)
-    {
-        return "";
-    }
-    return date( 'd-m-Y h:i:sa',strtotime($tiempo) );
-}
-
 function suerte($una, $dos){
     if (rand(0,1)) {
         return $una;
@@ -694,5 +655,10 @@ function SEO($URL){
     $URL = preg_replace( "`&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig|quot|rsquo);`i","\\1", $URL );
     $URL = preg_replace( array("`[^a-z0-9]`i","`[-]+`") , "-", $URL);
     return strtolower(trim($URL, '-')).".html";
+}
+function email($para, $asunto, $sujeto)
+{
+$headers = 'From: '. PROY_MAIL_POSTMASTER . "\r\n" . 'Reply-To: '. PROY_MAIL_REPLYTO . "\r\n";
+return mail($para,$asunto,$sujeto,$headers);
 }
 ?>
