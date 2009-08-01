@@ -13,6 +13,7 @@ define('_N_vendedor',           3);
 define('_N_usuario',            2);
 
 // Estados
+define('_N_activo',             0);
 define('_N_bloqueado_temp',     1);
 define('_N_bloqueado_perm',     2);
 define('_N_esp_activacion',     3);
