@@ -48,10 +48,15 @@ function CONTENIDO_ADMIN()
 
 function INTERFAZ__ACTIVACION_USUARIOS()
 {
-    if (!empty($_GET['aprobar']))
+    if (!empty($_GET['activar']))
     {
+        $c = "UPDATE ventas_usuarios SET estado='"._N_activo."' WHERE id_usuario='" . db_codex($_GET['activar'])."' LIMIT 1";
+        $r = db_consultar($c);
+        $ret = db_afectados();
         if ($ret == 1)
         {
+            $Usuario = _F_usuario_datos($_GET['activar']);
+            email($Usuario['email'],"Su cuenta en " . PROY_NOMBRE . " ha sido aprobada","Gracias por su espera, su cuenta puede ser accedida en: ".PROY_URL."/ingresar");
             echo Mensaje("Usuario exitosamente activado",_M_INFO);
         }
         else
