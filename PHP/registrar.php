@@ -52,12 +52,12 @@ function CONTENIDO_REGISTRAR()
         if (!empty($_POST['registrar_campo_clave']) && !empty($_POST['registrar_campo_clave_2']))
         {
             //Contraseñas iguales?
-            if ($_POST['registrar_campo_clave'] == $_POST['registrar_campo_clave_2'])
+            if (trim($_POST['registrar_campo_clave']) == trim($_POST['registrar_campo_clave_2']))
             {
                 //Tamaño adecuado?
                 if(strlen($_POST['registrar_campo_clave']) >= 6 && strlen($_POST['registrar_campo_clave']) <= 100)
                 {
-                    $datos['clave'] = md5($_POST['registrar_campo_clave']);
+                    $datos['clave'] = md5(trim($_POST['registrar_campo_clave']));
                 }
                 else
                 {
@@ -99,14 +99,15 @@ function CONTENIDO_REGISTRAR()
             $datos["ultimo_acceso"] = mysql_datetime();
             $datos["registro"]= mysql_datetime();
             db_agregar_datos("ventas_usuarios",$datos);
-            echo "¡Su solicitud de registro ha sido procesada!<br />Sin embargo su registro será efectivo hasta el momento que un Administrador de el aval a su nueva cuenta.<br />Un mensaje será enviado al correo electrónico especificado al registrarse en el que se le confirmará que su cuenta esta activa.<br />Este proceso puede tardar entre 10 minutos y 2 horas en llevarse a cabo, gracias por su espera.<br />";
+            echo "¡Su solicitud de registro ha sido procesada!<br />Sin embargo su cuenta estará activa cuando un Administrador apruebe su nueva cuenta.<br />Un mensaje será enviado su correo electrónico en el que se le confirmará que su cuenta esta activa.<br />Este proceso puede tardar entre 10 minutos y 2 horas en llevarse a cabo, gracias por su espera.<br />";
             echo "Le invitamos a seguir navegando en nuestro sitio mientras su cuenta es activada. ". ui_href("registrar_continuar","./", "Continuar") ."<br />";
             despachar_notificaciones_sms("Pediente aprobación de nuevo registro en foro de ventas");
             despachar_notificaciones_email("Pediente aprobación de nuevo registro en foro de ventas");
+            email($datos['email'],"Su registro en ".PROY_NOMBRE." ha sido exitoso","Su registro de usuario  en ".PROY_NOMBRE." ha sido exitoso, sin embargo los Administradores deben que aprobar manualmente su cuenta para que esta sea funcional.\nSe le notificará con un correo electrónico cuando este suceda.\n\nDatos del registro\nUsuario: ".$datos['usuario']."\nContraseña: ".trim($_POST['registrar_campo_clave'])); //$datos['clave'] en este punto ya contiene la contraseña encriptada
             return;
         }
     }
-echo "¡Bienvenido!, ¿deseas formar parte del comercio electrónico?<br />Si ya posees una cuenta puedes ". ui_href("registrar_iniciar_sesion","./iniciar","iniciar sesión") . ".<br />";
+echo "¡Bienvenido!, ¿deseas formar parte del comercio electrónico?<br />Si ya posees una cuenta puedes ". ui_href("registrar_iniciar_sesion","./iniciar","iniciar sesión") . ".<br />Todos los campos son requeridos<br />";
 echo "<form action=\"registrar\" method=\"POST\">";
 echo "<table>";
 echo ui_tr(ui_td("<acronym title='Ud. ingresará a nuestro sistema usando esta dirección de correo electronico. Asegurese que la dirección exista, puesto que será necesaria en caso de que desee recuperar su contraseña.'>Correo electronico (e-mail)</acronym>") . ui_td(ui_input("registrar_campo_email",_F_form_cache("registrar_campo_email"))) . ui_td('<span id="registrar_respuesta_email"></span>'));
