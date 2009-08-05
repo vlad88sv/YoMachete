@@ -656,9 +656,23 @@ function SEO($URL){
     $URL = preg_replace( array("`[^a-z0-9]`i","`[-]+`") , "-", $URL);
     return strtolower(trim($URL, '-')).".html";
 }
-function email($para, $asunto, $sujeto)
+// http://www.webcheatsheet.com/PHP/get_current_page_url.php
+// Obtiene la URL actual, $stripArgs determina si eliminar la parte dinamica de la URL
+function curPageURL($stripArgs=false) {
+ $pageURL = 'http';
+ if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+ $pageURL .= "://";
+ if ($_SERVER["SERVER_PORT"] != "80") {
+  $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+ } else {
+  $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+ }
+ if ($stripArgs) {$pageURL = preg_replace("/\?.*/", "",$pageURL);}
+ return $pageURL;
+}
+function email($para, $asunto, $mensaje)
 {
-$headers = 'From: '. PROY_MAIL_POSTMASTER . "\r\n" . 'Reply-To: '. PROY_MAIL_REPLYTO . "\r\n";
-return mail($para,$asunto,$sujeto,$headers);
+$headers = 'From: '. PROY_MAIL_POSTMASTER . "\r\n";
+return mail($para,$asunto,$mensaje,$headers);
 }
 ?>
