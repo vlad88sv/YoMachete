@@ -36,6 +36,22 @@ function CONTENIDO_PUBLICACION($op="")
         return;
     }
 
+    // Operaciones especiales con la publicación que no necesite permisos de administración
+    if (isset($_GET['se']))
+    {
+        switch($_GET['se'])
+        {
+        case 'pub2pdf':
+        break;
+        case 'pub2mail':
+            CONTENIDO_PUB2MAIL($ticket);
+            return;
+        break;
+        case 'pubrep':
+        break;
+        }
+    }
+
     // Preprocesamos cualquier codigo de operación
     if (isset($_GET['op']) && isset($_GET['id']) && _F_usuario_cache('nivel') == _N_administrador)
     {
@@ -236,7 +252,16 @@ function CONTENIDO_PUBLICACION($op="")
         echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$Publicacion['id_articulo']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
 
+   
+    // Mostrar opciones adicionales
+    
+    echo '
+    <a href="'.$_SERVER['REQUEST_URI'].'?se=pub2pdf"><img src="IMG/pub_extop_ipdf.gif" title="Obtener una copia de esta venta en formato PDF" alt="[descargar venta en PDF]" /></a>
+    <a href="'.$_SERVER['REQUEST_URI'].'?se=pub2mail"><img src="IMG/pub_extop_mail.gif" title="Enviar esta publicación a un amigo" alt="[enviar por email]" /></a>
+    <a href="'.$_SERVER['REQUEST_URI'].'?se=pubrep"><img src="IMG/pub_extop_reportar.gif" title="Notificar a los administradores de una publicación fraudulenta" alt="[reportar publicación]" /></a>
+    ';
     }
+    
     echo JS_onload('
     $(".auto_ocultar").hide();
     $(".auto_mostrar").show();
@@ -340,5 +365,43 @@ else
 $WHERE .= " AND fecha_fin >= '" . mysql_datetime() . "'";
 $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","tienda");
 echo $data;
+}
+
+function CONTENIDO_PUB2MAIL($id_publicacion)
+{
+    $publicacion = ObtenerDatos($id_publicacion);
+    if (!empty($_POST['nr']) && !empty($_POST['nd']) && !empty($_POST['correo']) && !empty($_POST['enviar_pub2mail']))
+    {
+        // Nos conformamos con que exista el destinatario:
+        if (validEmail($_POST['correo']))
+        {
+            $MensajeMail="";
+            if (email($_POST['correo'],"Publicación: " . $publicacion['titulo'], "Estimado(a) ".$_POST['nd'].",\nQuiero que revises la siguiente publicación: " . curPageURL(true) . " en " . PROY_NOMBRE . "\nGracias,\n".$_POST['nr']))
+            {
+                echo Mensaje("Su mensaje ha sido enviado");
+                
+            }
+            else
+            {
+                echo Mensaje("Su mensaje NO ha sido enviado debido a fallas técnicas, por favor intente en otro momento");
+            }
+        return;
+        }
+        else
+        {
+        echo Mensaje("Parece que el correo electronico esta mal escrito",_M_ERROR);
+        }
+    }
+    $mensaje= " de nuestro sitio web " . PROY_URL . " cree haber encontrado una publicación de tu interes y desea compartirla contigo.\n"."Puedes accederla a travez del siguiente link";
+    echo '<p>Enviar la publicación "<strong>'.$publicacion['titulo'].'</strong>" a un amigo</p>';
+    echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+    echo '<table>';
+    echo ui_tr(ui_td('Nombre remitente: '). ui_td(ui_input("nr",(_F_form_cache('nr') ? _F_form_cache('comentario') : _F_usuario_cache('usuario')),"","","width:100%")));
+    echo ui_tr(ui_td('Nombre destinatario: '). ui_td(ui_input("nd",_F_form_cache('nd'),"","","width:100%")));
+    echo ui_tr(ui_td('Correo Electrónico: '). ui_td(ui_input("correo",_F_form_cache('correo'),"","","width:100%")));
+    echo ui_tr(ui_td('Comentario: '). ui_td(ui_textarea("comentario",_F_form_cache('comentario'),"","width:100%")));
+    echo '</table>';
+    echo ui_input("enviar_pub2mail","Enviar","submit").'<br />';
+    echo '</form>';
 }
 ?>
