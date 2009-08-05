@@ -379,6 +379,7 @@ function CONTENIDO_PUB2MAIL($id_publicacion)
             if (email($_POST['correo'],"Publicación: " . $publicacion['titulo'], "Estimado(a) ".$_POST['nd'].",\nQuiero que revises la siguiente publicación: " . curPageURL(true) . " en " . PROY_NOMBRE . "\nGracias,\n".$_POST['nr']))
             {
                 echo Mensaje("Su mensaje ha sido enviado");
+                echo ui_href("",curPageURL(true),"Retornar a la publicación");
                 
             }
             else
@@ -392,7 +393,6 @@ function CONTENIDO_PUB2MAIL($id_publicacion)
         echo Mensaje("Parece que el correo electronico esta mal escrito",_M_ERROR);
         }
     }
-    $mensaje= " de nuestro sitio web " . PROY_URL . " cree haber encontrado una publicación de tu interes y desea compartirla contigo.\n"."Puedes accederla a travez del siguiente link";
     echo '<p>Enviar la publicación "<strong>'.$publicacion['titulo'].'</strong>" a un amigo</p>';
     echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
     echo '<table>';
