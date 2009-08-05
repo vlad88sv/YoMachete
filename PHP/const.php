@@ -2,13 +2,13 @@
 // Proyecto
 define('PROY_NOMBRE','Ventas.com');
 define('PROY_URL',"http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']));
-define('PROY_MAIL_POSTMASTER','admin@localhost');
+define('PROY_MAIL_POSTMASTER','mensajero@'.$_SERVER['HTTP_HOST']);
 define('PROY_MAIL_REPLYTO',PROY_MAIL_POSTMASTER);
 
 // Niveles
 define('_N_administrador',      9);
 define('_N_moderador',          7);
-define('_N_tienda',            4);
+define('_N_tienda',             4);
 define('_N_vendedor',           3);
 define('_N_usuario',            2);
 
