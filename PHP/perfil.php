@@ -20,15 +20,15 @@ function CONTENIDO_PERFIL()
 
     if(_F_usuario_cache('id_usuario')==$usuario['id_usuario'])
     {
-        $c = "SELECT id_usuario_rmt, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario = a.id_usuario_rmt LIMIT 1) AS nombre_rmt, mensaje, tipo, contexto, fecha FROM ventas_mensajes AS a WHERE id IN (SELECT id_msj FROM ventas_mensajes_dst WHERE id_usuario_dst='"._F_usuario_cache('id_usuario')."')";
+        $c = "SELECT id_usuario_rmt, fecha, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario = a.id_usuario_rmt LIMIT 1) AS nombre_rmt, mensaje, tipo, contexto, fecha FROM ventas_mensajes AS a WHERE id IN (SELECT id_msj FROM ventas_mensajes_dst WHERE id_usuario_dst='"._F_usuario_cache('id_usuario')."') ORDER BY fecha DESC";
         $r = db_consultar($c);
         if (mysql_num_rows($r) > 0)
         {
             echo '<table class="ancha resultados">';
-            echo ui_tr(ui_th('Nombre Remitente').ui_th('Mensaje'));
+            echo ui_tr(ui_th('Nombre Remitente').ui_th('Fecha').ui_th('Mensaje'));
             while ($f = mysql_fetch_array($r))
             {
-            echo ui_tr(ui_td($f['nombre_rmt']).ui_td($f['mensaje']));
+            echo ui_tr(ui_td($f['nombre_rmt']).ui_td(fechatiempo_h_desde_mysql_datetime($f['fecha'])).ui_td($f['mensaje']));
             }
             echo '</table>';
         }

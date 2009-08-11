@@ -30,8 +30,7 @@ function _F_usuario_datos($id_usuario){
 function _F_usuario_agregar($datos){
     global $tablaUsuarios;
     if ( !_F_usuario_existe($datos['usuario']) ){
-        db_agregar_datos ($tablaUsuarios, $datos);
-        return true;
+        return db_agregar_datos ($tablaUsuarios, $datos);
     } else {
         return false;
     }

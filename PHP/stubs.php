@@ -176,7 +176,7 @@ function validEmail($email)
 function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron articulos")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_articulo, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
+    $c = "SELECT id_categoria, id_articulo, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
@@ -203,7 +203,7 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     $data .= '<tr>';
     if ($tipo != "previsualizacion")
     {
-        $data .= '<td class="titulo"><a id="titulo" href="'.$lnkTitulo.'">'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
+        $data .= '<td class="titulo"><a id="titulo" href="'.$lnkTitulo.'">'.htmlentities($titulo,ENT_QUOTES,'utf-8').'</a></td>';
     }
     else
     {
@@ -227,10 +227,10 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
         switch ($tipo)
         {
             case "admin":
-                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
             break;
             default:
-            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=eliminar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
     }
     $data .= '</table>';
@@ -492,7 +492,7 @@ function CargarDatos($id_articulo,$id_usuario)
     $id_articulo = db_codex($id_articulo);
     $id_usuario = db_codex($id_usuario);
 
-    $datos["tipo"] = _A_temporal;
+    if (_F_usuario_cache('nivel') != _N_administrador) {$datos["tipo"] = _A_temporal;}
     $datos["fecha_ini"] = mysql_datetime();
     $datos["fecha_fin"] = mysql_datetime();
     $datos["id_categoria"] = _F_form_cache("id_categoria");

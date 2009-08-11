@@ -102,35 +102,63 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
         $id_articulo = db_codex($_GET['id_articulo']);
         $id_usuario = db_codex($_GET['id_usuario']);
         $ret = 0;
-
+        $publicacion = ObtenerDatos($_GET['id_articulo']);
+        
         switch ($_GET['operacion'])
         {
             case "aprobar":
                 $ret = Publicacion_Aprobar($id_articulo);
                 if($ret)
                 {
-                    $msjNota="¡Su publicación ha sido aprobada! [".ui_href("","publicacion_".$id_articulo,"ver")."]";
-                }
-                {
-                    $msjNota="Su publicación NO pudo ser aprobada";
+                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("","publicacion_".$id_articulo,"ver")."]";
                 }
             break;
             case "rechazar":
-                $ret = DestruirTicket($_GET['cancelar'],_A_esp_activacion);
-                $msjNota="¡Su publicación [$id_articulo] ha sido rechazada y eliminada, esto significa que su publicación era ilegal!";
+                if (empty($_POST['motivo']))
+                {
+                    echo '<form action="'. $_SERVER['REQUEST_URI'] . '" method="post">';
+                    echo '<h1>Rechazar publicación</h1>';
+                    echo 'Por favor introduzca el motivo por el cual Ud. esta <strong>rechanzando (y eliminando) la publicación</strong> del vendedor<br />';
+                    echo 'Motivo: <input name="motivo" value="" />';
+                    echo '<input type="submit" value="Rechazar y eliminar"';
+                    echo '</form>';
+                    return;
+                }
+                $ret = DestruirTicket($_GET['id_articulo'],_A_esp_activacion);
+                $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido rechazada y eliminada!<br />El motivo del rechazo y eliminación de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
             break;
             case "retornar":
-                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo='"._A_aceptado."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
+                if (empty($_POST['motivo']))
+                {
+                    echo '<form action="'. $_SERVER['REQUEST_URI'] . '" method="post">';
+                    echo '<h1>Retornar publicación</h1>';
+                    echo 'Por favor introduzca el motivo por el cual Ud. esta <strong>retornando la publicación a la bandeja de publicaciones</strong> del vendedor<br />';
+                    echo 'Motivo: <input name="motivo" value="" />';
+                    echo '<input type="submit" value="retornar"';
+                    echo '</form>';
+                    return;
+                }
+                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo!='"._A_temporal."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
-                $msjNota="¡Su publicación ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]";
+                $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]<br />El motivo del retorno de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
             break;
             // Esta opción tiene logica si la ejecutan una vez aprobada la publicación, Ej. desde una VISTA__articulos()
             case "desaprobar":
+                if (empty($_POST['motivo']))
+                {
+                    echo '<form action="'. $_SERVER['REQUEST_URI'] . '" method="post">';
+                    echo '<h1>Desaprobar publicación</h1>';
+                    echo 'Por favor introduzca el motivo por el cual Ud. esta <strong>desaprobando la publicación</strong> del vendedor<br />';
+                    echo 'Motivo: <input name="motivo" value="" />';
+                    echo '<input type="submit" value="desprobar"';
+                    echo '</form>';
+                    return;
+                }
                 $c = "UPDATE ventas_articulos SET tipo="._A_esp_activacion." WHERE tipo='"._A_aceptado."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
-                $msjNota="¡La publicación ha sido desaprobada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]";
+                $msjNota="¡La publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido desaprobada, favor verifiquela e intene de nuevo! [".ui_href("","vender?ticket=".$id_articulo,"ver y editar esta publicación")."]<br />El motivo de desaprobación de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
             break;
         }
         if ($ret == 1)
@@ -142,7 +170,6 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
         {
             echo Mensaje("Operación erronea: ".$_GET['operacion'],_M_ERROR);
         }
-        echo '<br /><a href="'.$_SERVER['HTTP_REFERER'].'">Regresar</a>';
     }
 
     // Obtenemos las publicaciones pendientes

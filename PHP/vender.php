@@ -140,7 +140,7 @@ function CONTENIDO_VENDER()
         return;
     }
 
-    if(isset($_POST['vender_cancelar']))
+    if(isset($_POST['vender_eliminar']))
     {
         header("location: ./");
         if (!empty($_GET['ticket']))
@@ -197,7 +197,7 @@ function CONTENIDO_VENDER()
 
     if($flag_modo_previsualizacion || $flag_publicar)
     {
-        echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Publicar\"",_M_INFO);
+        echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Enviar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex(@$Buffer['id_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
@@ -298,9 +298,9 @@ function CONTENIDO_VENDER()
     echo "<span class='explicacion'>Puede observar como quedaría su publicación utilizando el botón 'Previsualizar'.<br />Cuando este satisfecho con el resultado presione el botón 'Publicar'.</span><br />";
     echo "<br />";
     echo "<center>";
-    echo ui_input("vender_previsualizar", "Previsualizar", "submit");
+    echo ui_input("vender_previsualizar", "Guardar y Previsualizar", "submit");
     echo ui_input("vender_publicar", "Publicar", "submit");
-    echo ui_input("vender_cancelar", "Cancelar", "submit");
+    echo ui_input("vender_eliminar", "Eliminar", "submit");
     echo "</center>";
     echo "</form>";
     echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');

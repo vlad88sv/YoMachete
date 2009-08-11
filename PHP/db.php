@@ -97,7 +97,7 @@ function db_actualizar_datos($tabla, $datos, $donde = "0") {
     $DATA = join(",",$arr_DATA);
     $c = "UPDATE $tabla SET $DATA WHERE $donde";
     $resultado = db_consultar ($c);
-    $id = @mysql_insert_id ($db_link);
+    $id = @mysql_affected_rows();
     DEPURAR ($c, 0);
     return $id;
 }
