@@ -1,7 +1,17 @@
 <?php
 function CONTENIDO_PERFIL()
 {
-
+    if(empty($_GET['id']) && !_autenticado())
+    {
+    // Un invitado quizo ver su propio perfil...
+    if (!S_iniciado())
+    {
+        echo "Necesitas iniciar sesión para poder <b>ver tu perfil</b><br />";
+        require_once("PHP/inicio.php");
+        CONTENIDO_INICIAR_SESION();
+        return;
+    }
+    }
     $usuario = empty($_GET['id']) && _autenticado() ? $_SESSION['cache_datos_usuario'] : _F_usuario_datos($_GET['id']);
     if(!is_array($usuario))
     {
