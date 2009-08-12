@@ -18,18 +18,18 @@ function CONTENIDO_PUBLICACION($op="")
     }
 
     $ticket = db_codex($_GET['publicacion']);
-    $Publicacion = ObtenerDatos($ticket);
-    if (!$Publicacion)
+    $publicacion = ObtenerDatos($ticket);
+    if (!$publicacion)
     {
         echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
         return;
     }
 
     // Ya venció el tiempo de publicación?.
-    if (strtotime($Publicacion['fecha_fin']) < time())
+    if (strtotime($publicacion['fecha_fin']) < time())
     {
         echo Mensaje("disculpe, el tiempo de publicación para la publicación solicitada ha caducado.", _M_INFO);
-        if (_F_usuario_cache('id_usuario') == $Publicacion['id_usuario'])
+        if (_F_usuario_cache('id_usuario') == $publicacion['id_usuario'])
         {
             echo ui_href("","servicios?op=atp&pub=$ticket","¿Desea ampliar el tiempo de su publicación?");
         }
@@ -44,10 +44,12 @@ function CONTENIDO_PUBLICACION($op="")
         case 'pub2pdf':
         break;
         case 'pub2mail':
-            CONTENIDO_PUB2MAIL($ticket);
+            CONTENIDO_PUB2MAIL($publicacion);
             return;
         break;
         case 'pubrep':
+            CONTENIDO_PUBREP($publicacion);
+            return;
         break;
         }
     }
@@ -79,7 +81,7 @@ function CONTENIDO_PUBLICACION($op="")
         }
     }
 
-    $Vendedor = _F_usuario_datos(@$Publicacion['id_usuario']);
+    $Vendedor = _F_usuario_datos(@$publicacion['id_usuario']);
     $imagenes = ObtenerImagenesArr($ticket,"");
     // Grabamos cualquier consulta enviada
     if ( _autenticado() && isset($_POST['consulta']) && isset($_POST['enviar_consulta']) && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'] )
@@ -108,16 +110,16 @@ function CONTENIDO_PUBLICACION($op="")
         }
     }
 
-    echo "<h1>".@$Publicacion['titulo']."</h1>";
-    echo "<hr /><div id=\"pub_descripcion_corta\">".@$Publicacion['descripcion_corta']."</div>";
+    echo "<h1>".@$publicacion['titulo']."</h1>";
+    echo "<hr /><div id=\"pub_descripcion_corta\">".@$publicacion['descripcion_corta']."</div>";
     echo "<hr />";
 
     // Categoria en la que se encuentra ubicado el producto
-    echo "<b>Categoría de la publicación:</b> " . join(" > ", get_path(@$Publicacion['id_categoria']));
+    echo "<b>Categoría de la publicación:</b> " . join(" > ", get_path(@$publicacion['id_categoria']));
     echo "<br />";
 
     // Categoria en la que se encuentra ubicado el producto
-    echo "<b>Fin de la publicación:</b> " . fecha_desde_mysql_datetime(@$Publicacion['fecha_fin']);
+    echo "<b>Fin de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_fin']);
     echo "<br />";
 
     // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.
@@ -136,7 +138,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<br />";
 
     // Precio y formas de pago aceptadas
-    echo "<b>Precio:</b> $" . number_format(@$Publicacion['precio'],2,".",",") ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
+    echo "<b>Precio:</b> $" . number_format(@$publicacion['precio'],2,".",",") ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
     echo "<div id=\"detalle_precio\" class=\"auto_ocultar\">";
     echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"),'disabled="disabled"');
     echo "</div>";
@@ -164,7 +166,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "</center>";
     }
     echo "<hr /><h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
-    echo nl2br(strip_html_tags(@$Publicacion['descripcion']));
+    echo nl2br(strip_html_tags(@$publicacion['descripcion']));
     echo "</div></center>";
 
     if ($op != "previsualizacion")
@@ -236,20 +238,20 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Otras publicaciones de este vendedor</h1>';
-        echo VISTA_ArticuloEnBarra("id_articulo <> '".$Publicacion['id_categoria']."' AND id_articulo <> '".$Publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
+        echo VISTA_ArticuloEnBarra("id_articulo <> '".$publicacion['id_categoria']."' AND id_articulo <> '".$publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
     }
 
     // Mostrar "Productos similares". Escoger de la misma categoria los
     // productos que esten en el rango de +/-25% del precio actual
 
-    $PrecioMin = (double) (@$Publicacion['precio']) * 0.50; // -50%
-    $PrecioMax = (double) (@$Publicacion['precio']) * 1.50; // +50%
+    $PrecioMin = (double) (@$publicacion['precio']) * 0.50; // -50%
+    $PrecioMax = (double) (@$publicacion['precio']) * 1.50; // +50%
 
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Publicaciones similares</h1>';
-        echo VISTA_ArticuloEnBarra("id_categoria='".$Publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$Publicacion['id_articulo']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
+        echo VISTA_ArticuloEnBarra("id_categoria='".$publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$publicacion['id_articulo']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
 
    
@@ -367,9 +369,8 @@ $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC
 echo $data;
 }
 
-function CONTENIDO_PUB2MAIL($id_publicacion)
+function CONTENIDO_PUB2MAIL($publicacion)
 {
-    $publicacion = ObtenerDatos($id_publicacion);
     if (!empty($_POST['nr']) && !empty($_POST['nd']) && !empty($_POST['correo']) && !empty($_POST['enviar_pub2mail']))
     {
         // Nos conformamos con que exista el destinatario:
@@ -403,5 +404,9 @@ function CONTENIDO_PUB2MAIL($id_publicacion)
     echo '</table>';
     echo ui_input("enviar_pub2mail","Enviar","submit").'<br />';
     echo '</form>';
+}
+function CONTENIDO_PUBREP($publicacion)
+{
+    email_x_nivel(_N_administrador, "Reporte de publicación", "La siguiente publicación ha sido reportada:\n\"%s\"\nURL: %s",$publicacion['titulo'],curPageURL(true));
 }
 ?>

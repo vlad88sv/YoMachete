@@ -31,14 +31,6 @@ function despachar_notificaciones_sms($mensaje){
     }
 }
 
-function despachar_notificaciones_email($mensaje){
-    $c = "SELECT email FROM ventas_usuarios WHERE nivel="._N_administrador;
-    $r = db_consultar($c);
-    while ($f = mysql_fetch_array($r)) {
-        mail($f[0],$mensaje,"No responda a este mensaje. Gracias");
-    }
-}
-
 // http://www.sitepoint.com/article/hierarchical-data-database/
 function get_path($node,$url=true,$prefijo="categoria-") {
    // look up the parent of this node
@@ -300,14 +292,15 @@ function ObtenerTicketTMP($id_usuario)
 */
 function DestruirTicket($id_articulo,$tipo=_A_temporal)
 {
-    $AND_usuario = '';
+    $AND_usuario = $AND_tipo = '';
     if (_F_usuario_cache('nivel') != _N_administrador)
     {
         $id_usuario =  _F_usuario_cache('id_usuario');
         $AND_usuario = "AND id_usuario='$id_usuario'";
+        $AND_tipo = "AND tipo="._A_temporal;
     }
     $id_articulo = db_codex($id_articulo);
-    $c = "DELETE FROM ventas_articulos WHERE id_articulo='$id_articulo' $AND_usuario AND tipo='".$tipo."' LIMIT 1";
+    $c = "DELETE FROM ventas_articulos WHERE id_articulo='$id_articulo' $AND_usuario $AND_tipo LIMIT 1";
     $r = db_consultar($c);
     $ret = db_afectados();
     if ($ret)
@@ -672,7 +665,17 @@ function curPageURL($stripArgs=false) {
 }
 function email($para, $asunto, $mensaje)
 {
-$headers = 'From: '. PROY_MAIL_POSTMASTER . "\r\n";
+$headers = "MIME-Version: 1.0" . "\r\n";
+$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+$headers .= 'From: <'. PROY_MAIL_POSTMASTER . ">\r\n";
 return mail($para,$asunto,$mensaje,$headers);
+}
+function email_x_nivel($id_nivel, $asunto, $mensaje)
+{
+    $c = "SELECT email FROM ventas_usuarios WHERE nivel=$id_nivel";
+    $r = db_consultar($c);
+    while ($f = mysql_fetch_array($r)) {
+        email($f['email'],PROY_NOMBRE." - $asunto",$mensaje);
+    }
 }
 ?>
