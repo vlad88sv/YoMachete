@@ -588,6 +588,9 @@ function ObtenerEstadisticasUsuario($id_usuario, $tipo)
         case _EST_CANT_PUB_ACEPT:
             $c = "SELECT COUNT(*) AS cuenta FROM ventas_publicaciones WHERE id_usuario='$id_usuario' AND tipo='"._A_aceptado."'";
         break;
+        case _EST_CANT_PUB_NOTEMP:
+            $c = "SELECT COUNT(*) AS cuenta FROM ventas_publicaciones WHERE id_usuario='$id_usuario' AND tipo != '"._A_temporal."'";
+        break;
         default:
         return "#ERROR# constante _EST_ '$tipo' no registrada";
     }

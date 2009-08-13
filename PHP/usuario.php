@@ -16,8 +16,6 @@ if ($resultado) {
     return false;
 }
 }
-function _F_usuario_eliminar(){}
-function _F_usuario_actualizar(){}
 
 function _F_usuario_datos($id_usuario){
     global $tablaUsuarios;

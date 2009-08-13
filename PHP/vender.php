@@ -20,10 +20,17 @@ function CONTENIDO_VENDER()
     // --------------------------CATEGORIA-------------------------------
     if ( !isset($_GET['op']) && !isset($_GET['ticket']))
     {
-        // No ha escogido categoría, le mostramos las opciones.
-        echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
-        echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?op=articulo", "artículo");
-
+        //Será que aún tiene ventas disponibles?
+        if (ObtenerEstadisticasUsuario(_F_usuario_cache('id_usuario'),_EST_CANT_PUB_NOTEMP) >= _F_usuario_cache('nPubMax'))
+        {
+            echo Mensaje("Ud. ha alcanzado su límite de publicaciones ("._F_usuario_cache('nPubMax')."), si desea agregar más publicaciones puede eliminar una publicación actual o adquirir una cuenta premium.");
+        }
+        else
+        {
+            // No ha escogido categoría, le mostramos las opciones.
+            echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
+            echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?op=articulo", "artículo");
+        }
         // Mostrar las ventas publicadas:
 
         $c = "SELECT id_publicacion, titulo, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";

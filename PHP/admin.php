@@ -326,7 +326,7 @@ function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
             else{
                 echo Mensaje("Usuario NO PUDO ser añadido",_M_ERROR);
             }
-            email($datos['email'],"Estimado %s, Ud. ha sido registrado en ".PROY_NOMBRE." por un Administrador","Su registro de usuario  en ".PROY_NOMBRE." ha sido efectuado manualmente por un administrador, ¡su cuenta esta activa y esperando a ser utilizada!.<br />\n\n<hr><br />\n<h1>Datos registrados</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".trim($_POST['registrar_campo_clave']))."</strong><br /><br />Gracias por su amable espera.<br />".PROY_NOMBRE."<br />".PROY_URL; //$datos['clave'] en este punto ya contiene la contraseña encriptada
+            email($datos['email'],sprintf("Estimado %s, Ud. ha sido registrado en ".PROY_NOMBRE." por un Administrador",$datos['usuario']),"Su registro de usuario  en ".PROY_NOMBRE." ha sido efectuado manualmente por un administrador, ¡su cuenta esta activa y esperando a ser utilizada!.<br />\n\n<hr><br />\n<h1>Datos registrados</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".trim($_POST['registrar_campo_clave']))."</strong><br />".PROY_NOMBRE."<br />".PROY_URL; //$datos['clave'] en este punto ya contiene la contraseña encriptada
             return;
         }
     }
@@ -364,9 +364,10 @@ $("#registrar_campo_usuario").keyup(function(){$("#registrar_respuesta_usuario")
 
 function INTERFAZ__ADMIN_USUARIOS_EDITAR()
 {
-    if(!empty($_POST['registrar']))
+    if(!empty($_POST['modificar']))
     {
         $flag_registroExitoso=true;
+        
         if (!empty($_POST['registrar_campo_email']))
         {
             if (!validEmail($_POST['registrar_campo_email']))
@@ -374,12 +375,7 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
                 echo mensaje ("Este correo electrónico no es válido, por favor revise que este escrito correctamente o escoja otro e intente de nuevo",_M_ERROR);
                 $flag_registroExitoso=false;
             }
-            if (_F_usuario_existe($_POST['registrar_campo_email'],"email"))
-            {
-                echo mensaje ("Este correo electrónico ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
-                $flag_registroExitoso=false;
-            }
-                $datos['email'] = $_POST['registrar_campo_email'];
+            $datos['email'] = $_POST['registrar_campo_email'];
         }
         else
         {
@@ -389,11 +385,6 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
 
         if (!empty($_POST['registrar_campo_usuario']))
         {
-            if (_F_usuario_existe($_POST['registrar_campo_usuario']))
-            {
-                echo mensaje ("Este nombre de usuario ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
-                $flag_registroExitoso=false;
-            }
             if (strpos(trim($_POST['registrar_campo_usuario'])," "))
             {
                 echo mensaje ("Este nombre de usuario no es válido (contiene espacios), por favor escoja otro e intente de nuevo",_M_ERROR);
@@ -429,73 +420,68 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
                 $flag_registroExitoso=false;
             }
         }
-        else
-        {
-            echo mensaje ("Por favor ingrese su contraseña e intente de nuevo",_M_ERROR);
-            $flag_registroExitoso=false;
-        }
 
         if (!empty($_POST['registrar_campo_nombre']))
         {
             $datos['nombre'] = $_POST['registrar_campo_nombre'];
         }
-        if (!empty($_POST['registrar_campo_telefono']))
+        if (isset($_POST['registrar_campo_telefono']))
         {
-            if (_F_usuario_existe($_POST['registrar_campo_telefono'], "telefono1"))
-            {
-                echo mensaje ("Este teléfono ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
-                $flag_registroExitoso=false;
-            }
-
             $datos['telefono1'] = $_POST['registrar_campo_telefono'];
-        }
-        else
-        {
-            echo mensaje ("Por favor ingrese su número telefonico e intente de nuevo",_M_ERROR);
-            $flag_registroExitoso=false;
         }
 
         if ($flag_registroExitoso)
         {
             $datos["estado"] = _N_activo;
             $datos["nivel"] = $_POST['nivel'];
+            $datos["nPubMax"] = $_POST['nPubMax'];
+            $datos["nDiasVigencia"] = $_POST['nDiasVigencia'];
             $datos["ultimo_acceso"] = mysql_datetime();
-            $datos["registro"]= mysql_datetime();
-            if (db_agregar_datos("ventas_usuarios",$datos))
+            if (db_actualizar_datos("ventas_usuarios",$datos,"id_usuario=".db_codex($_GET['usuario'])))
             {
-                echo Mensaje("Usuario añadido exitosamente");
+                echo Mensaje("Usuario editado exitosamente");
+                echo '<h1>Opciones</h1>';
+                echo ui_href("","admin_usuarios_admin","Retornar a lista de usuarios");
             }
             else{
-                echo Mensaje("Usuario NO PUDO ser añadido",_M_ERROR);
+                echo Mensaje("Usuario NO PUDO ser editado o no se realizo ningun cambio",_M_ERROR);
             }
-            email($datos['email'],"Estimado %s, Ud. ha sido registrado en ".PROY_NOMBRE." por un Administrador","Su registro de usuario  en ".PROY_NOMBRE." ha sido efectuado manualmente por un administrador, ¡su cuenta esta activa y esperando a ser utilizada!.<br />\n\n<hr><br />\n<h1>Datos registrados</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".trim($_POST['registrar_campo_clave']))."</strong><br /><br />Gracias por su amable espera.<br />".PROY_NOMBRE."<br />".PROY_URL; //$datos['clave'] en este punto ya contiene la contraseña encriptada
+            if (isset($_POST['enviar_notificacion']))
+            {
+                email($datos['email'],sprintf("Estimado %s, sus datos han sido modificados en ".PROY_NOMBRE." por un Administrador",$datos['usuario']),"Sus datos de usuario  en ".PROY_NOMBRE." han sido modificados por un administrador.<br />\n\n<hr><br />\n<h1>Datos actuales</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".(trim($_POST['registrar_campo_clave']) != "" ? trim($_POST['registrar_campo_clave']) : "<la contraseña no fue modificada>") ."</strong><br /><br />".PROY_NOMBRE."<br />".PROY_URL); //$datos['clave'] en este punto ya contiene la contraseña encriptada
+            }
             return;
         }
     }
+
+$usuario = _F_usuario_datos($_GET['usuario']);
 ?>
-<h1>Registro de usuario</h1>
+<h1>Edición de usuario</h1>
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" >
 <table>
-<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="" /></tr>
-<tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="" /></tr>
-<tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="" /></tr>
+<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="<?php echo $usuario['email']; ?>" /></tr>
+<tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="<?php echo $usuario['usuario']; ?>" /></tr>
+<tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="<?php echo $usuario['nombre']; ?>" /></tr>
 <tr><td>Clave</td><td><input name="registrar_campo_clave" value="" /></tr>
 <tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" value="" /></tr>
-<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="" /></tr>
+<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="<?php echo $usuario['telefono1']; ?>" /></tr>
+<tr><td>Días de vigencia para publicaciones</td><td><input name="nDiasVigencia" value="<?php echo $usuario['nDiasVigencia']; ?>" /></tr>
+<tr><td>Publicaciones máximas</td><td><input name="nPubMax" value="<?php echo $usuario['nPubMax']; ?>" /></tr>
 <tr>
 <td>Nivel</td>
 <td>
 <select name="nivel">
-    <option value="<?php echo _N_administrador; ?>">Administrador</option>
-    <option value="<?php echo _N_moderador; ?>">Moderador</option>
-    <option value="<?php echo _N_tienda; ?>">Vendedor con Tienda</option>
-    <option value="<?php echo _N_vendedor; ?>">Vendedor</option>
+    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_administrador; ?>">Administrador</option>
+    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_moderador; ?>">Moderador</option>
+    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_tienda; ?>">Vendedor con Tienda</option>
+    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_vendedor; ?>">Vendedor</option>
 </select>
 </td>
 </tr>
 </table>
+<input name="enviar_notificacion" value="Si" checked="checked" type="checkbox"/> Enviar notificación sobre este cambio al usuario<br />
 <br />
-<input name="registrar" value="Registrar" type="submit"/>
+<input name="modificar" value="Modificar" type="submit"/>
 </form>
 <?php
 echo JS_onload('
@@ -504,8 +490,39 @@ $("#registrar_campo_usuario").keyup(function(){$("#registrar_respuesta_usuario")
 ');
 }
 
+function INTERFAZ__ADMIN_USUARIOS_ELIMINAR()
+{
+    $c = "DELETE FROM ventas_usuarios WHERE id_usuario='".db_codex($_GET['usuario'])."'";
+    db_consultar($c);
+    if(db_afectados())
+    {
+        echo Mensaje("Usuario eliminado exitosamente");
+    }
+    else
+    {
+        echo Mensaje("Usuario no pudo ser eliminado",_M_ERROR);
+    }
+    
+    echo '<h1>Opciones</h1>';
+    echo ui_href("","admin_usuarios_admin","Retornar a lista de usuarios");
+}
+
 function INTERFAZ__ADMIN_USUARIOS()
 {
+    if(!empty($_GET['accion']))
+    {
+        switch($_GET['accion'])
+        {
+        case 'editar' :
+            INTERFAZ__ADMIN_USUARIOS_EDITAR();
+            return;
+        break;
+        case 'eliminar' :
+            INTERFAZ__ADMIN_USUARIOS_ELIMINAR();
+            return;
+        break;
+        }
+    }
     
     $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor+Tienda' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax` FROM ventas_usuarios WHERE 1",_N_administrador,_N_moderador,_N_tienda,_N_vendedor);
     $r = db_consultar($c);
@@ -521,6 +538,8 @@ function INTERFAZ__ADMIN_USUARIOS()
 ?>
 </table>
 <?php
+echo '<h1>Opciones</h1>';
+echo ui_href("","admin","Retornar a Administración");
 }
 ?>
 
