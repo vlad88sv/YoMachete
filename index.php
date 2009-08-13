@@ -48,7 +48,7 @@ $mensaje="";
 
 if (_F_usuario_cache('nivel') == _N_administrador)
 {
-    $PPA = db_contar("ventas_articulos","tipo='"._A_esp_activacion."'");
+    $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
     $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
     if ($PPA || $UPA)
     {

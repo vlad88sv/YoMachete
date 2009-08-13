@@ -88,7 +88,7 @@ function CONTENIDO_PUBLICACION($op="")
     {
         // Consulta publica
         $datos['id_usuario'] = _F_usuario_cache('id_usuario');
-        $datos['id_articulo'] = $ticket;
+        $datos['id_publicacion'] = $ticket;
         $datos['consulta'] = substr(strip_tags(db_codex($_POST['consulta'])),0,300);
         $datos['tipo'] = isset($_POST['tipo_consulta']) ? _MeP_Publico : _MeP_Privado;
         $datos['fecha_consulta'] = mysql_datetime();
@@ -104,7 +104,7 @@ function CONTENIDO_PUBLICACION($op="")
         {
             $respuesta = substr(strip_tags(db_codex($respuesta)),0,300);
             $id = db_codex($id);
-            $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta', fecha_respuesta='".mysql_datetime()."' WHERE id='$id' AND id_articulo='$ticket' LIMIT 1";
+            $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta', fecha_respuesta='".mysql_datetime()."' WHERE id='$id' AND id_publicacion='$ticket' LIMIT 1";
             $r = db_consultar($c);
             // Enviamos un mensaje al comprador
         }
@@ -172,7 +172,7 @@ function CONTENIDO_PUBLICACION($op="")
     if ($op != "previsualizacion")
     {
     echo '<hr /><div class="cuadro_importante">';
-    $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo, fecha_consulta, fecha_respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_articulo=$ticket";
+    $c = "SELECT id, id_usuario, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario=a.id_usuario) AS usuario, consulta, respuesta, respuesta, tipo, fecha_consulta, fecha_respuesta FROM ventas_mensajes_publicaciones AS a WHERE id_publicacion=$ticket";
     $r = db_consultar($c);
     if ($r && mysql_num_rows($r) > 0)
     {
@@ -238,7 +238,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Otras publicaciones de este vendedor</h1>';
-        echo VISTA_ArticuloEnBarra("id_articulo <> '".$publicacion['id_categoria']."' AND id_articulo <> '".$publicacion['id_articulo']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
+        echo VISTA_ArticuloEnBarra("id_publicacion <> '".$publicacion['id_categoria']."' AND id_publicacion <> '".$publicacion['id_publicacion']."' AND id_usuario = '".$Vendedor['id_usuario']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
     }
 
@@ -251,7 +251,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Publicaciones similares</h1>';
-        echo VISTA_ArticuloEnBarra("id_categoria='".$publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_articulo <> '".$publicacion['id_articulo']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
+        echo VISTA_ArticuloEnBarra("id_categoria='".$publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_publicacion <> '".$publicacion['id_publicacion']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
 
    
@@ -327,7 +327,7 @@ $data = '';
 $Vendedor = _F_usuario_datos($_GET['tienda']);
 echo "Viendo tienda de: <b>".$Vendedor['usuario']."</b><hr /><br />";
 $nivel = (!empty($_GET['categoria'])) ? "padre='".db_codex($_GET['categoria'])."' AND " : "";
-$c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE $nivel id_categoria IN (SELECT padre FROM ventas_categorias WHERE id_categoria IN (SELECT id_categoria FROM ventas_articulos WHERE id_usuario='".$Vendedor['id_usuario']."')) ORDER BY nombre";
+$c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE $nivel id_categoria IN (SELECT padre FROM ventas_categorias WHERE id_categoria IN (SELECT id_categoria FROM ventas_publicaciones WHERE id_usuario='".$Vendedor['id_usuario']."')) ORDER BY nombre";
 $resultado = db_consultar($c);
 $n_campos = mysql_num_rows($resultado);
 $data = ' <div id="secc_categorias">';

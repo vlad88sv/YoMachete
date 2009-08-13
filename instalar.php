@@ -25,22 +25,12 @@ $usuario['ultimo_acceso']= mysql_datetime();
 $usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
 
-// Agregamos al usuario Usuario
-$usuario['usuario'] = 'usuario';
-$usuario['clave']   = md5('usuario');
-$usuario['nombre']  = 'Uusuario Ejemplo';
-$usuario['email']   = 'usuario@localhost.com';
-$usuario['nivel']   = _N_usuario;
-$usuario['ultimo_acceso']= mysql_datetime();
-$usuario['registro']= mysql_datetime();
-_F_usuario_agregar ($usuario);
-
 // Agregamos al usuario Vendedor
 $usuario['usuario'] = 'vendedor';
 $usuario['clave']   = md5('vendedor');
 $usuario['nombre']  = 'Vendedor Ejemplo';
 $usuario['email']   = 'vendedor@localhost.com';
-$usuario['nivel']   = _N_usuario;
+$usuario['nivel']   = _N_vendedor;
 $usuario['ultimo_acceso']= mysql_datetime();
 $usuario['registro']= mysql_datetime();
 _F_usuario_agregar ($usuario);
@@ -385,11 +375,11 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Otras Entradas", "descripcion" => "", "rubro" => "articulo"));
 
 // Tabla de articulos
-$campos = "id_articulo INT NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo INT, promocionado TINYINT(1), fecha_ini DATETIME, fecha_fin DATETIME, id_categoria INT, id_usuario INT, precio DECIMAL(12,2), titulo VARCHAR(200), descripcion_corta VARCHAR(500), descripcion LONGTEXT";
-echo db_crear_tabla("ventas_articulos", $campos, true);
+$campos = "id_publicacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo INT, promocionado TINYINT(1), fecha_ini DATETIME, fecha_fin DATETIME, id_categoria INT, id_usuario INT, precio DECIMAL(12,2), titulo VARCHAR(200), descripcion_corta VARCHAR(500), descripcion LONGTEXT";
+echo db_crear_tabla("ventas_publicaciones", $campos, true);
 
 // Tabla imagenes
-$campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_articulo INT, mime VARCHAR(100)";
+$campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_publicacion INT, mime VARCHAR(100)";
 echo db_crear_tabla("ventas_imagenes", $campos, true);
 
 // Tabla FLAGS ventas
@@ -419,7 +409,7 @@ db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_pactada", "no
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "Marque esta opción si Ud. desea enviar el producto a travez de un courier o una empresa de entrega de paquetes"));
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "Marque esta opción si Ud. desea enviar el producto a travez de correo nacional"));
 
-$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_articulo INT";
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_publicacion INT";
 echo db_crear_tabla("ventas_flags_art", $campos, true);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT, fecha DATETIME";
@@ -428,7 +418,7 @@ echo db_crear_tabla("ventas_mensajes", $campos, true);
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_msj INT, id_usuario_dst INT, leido TINYINT(1), eliminado TINYINT(1)";
 echo db_crear_tabla("ventas_mensajes_dst", $campos, true);
 
-$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_articulo INT, consulta VARCHAR(1000), respuesta VARCHAR(1000), tipo INT, fecha_consulta DATETIME, fecha_respuesta DATETIME";
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_publicacion INT, consulta VARCHAR(1000), respuesta VARCHAR(1000), tipo INT, fecha_consulta DATETIME, fecha_respuesta DATETIME";
 echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, true);
 ?>
 </body>

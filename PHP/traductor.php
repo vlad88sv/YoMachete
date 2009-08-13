@@ -74,7 +74,7 @@ switch ($_GET['peticion'])
         {
             $flag_Abortar = false;
             $op =  db_codex($_GET['op']);
-            $c = "SELECT id_img, id_articulo, mime FROM ventas_imagenes WHERE id_img='$op' LIMIT 1";
+            $c = "SELECT id_img, id_publicacion, mime FROM ventas_imagenes WHERE id_img='$op' LIMIT 1";
             $r = db_consultar($c);
             $f = mysql_fetch_array($r);
 

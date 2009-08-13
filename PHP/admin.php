@@ -12,7 +12,7 @@ function CONTENIDO_ADMIN()
             CONTENIDO_INICIAR_SESION();
             return;
         }
-
+    
         return;
     }
     if (empty($_GET['op']))
@@ -21,10 +21,13 @@ function CONTENIDO_ADMIN()
         echo "Por favor seleccione el área a administrar:";
         echo "<ul>";
         echo "<li>".ui_href("","admin_usuarios_activacion","Usuarios: activación de cuentas")."</li>";
-        echo "<li>".ui_href("","admin_usuarios_admin","Usuarios: administración general")."</li>";
-        echo "<li>".ui_href("","admin_categorias_admin","Categorias: administración general")."</li>";
+        echo "<li>".ui_href("","admin_usuarios_admin","Usuarios: administración")."</li>";
+        echo "<li>".ui_href("","admin_usuarios_agregar","Usuarios: agregar")."</li>";
+        echo "<li>".ui_href("","admin_categorias_admin","Categorias: administración")."</li>";
         echo "<li>".ui_href("","admin_publicaciones_activacion","Publicaciones: aprobación")."</li>";
-        echo "<li>".ui_href("","admin_publicaciones_admin","Publicaciones: administración general")."</li>";
+        echo "<li>".ui_href("","admin_publicaciones_admin","Publicaciones: administración")."</li>";
+        echo "<li>".ui_href("","admin_tiendas","Tiendas: administración")."</li>";
+        echo "<li>".ui_href("","admin_tiendas","Tiendas: agregar")."</li>";
         echo "</ul>";
         return;
     }
@@ -34,6 +37,12 @@ function CONTENIDO_ADMIN()
     {
         case "usuarios_activacion":
             INTERFAZ__ACTIVACION_USUARIOS();
+        break;
+        case "usuarios_agregar":
+            INTERFAZ__ADMIN_USUARIOS_AGREGAR();
+        break;
+        case "usuarios_admin":
+            INTERFAZ__ADMIN_USUARIOS();
         break;
         case "publicaciones_activacion":
             INTERFAZ__PUBLICACIONES_ACTIVACION();
@@ -100,21 +109,21 @@ function INTERFAZ__ACTIVACION_USUARIOS()
 }
 function INTERFAZ__PUBLICACIONES_ACTIVACION()
 {
-    if (!empty($_GET['operacion']) && !empty($_GET['id_articulo']) && !empty($_GET['id_usuario']))
+    if (!empty($_GET['operacion']) && !empty($_GET['id_publicacion']) && !empty($_GET['id_usuario']))
     {
-        $id_articulo = db_codex($_GET['id_articulo']);
+        $id_publicacion = db_codex($_GET['id_publicacion']);
         $id_usuario = db_codex($_GET['id_usuario']);
         $ret = 0;
         $usuario = _F_usuario_datos($id_usuario);
-        $publicacion = ObtenerDatos($_GET['id_articulo']);
+        $publicacion = ObtenerDatos($_GET['id_publicacion']);
         
         switch ($_GET['operacion'])
         {
             case "aprobar":
-                $ret = Publicacion_Aprobar($id_articulo);
+                $ret = Publicacion_Aprobar($id_publicacion);
                 if($ret)
                 {
-                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("",PROY_URL."/publicacion_".$id_articulo,"ver")."]";
+                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("",PROY_URL."/publicacion_".$id_publicacion,"ver")."]";
                 }
             break;
             case "rechazar":
@@ -128,7 +137,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                     echo '</form>';
                     return;
                 }
-                $ret = DestruirTicket($_GET['id_articulo'],_A_esp_activacion);
+                $ret = DestruirTicket($_GET['id_publicacion'],_A_esp_activacion);
                 $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido rechazada y eliminada!<br />El motivo del rechazo y eliminación de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
             break;
             case "retornar":
@@ -142,10 +151,10 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                     echo '</form>';
                     return;
                 }
-                $c = "UPDATE ventas_articulos SET tipo="._A_temporal." WHERE tipo!='"._A_temporal."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
+                $c = "UPDATE ventas_publicaciones SET tipo="._A_temporal." WHERE tipo!='"._A_temporal."' AND id_publicacion='$id_publicacion' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
-                $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("",PROY_URL."/vender?ticket=".$id_articulo,"ver y editar esta publicación")."]<br />El motivo del retorno de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
+                $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("",PROY_URL."/vender?ticket=".$id_publicacion,"ver y editar esta publicación")."]<br />El motivo del retorno de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
             break;
             // Esta opción tiene logica si la ejecutan una vez aprobada la publicación, Ej. desde una VISTA__articulos()
             case "desaprobar":
@@ -159,7 +168,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                     echo '</form>';
                     return;
                 }
-                $c = "UPDATE ventas_articulos SET tipo="._A_esp_activacion." WHERE tipo='"._A_aceptado."' AND id_articulo='$id_articulo' AND id_usuario='$id_usuario' LIMIT 1";
+                $c = "UPDATE ventas_publicaciones SET tipo="._A_esp_activacion." WHERE tipo='"._A_aceptado."' AND id_publicacion='$id_publicacion' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
                 $msjNota="¡La publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido desaprobada!<br />\nEsto significa que un administrador esta realizando una revisión de la publicación y no estará disponible al público mientras no sea re-aprobada.<br />\nEl motivo de desaprobación de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
@@ -185,9 +194,9 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
 
 function INTERFAZ__PUBLICACIONES_ADMIN()
 {
-    if (!empty($_GET['operacion']) && !empty($_GET['id_articulo']) && !empty($_GET['id_usuario']))
+    if (!empty($_GET['operacion']) && !empty($_GET['id_publicacion']) && !empty($_GET['id_usuario']))
     {
-        $id_articulo = db_codex($_GET['id_articulo']);
+        $id_publicacion = db_codex($_GET['id_publicacion']);
         $id_usuario = db_codex($_GET['id_usuario']);
         $ret = 0;
 
@@ -196,7 +205,7 @@ function INTERFAZ__PUBLICACIONES_ADMIN()
             case "promocionar":
                 if ($_GET['estado'] == 0 || $_GET['estado'] == 1 )
                 {
-                    if (PromocionarPublicacion($id_articulo, $_GET['estado']))
+                    if (PromocionarPublicacion($id_publicacion, $_GET['estado']))
                     {
                         echo 'Estado de promoción alternado.';
                     }
@@ -210,4 +219,308 @@ function INTERFAZ__PUBLICACIONES_ADMIN()
         echo '<br /><a href="'.$_SERVER['HTTP_REFERER'].'">Regresar</a>';
     }
 }
+
+function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
+{
+    if(!empty($_POST['registrar']))
+    {
+        $flag_registroExitoso=true;
+        if (!empty($_POST['registrar_campo_email']))
+        {
+            if (!validEmail($_POST['registrar_campo_email']))
+            {
+                echo mensaje ("Este correo electrónico no es válido, por favor revise que este escrito correctamente o escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+            if (_F_usuario_existe($_POST['registrar_campo_email'],"email"))
+            {
+                echo mensaje ("Este correo electrónico ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+                $datos['email'] = $_POST['registrar_campo_email'];
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su email e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if (!empty($_POST['registrar_campo_usuario']))
+        {
+            if (_F_usuario_existe($_POST['registrar_campo_usuario']))
+            {
+                echo mensaje ("Este nombre de usuario ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+            if (strpos(trim($_POST['registrar_campo_usuario'])," "))
+            {
+                echo mensaje ("Este nombre de usuario no es válido (contiene espacios), por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+            $datos['usuario'] = trim($_POST['registrar_campo_usuario']);
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su usuario e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if (!empty($_POST['registrar_campo_clave']) && !empty($_POST['registrar_campo_clave_2']))
+        {
+            //Contraseñas iguales?
+            if (trim($_POST['registrar_campo_clave']) == trim($_POST['registrar_campo_clave_2']))
+            {
+                //Tamaño adecuado?
+                if(strlen($_POST['registrar_campo_clave']) >= 6 && strlen($_POST['registrar_campo_clave']) <= 100)
+                {
+                    $datos['clave'] = md5(trim($_POST['registrar_campo_clave']));
+                }
+                else
+                {
+                    echo mensaje ("La contraseña debe tener mas de 6 caracteres",_M_ERROR);
+                    $flag_registroExitoso=false;
+                }
+            }
+            else
+            {
+                echo mensaje ("Las contraseñas no coinciden, por favor ingrese su contraseña e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su contraseña e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if (!empty($_POST['registrar_campo_nombre']))
+        {
+            $datos['nombre'] = $_POST['registrar_campo_nombre'];
+        }
+        if (!empty($_POST['registrar_campo_telefono']))
+        {
+            if (_F_usuario_existe($_POST['registrar_campo_telefono'], "telefono1"))
+            {
+                echo mensaje ("Este teléfono ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+
+            $datos['telefono1'] = $_POST['registrar_campo_telefono'];
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su número telefonico e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if ($flag_registroExitoso)
+        {
+            $datos["estado"] = _N_activo;
+            $datos["nivel"] = $_POST['nivel'];
+            $datos["ultimo_acceso"] = mysql_datetime();
+            $datos["registro"]= mysql_datetime();
+            if (db_agregar_datos("ventas_usuarios",$datos))
+            {
+                echo Mensaje("Usuario añadido exitosamente");
+            }
+            else{
+                echo Mensaje("Usuario NO PUDO ser añadido",_M_ERROR);
+            }
+            email($datos['email'],"Estimado %s, Ud. ha sido registrado en ".PROY_NOMBRE." por un Administrador","Su registro de usuario  en ".PROY_NOMBRE." ha sido efectuado manualmente por un administrador, ¡su cuenta esta activa y esperando a ser utilizada!.<br />\n\n<hr><br />\n<h1>Datos registrados</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".trim($_POST['registrar_campo_clave']))."</strong><br /><br />Gracias por su amable espera.<br />".PROY_NOMBRE."<br />".PROY_URL; //$datos['clave'] en este punto ya contiene la contraseña encriptada
+            return;
+        }
+    }
 ?>
+<h1>Registro de usuario</h1>
+<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" >
+<table>
+<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="" /></tr>
+<tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="" /></tr>
+<tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="" /></tr>
+<tr><td>Clave</td><td><input name="registrar_campo_clave" value="" /></tr>
+<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" value="" /></tr>
+<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="" /></tr>
+<tr>
+<td>Nivel</td>
+<td>
+<select name="nivel">
+    <option value="<?php echo _N_administrador; ?>">Administrador</option>
+    <option value="<?php echo _N_moderador; ?>">Moderador</option>
+    <option value="<?php echo _N_tienda; ?>">Vendedor con Tienda</option>
+    <option value="<?php echo _N_vendedor; ?>">Vendedor</option>
+</select>
+</td>
+</tr>
+</table>
+<br />
+<input name="registrar" value="Registrar" type="submit"/>
+</form>
+<?php
+echo JS_onload('
+$("#registrar_campo_email").keyup(function(){$("#registrar_respuesta_email").load("./registro_correo_existe:"+$("#registrar_campo_email").val());});
+$("#registrar_campo_usuario").keyup(function(){$("#registrar_respuesta_usuario").load("./registro_usuario_existe:"+$("#registrar_campo_usuario").val());});
+');
+}
+
+function INTERFAZ__ADMIN_USUARIOS_EDITAR()
+{
+    if(!empty($_POST['registrar']))
+    {
+        $flag_registroExitoso=true;
+        if (!empty($_POST['registrar_campo_email']))
+        {
+            if (!validEmail($_POST['registrar_campo_email']))
+            {
+                echo mensaje ("Este correo electrónico no es válido, por favor revise que este escrito correctamente o escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+            if (_F_usuario_existe($_POST['registrar_campo_email'],"email"))
+            {
+                echo mensaje ("Este correo electrónico ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+                $datos['email'] = $_POST['registrar_campo_email'];
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su email e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if (!empty($_POST['registrar_campo_usuario']))
+        {
+            if (_F_usuario_existe($_POST['registrar_campo_usuario']))
+            {
+                echo mensaje ("Este nombre de usuario ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+            if (strpos(trim($_POST['registrar_campo_usuario'])," "))
+            {
+                echo mensaje ("Este nombre de usuario no es válido (contiene espacios), por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+            $datos['usuario'] = trim($_POST['registrar_campo_usuario']);
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su usuario e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if (!empty($_POST['registrar_campo_clave']) && !empty($_POST['registrar_campo_clave_2']))
+        {
+            //Contraseñas iguales?
+            if (trim($_POST['registrar_campo_clave']) == trim($_POST['registrar_campo_clave_2']))
+            {
+                //Tamaño adecuado?
+                if(strlen($_POST['registrar_campo_clave']) >= 6 && strlen($_POST['registrar_campo_clave']) <= 100)
+                {
+                    $datos['clave'] = md5(trim($_POST['registrar_campo_clave']));
+                }
+                else
+                {
+                    echo mensaje ("La contraseña debe tener mas de 6 caracteres",_M_ERROR);
+                    $flag_registroExitoso=false;
+                }
+            }
+            else
+            {
+                echo mensaje ("Las contraseñas no coinciden, por favor ingrese su contraseña e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su contraseña e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if (!empty($_POST['registrar_campo_nombre']))
+        {
+            $datos['nombre'] = $_POST['registrar_campo_nombre'];
+        }
+        if (!empty($_POST['registrar_campo_telefono']))
+        {
+            if (_F_usuario_existe($_POST['registrar_campo_telefono'], "telefono1"))
+            {
+                echo mensaje ("Este teléfono ya existe en el sistema, por favor escoja otro e intente de nuevo",_M_ERROR);
+                $flag_registroExitoso=false;
+            }
+
+            $datos['telefono1'] = $_POST['registrar_campo_telefono'];
+        }
+        else
+        {
+            echo mensaje ("Por favor ingrese su número telefonico e intente de nuevo",_M_ERROR);
+            $flag_registroExitoso=false;
+        }
+
+        if ($flag_registroExitoso)
+        {
+            $datos["estado"] = _N_activo;
+            $datos["nivel"] = $_POST['nivel'];
+            $datos["ultimo_acceso"] = mysql_datetime();
+            $datos["registro"]= mysql_datetime();
+            if (db_agregar_datos("ventas_usuarios",$datos))
+            {
+                echo Mensaje("Usuario añadido exitosamente");
+            }
+            else{
+                echo Mensaje("Usuario NO PUDO ser añadido",_M_ERROR);
+            }
+            email($datos['email'],"Estimado %s, Ud. ha sido registrado en ".PROY_NOMBRE." por un Administrador","Su registro de usuario  en ".PROY_NOMBRE." ha sido efectuado manualmente por un administrador, ¡su cuenta esta activa y esperando a ser utilizada!.<br />\n\n<hr><br />\n<h1>Datos registrados</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".trim($_POST['registrar_campo_clave']))."</strong><br /><br />Gracias por su amable espera.<br />".PROY_NOMBRE."<br />".PROY_URL; //$datos['clave'] en este punto ya contiene la contraseña encriptada
+            return;
+        }
+    }
+?>
+<h1>Registro de usuario</h1>
+<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" >
+<table>
+<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="" /></tr>
+<tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="" /></tr>
+<tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="" /></tr>
+<tr><td>Clave</td><td><input name="registrar_campo_clave" value="" /></tr>
+<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" value="" /></tr>
+<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="" /></tr>
+<tr>
+<td>Nivel</td>
+<td>
+<select name="nivel">
+    <option value="<?php echo _N_administrador; ?>">Administrador</option>
+    <option value="<?php echo _N_moderador; ?>">Moderador</option>
+    <option value="<?php echo _N_tienda; ?>">Vendedor con Tienda</option>
+    <option value="<?php echo _N_vendedor; ?>">Vendedor</option>
+</select>
+</td>
+</tr>
+</table>
+<br />
+<input name="registrar" value="Registrar" type="submit"/>
+</form>
+<?php
+echo JS_onload('
+$("#registrar_campo_email").keyup(function(){$("#registrar_respuesta_email").load("./registro_correo_existe:"+$("#registrar_campo_email").val());});
+$("#registrar_campo_usuario").keyup(function(){$("#registrar_respuesta_usuario").load("./registro_usuario_existe:"+$("#registrar_campo_usuario").val());});
+');
+}
+
+function INTERFAZ__ADMIN_USUARIOS()
+{
+    
+    $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor+Tienda' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax` FROM ventas_usuarios WHERE 1",_N_administrador,_N_moderador,_N_tienda,_N_vendedor);
+    $r = db_consultar($c);
+?>
+<h1>Lista de usuarios</h1>
+<table class="ancha">
+    <tr><th>Usuario</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Nivel</th><th>Vigencia Pub.</th><th>Máx. Pubs.</th><th>Acciones</th></tr>
+<?php
+    while ($f = mysql_fetch_array($r))
+    {
+        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['usuario'],$f['nombre'],$f['email'],$f['telefono1'],$f['nivel'],$f['nDiasVigencia']. " días",$f['nPubMax'],"[".ui_href("","admin_usuarios_admin?accion=editar&usuario=".$f['id_usuario'],"Editar")."] [".ui_href("","admin_usuarios_admin?accion=eliminar&usuario=".$f['id_usuario'],"Eliminar")."]");
+    }
+?>
+</table>
+<?php
+}
+?>
+

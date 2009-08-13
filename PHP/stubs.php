@@ -168,7 +168,7 @@ function validEmail($email)
 function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron articulos")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_articulo, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_articulos AS a WHERE 1 AND $Where $OrderBy";
+    $c = "SELECT id_categoria, id_publicacion, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_publicaciones AS a WHERE 1 AND $Where $OrderBy";
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
@@ -177,12 +177,12 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_articulo']."_".SEO($f['titulo']);
+    $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
-    $id_articulo = $f['id_articulo'];
+    $id_publicacion = $f['id_publicacion'];
     $id_usuario = $f['id_usuario'];
     // ->
     $promocionado = ($f['promocionado'] == "1") ? " promocionado" : "";
@@ -210,19 +210,19 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
 
         if ($f['promocionado'] == "1")
         {
-            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_articulo=$id_articulo&id_usuario=$id_usuario&estado=0","DESPROMOCIONAR");
+            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_publicacion=$id_publicacion&id_usuario=$id_usuario&estado=0","DESPROMOCIONAR");
         }
         else
         {
-            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_articulo=$id_articulo&id_usuario=$id_usuario&estado=1","PROMOCIONAR");
+            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_publicacion=$id_publicacion&id_usuario=$id_usuario&estado=1","PROMOCIONAR");
         }
         switch ($tipo)
         {
             case "admin":
-                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
             break;
             default:
-            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_articulo","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_articulo=$id_articulo&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_articulo=$id_articulo&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_articulo=$id_articulo&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
         }
     }
     $data .= '</table>';
@@ -238,7 +238,7 @@ function VISTA_ArticuloEnLista($Where="1",$OrderBy="",$tipo="normal",$SiVacio="N
 function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se encontraron publicaciones")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_articulo, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_articulo = a.id_articulo ORDER BY RAND() LIMIT 1) as imagen, titulo, precio FROM ventas_articulos AS a WHERE $Where ORDER BY promocionado DESC, RAND() $Limite";
+    $c = "SELECT id_categoria, id_publicacion, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, titulo, precio FROM ventas_publicaciones AS a WHERE $Where ORDER BY promocionado DESC, RAND() $Limite";
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
@@ -247,10 +247,10 @@ function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se enc
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_articulo']."_".SEO($f['titulo']);
+    $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $ubicacion=join(" > ", get_path($f['id_categoria']));
-    $id_articulo = $f['id_articulo'];
+    $id_publicacion = $f['id_publicacion'];
     // ->
     $data .= "<div style='display:inline-block;margin:0 10px;'><a href=\"./$lnkTitulo\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";
     }
@@ -271,7 +271,7 @@ function ObtenerTicketTMP($id_usuario)
     {
         return 0;
     }
-    $datos["id_articulo"] = NULL;
+    $datos["id_publicacion"] = NULL;
     $datos["tipo"] = _A_temporal;
     $datos["fecha_ini"] = mysql_datetime();
     $datos["fecha_fin"] = mysql_datetime();
@@ -282,7 +282,7 @@ function ObtenerTicketTMP($id_usuario)
     $datos["descripcion_corta"] = "";
     $datos["descripcion"] = "";
     $datos["promocionado"] = "0";
-    return db_agregar_datos("ventas_articulos",$datos);
+    return db_agregar_datos("ventas_publicaciones",$datos);
 }
 /*
  * DestruirTicket()
@@ -290,7 +290,7 @@ function ObtenerTicketTMP($id_usuario)
  * Retorna 0 si no pudo borrar nada por algun motivo, idealmente 1 si fue exitosa.
  * Mas de 1 significa que se pasió en todo :P
 */
-function DestruirTicket($id_articulo,$tipo=_A_temporal)
+function DestruirTicket($id_publicacion,$tipo=_A_temporal)
 {
     $AND_usuario = $AND_tipo = '';
     if (_F_usuario_cache('nivel') != _N_administrador)
@@ -299,18 +299,18 @@ function DestruirTicket($id_articulo,$tipo=_A_temporal)
         $AND_usuario = "AND id_usuario='$id_usuario'";
         $AND_tipo = "AND tipo="._A_temporal;
     }
-    $id_articulo = db_codex($id_articulo);
-    $c = "DELETE FROM ventas_articulos WHERE id_articulo='$id_articulo' $AND_usuario $AND_tipo LIMIT 1";
+    $id_publicacion = db_codex($id_publicacion);
+    $c = "DELETE FROM ventas_publicaciones WHERE id_publicacion='$id_publicacion' $AND_usuario $AND_tipo LIMIT 1";
     $r = db_consultar($c);
     $ret = db_afectados();
     if ($ret)
     {
         //Borrar los archivos de imagenes relacionadas
-        EliminarArchivosArr(ObtenerImagenesArr($id_articulo));
-        EliminarArchivosArr(ObtenerMiniImagenesArr($id_articulo));
-        $c = "DELETE FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
+        EliminarArchivosArr(ObtenerImagenesArr($id_publicacion));
+        EliminarArchivosArr(ObtenerMiniImagenesArr($id_publicacion));
+        $c = "DELETE FROM ventas_imagenes WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
-        $c = "DELETE FROM ventas_flags_art WHERE id_articulo='$id_articulo'";
+        $c = "DELETE FROM ventas_flags_art WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
     }
     return $ret;
@@ -321,9 +321,9 @@ function DestruirTicket($id_articulo,$tipo=_A_temporal)
  * Comprueba que un ticket corresponda al usuario especificado
  * Retorna true si corresponde, false de lo contrario
 */
-function ComprobarTicket($id_articulo)
+function ComprobarTicket($id_publicacion)
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
     $AND_usuario = '';
     $AND_tipo = '';
     if (_F_usuario_cache('nivel') != _N_administrador)
@@ -333,7 +333,7 @@ function ComprobarTicket($id_articulo)
         $AND_tipo = "AND tipo="._A_temporal;
     }
 
-    $c = "SELECT id_articulo FROM ventas_articulos WHERE id_articulo='$id_articulo' $AND_usuario $AND_tipo LIMIT 1";
+    $c = "SELECT id_publicacion FROM ventas_publicaciones WHERE id_publicacion='$id_publicacion' $AND_usuario $AND_tipo LIMIT 1";
     $r = db_consultar($c);
     return (mysql_num_rows($r) == 1);
 }
@@ -341,11 +341,11 @@ function ComprobarTicket($id_articulo)
  * ObtenerImagenesArr()
  * Devuelve un array con las rutas (relativas) a las imagenes de cierto articulo
 */
-function ObtenerImagenesArr($id_articulo,$preDir="RCS/IMG/")
+function ObtenerImagenesArr($id_publicacion,$preDir="RCS/IMG/")
 {
     $arrImg = array();
-    $id_articulo = db_codex($id_articulo);
-    $c = "SELECT id_img FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
+    $id_publicacion = db_codex($id_publicacion);
+    $c = "SELECT id_img FROM ventas_imagenes WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
     while ($f = mysql_fetch_array($r)) {
         $arrImg[] = $preDir.$f[0];
@@ -356,11 +356,11 @@ function ObtenerImagenesArr($id_articulo,$preDir="RCS/IMG/")
  * ObtenerMiniImagenesArr()
  * Devuelve un array con las rutas (relativas) a las imagenes miniaturas de cierto articulo
 */
-function ObtenerMiniImagenesArr($id_articulo,$preDir="RCS/IMG/")
+function ObtenerMiniImagenesArr($id_publicacion,$preDir="RCS/IMG/")
 {
     $arrImg = array();
-    $id_articulo = db_codex($id_articulo);
-    $c = "SELECT id_img FROM ventas_imagenes WHERE id_articulo='$id_articulo'";
+    $id_publicacion = db_codex($id_publicacion);
+    $c = "SELECT id_img FROM ventas_imagenes WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
     while ($f = mysql_fetch_array($r)) {
         if ( file_exists($preDir.$f[0]."m") )
@@ -397,12 +397,12 @@ function EliminarArchivosArr($arrArchivos,$PararEnPerdido=false)
  * Obtiene un ticket de ventas_imagenes y lo ocupa como nombre
  * de archivo (idealmente es único).
 */
-function CargarArchivos($input,$id_articulo,$id_usuario)
+function CargarArchivos($input,$id_publicacion,$id_usuario)
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
 
-    if (!ComprobarTicket($id_articulo))
+    if (!ComprobarTicket($id_publicacion))
     {
         return false;
     }
@@ -421,7 +421,7 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
     {
         if (!$valor) continue;
         $datos['id_img'] = NULL;
-        $datos['id_articulo'] = $id_articulo;
+        $datos['id_publicacion'] = $id_publicacion;
         $datos['mime'] = $_FILES[$input]['type'][$llave];
         if (!in_array($datos['mime'],array("image/jpeg","image/png")))
         {
@@ -442,12 +442,12 @@ function CargarArchivos($input,$id_articulo,$id_usuario)
  * Descarga de la base de datos de imagenes los id_img especificados en
  * el array.
 */
-function DescargarArchivos($input,$id_articulo,$id_usuario)
+function DescargarArchivos($input,$id_publicacion,$id_usuario)
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
 
-    if (!ComprobarTicket($id_articulo))
+    if (!ComprobarTicket($id_publicacion))
     {
         return false;
     }
@@ -480,9 +480,9 @@ function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
     $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, 0);
     return $image->writeImage($Destino);
 }
-function CargarDatos($id_articulo,$id_usuario)
+function CargarDatos($id_publicacion,$id_usuario)
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
 
     if (_F_usuario_cache('nivel') != _N_administrador) {$datos["tipo"] = _A_temporal;}
@@ -494,17 +494,17 @@ function CargarDatos($id_articulo,$id_usuario)
     $datos["titulo"] = _F_form_cache("titulo");
     $datos["descripcion_corta"] = _F_form_cache("descripcion_corta");
     $datos["descripcion"] = _F_form_cache("descripcion");
-    $ret = db_actualizar_datos("ventas_articulos",$datos,"id_articulo='$id_articulo'");
+    $ret = db_actualizar_datos("ventas_publicaciones",$datos,"id_publicacion='$id_publicacion'");
     unset($datos);
 
     // Flags
 
     // Hay que eliminar los flags antes que nada.
-    $c = "DELETE FROM ventas_flags_art WHERE id_articulo='$id_articulo'";
+    $c = "DELETE FROM ventas_flags_art WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
 
     $datos['id'] = NULL;
-    $datos['id_articulo'] = $id_articulo;
+    $datos['id_publicacion'] = $id_publicacion;
 
     foreach(array("flags_ventas", "flags_pago", "flags_entrega") as $campo)
     {
@@ -519,21 +519,21 @@ function CargarDatos($id_articulo,$id_usuario)
         }
     }
 }
-function ObtenerDatos($id_articulo)
+function ObtenerDatos($id_publicacion)
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
 
-    $c = "SELECT id_articulo, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_articulos AS a WHERE id_articulo='$id_articulo' LIMIT 1";
+    $c = "SELECT id_publicacion, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_publicaciones AS a WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
 
     return mysql_fetch_array($r);
 }
-function ObtenerFlags($id_articulo, $id_tabla)
+function ObtenerFlags($id_publicacion, $id_tabla)
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
     $id_tabla = db_codex($id_tabla);
 
-    $c = "SELECT id_flag FROM ventas_flags_art WHERE id_articulo='$id_articulo' AND id_tabla='$id_tabla'";
+    $c = "SELECT id_flag FROM ventas_flags_art WHERE id_publicacion='$id_publicacion' AND id_tabla='$id_tabla'";
     $r = db_consultar($c);
 
     $arr = array();
@@ -583,10 +583,10 @@ function ObtenerEstadisticasUsuario($id_usuario, $tipo)
     switch ($tipo)
     {
         case _EST_CANT_PUB:
-            $c = "SELECT COUNT(*) AS cuenta FROM ventas_articulos WHERE id_usuario='$id_usuario'";
+            $c = "SELECT COUNT(*) AS cuenta FROM ventas_publicaciones WHERE id_usuario='$id_usuario'";
         break;
         case _EST_CANT_PUB_ACEPT:
-            $c = "SELECT COUNT(*) AS cuenta FROM ventas_articulos WHERE id_usuario='$id_usuario' AND tipo='"._A_aceptado."'";
+            $c = "SELECT COUNT(*) AS cuenta FROM ventas_publicaciones WHERE id_usuario='$id_usuario' AND tipo='"._A_aceptado."'";
         break;
         default:
         return "#ERROR# constante _EST_ '$tipo' no registrada";
@@ -632,12 +632,12 @@ function strip_html_tags( $text )
         $text );
     return strip_tags( $text );
 }
-function PromocionarPublicacion($id_articulo, $promocionado="1")
+function PromocionarPublicacion($id_publicacion, $promocionado="1")
 {
-    $id_articulo = db_codex($id_articulo);
+    $id_publicacion = db_codex($id_publicacion);
     $promocionado = db_codex($promocionado);
     $datos["promocionado"] = $promocionado;
-    $ret = db_actualizar_datos("ventas_articulos",$datos,"id_articulo='$id_articulo'");
+    $ret = db_actualizar_datos("ventas_publicaciones",$datos,"id_publicacion='$id_publicacion'");
     unset($datos);
     return db_afectados();
 }
