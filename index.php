@@ -110,7 +110,7 @@ function GENERAR_ARTICULOS()
 
         if (db_resultado($resultado, 'padre') > 0)
         {
-            $data .= "<h1>Mostrando artículos de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
+            $data .= "<h1>Mostrando publicaciones de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
             $data .= "Ubicación: " . join(" > ", get_path($categoria)) . "<br />";
             $data .= "<hr />";
             $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
@@ -119,19 +119,19 @@ function GENERAR_ARTICULOS()
         }
         else
         {
-            $data .= "<h1>Mostrando artículos recientes de la categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
+            $data .= "<h1>Mostrando publicaciones recientes de la categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
             $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=a.id_categoria)='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
         }
     }
     else
     {
-        $data .= "<h1>Artículos mas recientes</h1>";
+        $data .= "<h1>Publicaciones mas recientes</h1>";
         // Mostrar todos los articulos en la categoría
         $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
     }
 
     $WHERE .= " AND fecha_fin >= '" . mysql_datetime() . "'";
-    $data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","indice");
+    $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","indice");
     return $data;
 }
 

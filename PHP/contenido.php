@@ -365,7 +365,7 @@ else
     $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
 }
 $WHERE .= " AND fecha_fin >= '" . mysql_datetime() . "'";
-$data .= VISTA_ArticuloEnLista($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","tienda");
+$data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","tienda");
 echo $data;
 }
 

@@ -23,9 +23,7 @@ function CONTENIDO_ADMIN()
         echo "<li>".ui_href("","admin_usuarios_activacion","Usuarios: activación de cuentas")."</li>";
         echo "<li>".ui_href("","admin_usuarios_admin","Usuarios: administración")."</li>";
         echo "<li>".ui_href("","admin_usuarios_agregar","Usuarios: agregar")."</li>";
-        echo "<li>".ui_href("","admin_categorias_admin","Categorias: administración")."</li>";
         echo "<li>".ui_href("","admin_publicaciones_activacion","Publicaciones: aprobación")."</li>";
-        echo "<li>".ui_href("","admin_publicaciones_admin","Publicaciones: administración")."</li>";
         echo "<li>".ui_href("","admin_tiendas","Tiendas: administración")."</li>";
         echo "<li>".ui_href("","admin_tiendas","Tiendas: agregar")."</li>";
         echo "</ul>";
@@ -187,7 +185,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
     }
 
     // Obtenemos las publicaciones pendientes
-    echo VISTA_ArticuloEnLista("tipo='"._A_esp_activacion."'","ORDER by fecha_ini","admin","No hay publicaciones esperando activación");
+    echo VISTA_ListaPubs("tipo='"._A_esp_activacion."'","ORDER by fecha_ini","admin","No hay publicaciones esperando activación");
 
     echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
 }

@@ -8,7 +8,13 @@ html, body {
     font-family: Verdana, Helvetica, "Lucida Grande", Arial, sans-serif;
     height: 100%;
 }
-
+table th
+{
+    border-top:thin solid #c0c0c0;
+    border-left:thin solid #c0c0c0;
+    border-right:thin solid #c0c0c0;
+    background-color:#eee;
+}
 a {
     color:#00f;
     text-decoration:none;
