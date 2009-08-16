@@ -24,14 +24,24 @@
 <body>
 <div id="wrapper">
 <div id="header"><?php GENERAR_CABEZA(); ?><div style="clear:both"></div></div>
+<!--[<a id="ver_categorias">ocultar categorías</a>]-->
 <?php
 if (!isset($_GET['peticion']))
 {
-    echo '
-        [<a><span id="ver_categorias">ocultar categorías</span></a>]
-        <div id="secc_categorias">'. GENERAR_CATEGORIAS() .' </div>
-        <div id="secc_articulos">'. GENERAR_ARTICULOS() .' </div>
-        ';
+?>
+<div id="buscador">
+    <form><input id="busqueda" name="busqueda" type="text" value="" /> <?php echo ui_combobox("categoria_busqueda",join("",ver_hijos(""))); ?> <input id="buscar" name="buscar" type="submit" value="Buscar" /> <input id="buscar" name="buscar" type="submit" value="Busqueda avanzada" /></form>
+</div>
+<div id="columnas">
+<div id="col1">
+<div id="secc_categorias"><?php echo GENERAR_CATEGORIAS() ?></div>
+</div>
+<div id="col2">
+<div id="secc_articulos"><?php echo GENERAR_ARTICULOS() ?></div>
+</div>
+<div style="clear:both"></div>
+</div>
+<?php
 }
 else
 {
@@ -40,6 +50,7 @@ else
     echo '</div>';
 }
 ?>
+<div style="clear:both"></div>
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
 <?php
@@ -57,13 +68,11 @@ if (_F_usuario_cache('nivel') == _N_administrador)
     }
 }
 echo JS('
-var hCat = $.cookie("hCat");
-function CheckCat(){if(hCat==1){$("#secc_categorias").hide();$("#ver_categorias").text("mostrar categorías");}else{$("#ver_categorias").text("ocultar categorías");}};CheckCat();
-$("#ver_categorias").click(function() {$("#secc_categorias").toggle("slow",function(){$.cookie("hCat",hCat ^= true);CheckCat();});});
 $("a[rel=\'lightbox\']").lightBox();
 $.jGrowl.defaults.position = "bottom-right";
 '.($mensaje ? JS_growl($mensaje) : "").'
 ');
+
 ?>
 </body>
 </html>
@@ -73,27 +82,27 @@ function GENERAR_CABEZA()
 {
     // Cargamos el logo.
     echo "<div id='logotipo'>";
-    echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.png"));
+    echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
     echo "</div>";
     echo "<div id='menu'>";
-        echo ui_href("cabecera_link_Categorias","./","Comprar","izq");
-        echo ui_href("cabecera_link_vender","vender","Vender","");
+        echo ui_href("cabecera_link_Categorias","./","Comprar","boton izq");
+        echo ui_href("cabecera_link_vender","vender","Vender","boton");
     if (!S_iniciado())
     {
-        echo ui_href("cabecera_link_sesion","iniciar","Ingresar","");
-        echo ui_href("cabecera_link_cuenta","registrar","Registrarse","");
-        echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
-        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
+        echo ui_href("cabecera_link_sesion","iniciar","Ingresar","boton");
+        echo ui_href("cabecera_link_cuenta","registrar","Registrarse","boton");
+        echo ui_href("cabecera_link_busqueda","buscar","Búscar","boton");
+        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","boton");
     }
     else
     {
-        if(_F_usuario_cache('nivel') == _N_administrador) echo ui_href("cabecera_link_admin","admin","Administración","");
-        echo ui_href("cabecera_link_cuenta","perfil",_F_usuario_cache("usuario"),"");
-        echo ui_href("cabecera_link_busqueda","buscar","Búscar","");
-        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","");
-        echo ui_href("cabecera_link_sesion","finalizar","Salir","");
+        if(_F_usuario_cache('nivel') == _N_administrador) echo ui_href("cabecera_link_admin","admin","Administración","boton");
+        echo ui_href("cabecera_link_cuenta","perfil",_F_usuario_cache("usuario"),"boton");
+        echo ui_href("cabecera_link_busqueda","buscar","Búscar","boton");
+        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","boton");
+        echo ui_href("cabecera_link_sesion","finalizar","Salir","boton");
     }
-
+    echo "<div id=\"menu_url_der\"><a>Contáctenos</a> | <a>Mapa del sitio</a></div>";
     echo "</div>";
 }
 
@@ -139,7 +148,7 @@ function GENERAR_ARTICULOS()
 function GENERAR_CATEGORIAS()
 {
     $data = '';
-    $data .= (isset($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
+    $data .= (isset($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./">Mostrar categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
     $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
     $resultado = db_consultar($c);

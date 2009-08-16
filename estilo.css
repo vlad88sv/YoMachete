@@ -20,10 +20,6 @@ a {
     text-decoration:none;
 }
 
-a.menu {
-    padding-left:5px;
-    padding-right:5px;
-}
 a:hover {
     color:#50f;
 }
@@ -32,8 +28,12 @@ h1, h2, h3 {
     padding:0;
 }
 h1 {
+    display:block;
+    background-color:#F1AF35;
+    color:#FFF;
     font-size:99%;
     text-align:center;
+    padding:5px;
 }
 h2 {
     font-size:90%;
@@ -51,7 +51,9 @@ img {
 
 #wrapper {
     height: auto;
-    min-height: 90%;
+    min-height: 94%;
+    width:100%;
+    overflow:auto;
 }
 
 #header {
@@ -60,12 +62,12 @@ img {
     top:0px;
     padding: 0px;
     margin: 0px;
-    margin-bottom: 10px;
     border-bottom:1px solid transparent;
 }
 
 #header #logotipo {
-    width:115px;
+    width:329px;
+    height:65px;
     float:left;
 }
 
@@ -88,17 +90,19 @@ img {
     width:auto;
     white-space: nowrap;
 }
+#header #menu #menu_url_der {
+    float:right;
+}
 
-#header #menu a {
-    background:transparent url(IMG/fmenu.gif) repeat-x scroll left bottom;
-    background-attachment: scroll;
-    background-color: transparent;
-    color:#000;
+#header #menu a.boton {
+    background-color:#F1AF35;
+    color:#FFF;
     display:table-cell;
     position:relative;
     vertical-align:middle;
     font-weight:bolder;
-    border-right:1px solid #CCCCCC;
+    border-right:2px solid #CCC;
+    border-bottom:2px solid #CCC;
     font-size: 13px;
     height: 16px;
     line-height: normal;
@@ -110,27 +114,30 @@ img {
     width: 40px;
 
 }
+#header #menu a.boton:hover {
+    color:#f00;
+}
 
-#header #menu a.izq {
-   border-left:1px solid #CCCCCC;
+#header #menu a.boton.izq {
+   border-left:2px solid #CCC;
 }
 
 #secc_categorias {
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     display:block;
-    border:2px solid #80A0FF;
+    border:2px solid #CCCCCC;
     background-color:#FFF;
-    text-align:center;
+    color:#CCC;
+    text-align:left;
     font-size:90%;
-    margin-top:5px;
-    margin-bottom:5px;
     padding:5px;
 }
 
 #secc_categorias a {
     white-space: nowrap;
-    color:#000;
+    color:#888;
+    font-weight:bold;
 }
 
 #secc_categorias a:hover {
@@ -138,16 +145,16 @@ img {
 }
 
 #secc_categorias .item_cat {
-    display:inline;
+    display:block;
     line-height:25px;
-    margin-right:3px;
     padding:2px;
-    background:transparent url(IMG/fmenu.gif) repeat-x scroll left bottom;
-    border:1px solid #CCCCCC;
+    background-color:none;
+    /*border:1px solid #CCC;*/
     vertical-align:middle;
 }
 
 #secc_categorias .item_cat_todos {
+    font-weight:bolder;
     clear:both;
 }
 
@@ -157,9 +164,9 @@ img {
 #secc_articulos, #secc_general {
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
-    border:2px solid #80A0FF;
+    border:2px solid #CCCCCC;
     background-color:#FFF;
-    padding:10px;
+    padding:5px;
 }
 
 .explicacion {
@@ -196,7 +203,7 @@ margin:0;
 }
 
 .promocionado {
-border:2px dashed #80A0FF;
+border:2px dashed #CCCCCC;
 }
 
 .articulo .imagen {
@@ -292,7 +299,7 @@ width:auto;
 .publicacion_descripcion {
     display:block;
     margin:0 auto;
-    border:2px solid #80A0FF;
+    border:2px solid #CCCCCC;
     background-color:#FFF;
     text-align:left;
     font-size:90%;
@@ -337,10 +344,14 @@ width:auto;
 }
 
 #tabla_consultas .col1{
+    border:0;
+    margin:0;
     width:10%;
 }
 
 #tabla_consultas .col2{
+    border:0;
+    margin:0;
     width:70%;
     overflow:hidden;
 }
@@ -366,7 +377,7 @@ width:auto;
 }
 
 #tabla_consultas .pregunta_privada{
-    background-color:#80A0FF;
+    background-color:#CCCCCC;
 }
 
 #tabla_consultas tr{
@@ -379,11 +390,40 @@ width:auto;
 #tabla_consultas #envio{
     text-align:right;
 }
-
-.auto_mostrar{
-display:none;
+#columnas
+{
+    margin:0;
+    border:0;
+    padding:0;
 }
-
+#col1
+{
+    float:left;
+    display:inline;
+    width:20%;
+}
+#col2
+{
+    float:right;
+    display:inline;
+    width:78%;
+}
+.auto_mostrar{
+    display:none;
+}
 .centrado{
-text-align:center;
+    text-align:center;
+}
+#buscador
+{
+    display:block;
+    background-color:#42B4E6;
+    border:0;
+    padding:10px 0 10px 0;
+    margin-bottom:5px;
+    text-align:center;
+}
+#buscador #busqueda
+{
+    width:50%;
 }
