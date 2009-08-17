@@ -11,6 +11,9 @@ function CONTENIDO_VIP()
 
 function CONTENIDO_PUBLICACION($op="")
 {
+    require_once("parser.class.php");
+    $BBC = new parser;
+    
     if (!isset($_GET['publicacion']))
     {
         echo Mensaje("PUBLICACION: ERROR INTERNO", _M_ERROR);
@@ -22,6 +25,14 @@ function CONTENIDO_PUBLICACION($op="")
     if (!$publicacion)
     {
         echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
+        return;
+    }
+    
+    // Si no esta aprobado solo lo puede ver un Administrador
+    
+    if ($publicacion['tipo'] != _A_aceptado && _F_usuario_cache('nivel') != _N_administrador)
+    {
+        echo Mensaje("esta publicacion NO se encuentra disponible",_M_ERROR);
         return;
     }
 
@@ -166,7 +177,12 @@ function CONTENIDO_PUBLICACION($op="")
         echo "</center>";
     }
     echo "<hr /><h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
-    echo nl2br(strip_html_tags(@$publicacion['descripcion']));
+    $descripcion = $BBC->parse((strip_html_tags(@$publicacion['descripcion'])));
+    if( !is_array( $descripcion ) ) {
+            echo $descripcion;
+    } else {
+            print_r($descripcion);
+    }
     echo "</div></center>";
 
     if ($op != "previsualizacion")
@@ -201,14 +217,14 @@ function CONTENIDO_PUBLICACION($op="")
             // Si no es el dueño de la venta y la consulta no ha sido contestada
             elseif ( !$f['respuesta'] )
             {
-                $f['respuesta'] = htmlentities('<el vendedor aún no dado respuesta a esta consulta>',ENT_QUOTES,"utf-8");
+                $f['respuesta'] = htmlentities('<el vendedor aún no ha dado respuesta a esta consulta>',ENT_QUOTES,"utf-8");
             }
             // Si la consulta ha sido contestada
             else
             {
                 $f['respuesta'] = htmlentities($f['respuesta'],ENT_QUOTES,"utf-8");
             }
-            echo '<tr class="respuesta'.$Privada.'"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta']."</td><td>".fechatiempo_h_desde_mysql_datetime($f['fecha_respuesta'])."</td></tr>";
+            echo '<tr class="respuesta'.$Privada.'"><td class="col1">'.@$Vendedor['usuario'].'</td><td class="col2">'.$f['respuesta'].'</td><td class="col3">'.fechatiempo_h_desde_mysql_datetime($f['fecha_respuesta'])."</td></tr>";
         }
         if ($flag_activar_enviar_respuestas) echo '<tr><td id="envio" colspan="3">'.ui_input("cmdEnviarRespuesta","Enviar todas las respuestas","submit").'</td></tr>';
         echo '</table>';
@@ -303,7 +319,7 @@ if (!empty($_GET['id']))
     if (_F_usuario_existe($id_usuario,'id_usuario'))
     {
         $usuario_destino = _F_usuario_datos($id_usuario);
-        echo '<form action="mp" method="POST">';
+        echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
         echo 'Este mensaje será enviado al usuario <b>'.$usuario_destino['usuario'].'</b><br />';
         echo '<table>';
         echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto","","","","width:100%")));
@@ -318,9 +334,8 @@ if (!empty($_GET['id']))
         return;
     }
 }
-
-echo '<hr /><h1>Mensajes privados</h1>';
 }
+
 function CONTENIDO_TIENDA()
 {
 $data = '';

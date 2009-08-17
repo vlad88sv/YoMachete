@@ -7,6 +7,13 @@ html, body {
     font-size:90%;
     font-family: Verdana, Helvetica, "Lucida Grande", Arial, sans-serif;
     height: 100%;
+    font-size:1em;
+}
+input[type=text],input[type=password]
+{
+    background-color:#F1AF35;
+    font-weight:bolder;
+    color:#FFF;
 }
 table th
 {
@@ -29,9 +36,11 @@ h1, h2, h3 {
 }
 h1 {
     display:block;
+    -moz-border-radius:10px 10px 0 0;
+    -webkit-border-radius:10px 10px 0 0;
     background-color:#F1AF35;
     color:#FFF;
-    font-size:99%;
+    font-size:100%;
     text-align:center;
     padding:5px;
 }
@@ -86,9 +95,9 @@ img {
 
 #header #menu {
     float:right;
-    padding-left:1px;
     width:auto;
     white-space: nowrap;
+    font-size: 0.7em;
 }
 #header #menu #menu_url_der {
     float:right;
@@ -101,9 +110,8 @@ img {
     position:relative;
     vertical-align:middle;
     font-weight:bolder;
-    border-right:2px solid #CCC;
-    border-bottom:2px solid #CCC;
-    font-size: 13px;
+    border-right:2px solid #FFF;
+    font-family: sans-serif;
     height: 16px;
     line-height: normal;
     padding-bottom: 6px;
@@ -119,7 +127,7 @@ img {
 }
 
 #header #menu a.boton.izq {
-   border-left:2px solid #CCC;
+   /*border-left:2px solid #CCC;*/
 }
 
 #secc_categorias {
@@ -148,7 +156,6 @@ img {
     display:block;
     line-height:25px;
     padding:2px;
-    background-color:none;
     /*border:1px solid #CCC;*/
     vertical-align:middle;
 }
@@ -357,6 +364,7 @@ width:auto;
 }
 
 #tabla_consultas .col3{
+    border:0;
     width:20%;
 }
 
@@ -417,6 +425,8 @@ width:auto;
 #buscador
 {
     display:block;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
     background-color:#42B4E6;
     border:0;
     padding:10px 0 10px 0;

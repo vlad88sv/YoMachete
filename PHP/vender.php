@@ -20,7 +20,8 @@ function CONTENIDO_VENDER()
     // --------------------------CATEGORIA-------------------------------
     if ( !isset($_GET['op']) && !isset($_GET['ticket']))
     {
-        //Será que aún tiene ventas disponibles?
+        // Será que aún tiene ventas disponibles?
+
         if (ObtenerEstadisticasUsuario(_F_usuario_cache('id_usuario'),_EST_CANT_PUB_NOTEMP) >= _F_usuario_cache('nPubMax'))
         {
             echo Mensaje("Ud. ha alcanzado su límite de publicaciones ("._F_usuario_cache('nPubMax')."), si desea agregar más publicaciones puede eliminar una publicación actual o adquirir una cuenta premium.");
@@ -31,6 +32,7 @@ function CONTENIDO_VENDER()
             echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
             echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?op=articulo", "artículo");
         }
+        
         // Mostrar las ventas publicadas:
 
         $c = "SELECT id_publicacion, titulo, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";
@@ -135,6 +137,8 @@ function CONTENIDO_VENDER()
     }
 
     // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
+    
+    echo '<script type="text/javascript" src="JS/tinymce/jscripts/jquery.tinymce.js"></script>';
 
     if(isset($_GET['eliminar']))
     {
@@ -170,6 +174,9 @@ function CONTENIDO_VENDER()
         header("location: ./vender?ticket=$ticket");
     }
 
+    $Buffer = ObtenerDatos($ticket);
+    $imagenes = ObtenerImagenesArr($ticket,"");
+
     if ($flag_enviar)
     {
         // Al fin lo terminó de editar y lo esta enviando... Aleluya!
@@ -186,6 +193,9 @@ function CONTENIDO_VENDER()
             }
             else
             {
+                $vendedor = ObtenerDatos($Buffer['id_usuario']);
+                print_r($vendedor);
+                email($vendedor['email'],PROY_NOMBRE." - Publicación \"".$Buffer['titulo']."\" ha sido recibida","Su publicación ha sido recibida en nuestro sistema y se encuentra en proceso de activación.<br />\nEsta activación puede demorar entre <strong>1 minuto y 1 hora</strong> dependiendo de la disponibilidad de los administradores en línea.<br />Esta corta espera es necesaria para realizar una revisión de las publiciaciones y así poder ofrecer el mejor contenido a nuestros visitantes.<br />\n!Gracias por preferir ".PROY_NOMBRE." para realizar sus publicaciones!");
                 echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
             }
         }
@@ -196,9 +206,6 @@ function CONTENIDO_VENDER()
         echo "Continuar a: " . ui_href("","vender","publicar otra venta") . " / " . ui_href("","./","página principal")."<br />";
         return;
     }
-
-    $Buffer = ObtenerDatos($ticket);
-    $imagenes = ObtenerImagenesArr($ticket,"");
 
     echo "Ud. se encuentra utilizando una cuenta gratuita, ¡actualicese a una cuenta de ".ui_href("vender_vip","vip","Vendedor Distinguido","",'target="_blank"')." y disfrute de las ventajas!<br />";
 
@@ -228,8 +235,8 @@ function CONTENIDO_VENDER()
         echo "<span class='explicacion'>Esta a punto de enviar su publicación a revisión. Puede seguir editando su publicación presionando el botón <b>Editar</b> o finalizar presionando el botón <b>Enviar</b>.<br />$Aprobacion</span>";
         echo "<br />";
         echo "<center>";
-        echo ui_input("vender_enviar","Enviar","submit");
         echo ui_input("vender_editar","Editar","submit");
+        echo ui_input("vender_enviar","Enviar","submit");
         echo "</center>";
         return;
     }
@@ -310,6 +317,23 @@ function CONTENIDO_VENDER()
     echo ui_input("vender_eliminar", "Eliminar", "submit");
     echo "</center>";
     echo "</form>";
-    echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
+    echo JS_onload('
+    //TinyMCE
+    $(\'#descripcion\').tinymce({script_url : \'JS/tinymce/jscripts/tiny_mce.js\',theme : "advanced",
+mode : "none",
+plugins : "bbcode",
+theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,forecolor,removeformat,cleanup,code",
+theme_advanced_buttons2 : "",
+theme_advanced_buttons3 : "",
+theme_advanced_toolbar_location : "bottom",
+theme_advanced_toolbar_align : "center",
+theme_advanced_styles : "Code=codeStyle;Quote=quoteStyle",
+content_css : "css/bbcode.css",
+entity_encoding : "raw",
+add_unload_trigger : false,
+remove_linebreaks : false,
+inline_styles : false,
+convert_fonts_to_spans : false});
+');
 }
 ?>

@@ -64,7 +64,7 @@ function _F_usuario_acceder($email, $clave){
 }
 
 function _F_usuario_cache($campo){
-    if ( array_key_exists('cache_datos_usuario', $_SESSION) ) {
+    if ( isset($_SESSION) && array_key_exists('cache_datos_usuario', $_SESSION) ) {
         if ( array_key_exists ($campo, $_SESSION['cache_datos_usuario']) ) {
             return $_SESSION['cache_datos_usuario'][$campo];
         }else{

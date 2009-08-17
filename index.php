@@ -18,7 +18,7 @@
     <script src="JS/jquery.lightbox-0.5.pack.js" type="text/javascript"></script>
     <script src="JS/jquery.jgrowl.js" type="text/javascript"></script>
     <style>
-    div.jGrowl div.aviso {z-index:50;background-color: #FFF;color: #000;-moz-border-radius:0px;-webkit-border-radius:0px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
+    div.jGrowl div.aviso {z-index:50;background-color: #F1AF35;color: #FFF;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
     </style>
 </head>
 <body>
@@ -30,7 +30,7 @@ if (!isset($_GET['peticion']))
 {
 ?>
 <div id="buscador">
-    <form><input id="busqueda" name="busqueda" type="text" value="" /> <?php echo ui_combobox("categoria_busqueda",join("",ver_hijos(""))); ?> <input id="buscar" name="buscar" type="submit" value="Buscar" /> <input id="buscar" name="buscar" type="submit" value="Busqueda avanzada" /></form>
+    <form action="buscar" method="post"><input id="busqueda" name="busqueda" type="text" value="" /> <?php echo ui_combobox("categoria_busqueda",'<option value="">Todas las categorias</option>'.join("",ver_hijos(""))); ?> <input id="buscar" name="buscar" type="submit" value="Buscar" /> <input id="buscar" name="buscar" type="submit" value="Busqueda avanzada" /></form>
 </div>
 <div id="columnas">
 <div id="col1">

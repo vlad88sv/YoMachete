@@ -335,8 +335,8 @@ function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
 <tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="" /></tr>
 <tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="" /></tr>
 <tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="" /></tr>
-<tr><td>Clave</td><td><input name="registrar_campo_clave" value="" /></tr>
-<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" value="" /></tr>
+<tr><td>Clave</td><td><input name="registrar_campo_clave" type="password" value="" /></tr>
+<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" type="password" value="" /></tr>
 <tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="" /></tr>
 <tr>
 <td>Nivel</td>
@@ -446,7 +446,7 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
             }
             if (isset($_POST['enviar_notificacion']))
             {
-                email($datos['email'],sprintf("Estimado %s, sus datos han sido modificados en ".PROY_NOMBRE." por un Administrador",$datos['usuario']),"Sus datos de usuario  en ".PROY_NOMBRE." han sido modificados por un administrador.<br />\n\n<hr><br />\n<h1>Datos actuales</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\nContraseña: <strong>".(trim($_POST['registrar_campo_clave']) != "" ? trim($_POST['registrar_campo_clave']) : "<la contraseña no fue modificada>") ."</strong><br /><br />".PROY_NOMBRE."<br />".PROY_URL); //$datos['clave'] en este punto ya contiene la contraseña encriptada
+                email($datos['email'],sprintf("Estimado %s, sus datos han sido modificados en ".PROY_NOMBRE." por un Administrador",$datos['usuario']),"Sus datos de usuario  en ".PROY_NOMBRE." han sido modificados por un administrador.<br />\n\n<hr><br />\n<h1>Datos actuales</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br /><br />".PROY_NOMBRE."<br />".PROY_URL);
             }
             return;
         }
