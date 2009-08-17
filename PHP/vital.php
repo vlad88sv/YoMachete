@@ -17,7 +17,7 @@ require_once ("$base/stubs.php"); // Funciones varias
 require_once ("$base/publicaciones.php"); // Gestión de publicaciones
 require_once ("$base/usuario.php"); // Gestión de usuarios
 require_once ("$base/todosv.com.php");  // Envío de SMS
-function DEPURAR($s,$f=0){if($f){echo '<pre>'.$s.'</pre><br />';}}
+function DEPURAR($s,$f=0){if($f||isset($_GET['depurar'])){echo '<pre>'.$s.'</pre><br />';}}
 function Mensaje ($texto, $tipo=_M_INFO){
     switch ( $tipo ) {
         case _M_INFO:

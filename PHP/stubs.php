@@ -59,7 +59,8 @@ function get_path($node,$url=true,$prefijo="categoria-") {
 
 // http://www.sitepoint.com/article/hierarchical-data-database/
 function ver_hijos($padre, $rubro="articulo", $nivel = 0, $profundidad = 5) {
-$r = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE padre='$padre' AND rubro='$rubro' ORDER BY nombre ASC");
+    $AND_rubro = $rubro ? "AND rubro='$rubro'" : "";
+$r = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE padre='$padre' $AND_rubro ORDER BY nombre ASC");
 $arbol = array();
 while ($row = mysql_fetch_array($r)) {
     if ($nivel == 0)
@@ -169,6 +170,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
 {
     $data = '';
     $c = "SELECT id_categoria, id_publicacion, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_publicaciones AS a WHERE 1 AND $Where $OrderBy";
+    DEPURAR($c,0);
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {

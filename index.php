@@ -10,6 +10,7 @@
     <meta name="description" content="Servicio de compra y venta en línea." />
     <meta name="keywords" content="El Salvador, Comprar, Vender, Clasificados" />
     <meta name="robots" content="index, follow" />
+    <link href="favicon.ico" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="estilo.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.lightbox-0.5.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.jgrowl.css" />
@@ -23,21 +24,21 @@
 </head>
 <body>
 <div id="wrapper">
-<div id="header"><?php GENERAR_CABEZA(); ?><div style="clear:both"></div></div>
+<div id="header"><?php GENERAR_CABEZA(); ?></div>
 <!--[<a id="ver_categorias">ocultar categorías</a>]-->
 <?php
 if (!isset($_GET['peticion']))
 {
 ?>
 <div id="buscador">
-    <form action="buscar" method="post"><input id="busqueda" name="busqueda" type="text" value="" /> <?php echo ui_combobox("categoria_busqueda",'<option value="">Todas las categorias</option>'.join("",ver_hijos(""))); ?> <input id="buscar" name="buscar" type="submit" value="Buscar" /> <input id="buscar" name="buscar" type="submit" value="Busqueda avanzada" /></form>
+    <form action="buscar" method="post"><input id="busqueda" name="busqueda" type="text" value="" /> <?php echo ui_combobox("categoria_busqueda",'<option value="">Todas las categorias</option>'.join("",ver_hijos("",""))); ?> <input id="buscar" name="buscar" type="submit" value="Buscar" /> <input id="buscar" name="buscarAdv" type="submit" value="Busqueda avanzada" /></form>
 </div>
 <div id="columnas">
-<div id="col1">
-<div id="secc_categorias"><?php echo GENERAR_CATEGORIAS() ?></div>
-</div>
 <div id="col2">
 <div id="secc_articulos"><?php echo GENERAR_ARTICULOS() ?></div>
+</div>
+<div id="col1">
+<div id="secc_categorias"><?php echo GENERAR_CATEGORIAS() ?></div>
 </div>
 <div style="clear:both"></div>
 </div>

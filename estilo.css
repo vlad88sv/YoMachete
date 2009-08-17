@@ -9,11 +9,16 @@ html, body {
     height: 100%;
     font-size:1em;
 }
-input[type=text],input[type=password]
+input[type=text],input[type=password],select
 {
-    background-color:#F1AF35;
+    border:1px solid #F1AF35;
+    outline-color:-moz-use-text-color;
+    outline-style:none;
+    outline-width:medium;
+    padding:1px;
+    background-color:#FFF;
     font-weight:bolder;
-    color:#FFF;
+    color:#000;
 }
 table th
 {
@@ -66,18 +71,18 @@ img {
 }
 
 #header {
-    min-height: 10%;
+    display:block;
+    height: auto;
     width:100%;
     top:0px;
     padding: 0px;
     margin: 0px;
-    border-bottom:1px solid transparent;
+    overflow:hidden;
 }
 
 #header #logotipo {
     width:329px;
     height:65px;
-    float:left;
 }
 
 #footer {
@@ -94,13 +99,15 @@ img {
 }
 
 #header #menu {
-    float:right;
-    width:auto;
+    position:absolute;
+    right:1%;
+    top:0;
     white-space: nowrap;
     font-size: 0.7em;
 }
 #header #menu #menu_url_der {
-    float:right;
+position:absolute;
+right:0;
 }
 
 #header #menu a.boton {
@@ -118,7 +125,6 @@ img {
     padding-left: 10px;
     padding-right: 5px;
     padding-top: 6px;
-    white-space: nowrap;
     width: 40px;
 
 }
@@ -138,12 +144,12 @@ img {
     background-color:#FFF;
     color:#CCC;
     text-align:left;
-    font-size:90%;
+    font-size:0.8em;
     padding:5px;
+    width:auto;
 }
 
 #secc_categorias a {
-    white-space: nowrap;
     color:#888;
     font-weight:bold;
 }
@@ -201,18 +207,27 @@ font-weight:bold;
 
 /* Para la lista de articulos */
 .articulo {
-width:100%;
-height:auto;
-border-collapse:collapse;
-border:0;
-padding:0;
-margin:0;
+    width:100%;
+    height:auto;
+    border-collapse:collapse;
+    border:0;
+    padding:0;
+    margin:0;
+    font-size:0.8em;
 }
 
 .promocionado {
 border:2px dashed #CCCCCC;
 }
 
+.articulo a
+{
+    color: #42B4E6;
+}
+.articulo a:hover
+{
+    color: #32A4D6;
+}
 .articulo .imagen {
 background-color:none;
 color:#fff;
@@ -255,13 +270,18 @@ font-weight:bold;
 
 .articulo .titular .precio {
 background-color:#EEE;
-color:#F00;
+color:#F1AF35;
 width:20%;
 text-align:right;
 padding:0.1%;
 font-weight:bolder;
 }
 
+.articulo .titular .precio:hover {
+    color:#F00;
+    text-decoration: blink;
+    font-style: italic;
+}
 .articulo .titular .ubicacion {
 text-align:left;
 font-weight:bolder;
@@ -284,7 +304,10 @@ padding:0.1%;
 }
 
 .articulo .adm a {
-color:#FFF;
+color:#42B4E6;
+}
+.articulo .adm a:hover {
+color:#32A4D6;
 }
 
 .ancha {
@@ -408,13 +431,14 @@ width:auto;
 {
     float:left;
     display:inline;
-    width:20%;
+    width:19%;
+    overflow:hidden;
 }
 #col2
 {
     float:right;
     display:inline;
-    width:78%;
+    width:80%;
 }
 .auto_mostrar{
     display:none;

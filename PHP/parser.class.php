@@ -34,6 +34,10 @@ class parser
 	
 	private $tags = array
 		(
+			'left' => '<p style="text-align:left"=>{value}</p>',
+			'center' => '<p style="text-align:center"=>{value}</p>',
+			'right' => '<p style="text-align:right"=>{value}</p>',
+			'center' => '<center>{value}</center>',
 			'b' => '<strong>{value}</strong>',
 			'i' => '<span style="font-style:italic;">{value}</span>',
 			'u' => '<span style="text-decoration:underline;">{value}</span>',

@@ -28,6 +28,10 @@ switch ($_GET['peticion'])
         require_once ("PHP/contenido.php");
         CONTENIDO_PUBLICACION();
     break;
+    case 'buscar':
+        require_once ("PHP/buscar.php");
+        CONTENIDO_BUSCAR();
+    break;
     case 'mp':
         require_once ("PHP/contenido.php");
         CONTENIDO_MP();
