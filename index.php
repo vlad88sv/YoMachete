@@ -25,14 +25,17 @@
 <body>
 <div id="wrapper">
 <div id="header"><?php GENERAR_CABEZA(); ?></div>
-<!--[<a id="ver_categorias">ocultar categorías</a>]-->
+<div id="buscador">
+    <form action="buscar" method="get">
+        <input id="busqueda" name="b" type="text" value="<?php echo @$_GET["b"]; ?>" />
+        <?php echo ui_combobox("c",'<option value="">Todas las categorias</option>'.join("",ver_hijos("","")),@$_GET["c"]); ?>
+        <input type="submit" value="Buscar" />
+    </form>
+</div>
 <?php
 if (!isset($_GET['peticion']))
 {
 ?>
-<div id="buscador">
-    <form action="buscar" method="post"><input id="busqueda" name="busqueda" type="text" value="" /> <?php echo ui_combobox("categoria_busqueda",'<option value="">Todas las categorias</option>'.join("",ver_hijos("",""))); ?> <input id="buscar" name="buscar" type="submit" value="Buscar" /> <input id="buscar" name="buscarAdv" type="submit" value="Busqueda avanzada" /></form>
-</div>
 <div id="columnas">
 <div id="col2">
 <div id="secc_articulos"><?php echo GENERAR_ARTICULOS() ?></div>

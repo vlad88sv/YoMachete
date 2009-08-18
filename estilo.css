@@ -326,6 +326,21 @@ padding:3px;
 width:auto;
 }
 
+.limpio {
+border:0;
+background-color:transparent;
+}
+
+.limpio th {
+border:0;
+background-color:transparent;
+}
+
+.limpio td {
+background-color:transparent;
+}
+
+
 .publicacion_descripcion {
     display:block;
     margin:0 auto;
