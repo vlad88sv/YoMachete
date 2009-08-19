@@ -50,7 +50,14 @@ h1 {
     padding:5px;
 }
 h2 {
+    display:block;
+    -moz-border-radius:10px 10px 0 0;
+    -webkit-border-radius:10px 10px 0 0;
+    background-color:#42B4E6;
+    color:#FFF;
     font-size:90%;
+    text-align:center;
+    padding:5px;
 }
 h3 {
     font-size:85%;
@@ -114,18 +121,16 @@ right:0;
     background-color:#F1AF35;
     color:#FFF;
     display:table-cell;
-    position:relative;
     vertical-align:middle;
     font-weight:bolder;
     border-right:2px solid #FFF;
     font-family: sans-serif;
     height: 16px;
-    line-height: normal;
     padding-bottom: 6px;
     padding-left: 10px;
     padding-right: 5px;
     padding-top: 6px;
-    width: 40px;
+    width: auto;
 
 }
 #header #menu a.boton:hover {
@@ -326,6 +331,10 @@ padding:3px;
 width:auto;
 }
 
+.marginado-y {
+margin:5px 0 5px 0;
+}
+
 .limpio {
 border:0;
 background-color:transparent;
@@ -461,12 +470,12 @@ background-color:transparent;
 .centrado{
     text-align:center;
 }
+
 #buscador
 {
     display:block;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
-    background-color:#42B4E6;
     border:0;
     padding:10px 0 10px 0;
     margin-bottom:5px;
@@ -475,4 +484,17 @@ background-color:transparent;
 #buscador #busqueda
 {
     width:50%;
+}
+
+#buscador.principal
+{
+    background-color:#42B4E6;
+}
+.col1-3 th,.col1-3 td
+{
+    width:33.33%;
+}
+.col1-3 td
+{
+    font-size: 0.7em;
 }

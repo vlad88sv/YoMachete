@@ -25,17 +25,17 @@
 <body>
 <div id="wrapper">
 <div id="header"><?php GENERAR_CABEZA(); ?></div>
-<div id="buscador">
+<?php
+if (!isset($_GET['peticion']))
+{
+?>
+<div id="buscador" class="principal">
     <form action="buscar" method="get">
         <input id="busqueda" name="b" type="text" value="<?php echo @$_GET["b"]; ?>" />
         <?php echo ui_combobox("c",'<option value="">Todas las categorias</option>'.join("",ver_hijos("","")),@$_GET["c"]); ?>
         <input type="submit" value="Buscar" />
     </form>
 </div>
-<?php
-if (!isset($_GET['peticion']))
-{
-?>
 <div id="columnas">
 <div id="col2">
 <div id="secc_articulos"><?php echo GENERAR_ARTICULOS() ?></div>
@@ -89,23 +89,25 @@ function GENERAR_CABEZA()
     echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
     echo "</div>";
     echo "<div id='menu'>";
-        echo ui_href("cabecera_link_Categorias","./","Comprar","boton izq");
-        echo ui_href("cabecera_link_vender","vender","Vender","boton");
+    echo "<div>";
+        echo ui_href("","./","Comprar","boton izq");
+        echo ui_href("","vender","Vender","boton");
     if (!S_iniciado())
     {
-        echo ui_href("cabecera_link_sesion","iniciar","Ingresar","boton");
-        echo ui_href("cabecera_link_cuenta","registrar","Registrarse","boton");
-        echo ui_href("cabecera_link_busqueda","buscar","Búscar","boton");
-        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","boton");
+        echo ui_href("","iniciar","Ingresar","boton");
+        echo ui_href("","registrar","Registrarse","boton");
+        echo ui_href("","buscar","Búscar","boton");
+        echo ui_href("","ayuda","Ayuda","boton");
     }
     else
     {
         if(_F_usuario_cache('nivel') == _N_administrador) echo ui_href("cabecera_link_admin","admin","Administración","boton");
-        echo ui_href("cabecera_link_cuenta","perfil",_F_usuario_cache("usuario"),"boton");
-        echo ui_href("cabecera_link_busqueda","buscar","Búscar","boton");
-        echo ui_href("cabecera_link_ayuda","ayuda","Ayuda","boton");
-        echo ui_href("cabecera_link_sesion","finalizar","Salir","boton");
+        echo ui_href("","perfil",_F_usuario_cache("usuario"),"boton");
+        echo ui_href("","buscar","Búscar","boton");
+        echo ui_href("","ayuda","Ayuda","boton");
+        echo ui_href("","finalizar","Salir","boton");
     }
+    echo "</div>";
     echo "<div id=\"menu_url_der\"><a>Contáctenos</a> | <a>Mapa del sitio</a></div>";
     echo "</div>";
 }
