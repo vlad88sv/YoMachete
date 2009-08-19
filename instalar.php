@@ -404,10 +404,10 @@ db_agregar_datos("ventas_flags_pago",array("nombre" => "transferencia", "nombrep
 // Tabla FLAGS entregas
 $campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
 echo db_crear_tabla("ventas_flags_entrega", $campos, true);
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Marque esta opción si Ud. puede desplazarse a cualquier parte del país para entregar este producto"));
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_pactada", "nombrep" => "Entrega personalmente", "descripcion" => "Marque esta opción si Ud. desea acordar con el comprar un lugar específico para la venta"));
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "Marque esta opción si Ud. desea enviar el producto a travez de un courier o una empresa de entrega de paquetes"));
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "Marque esta opción si Ud. desea enviar el producto a travez de correo nacional"));
+db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Este producto puede ser entregado a domicilio a cualquier parte del país"));
+db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)"));
+db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "El producto es envíado mediante un courier o una empresa de entrega de paquetes"));
+db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional"));
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_publicacion INT";
 echo db_crear_tabla("ventas_flags_art", $campos, true);
@@ -420,6 +420,13 @@ echo db_crear_tabla("ventas_mensajes_dst", $campos, true);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_publicacion INT, consulta VARCHAR(1000), respuesta VARCHAR(1000), tipo INT, fecha_consulta DATETIME, fecha_respuesta DATETIME";
 echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, true);
+
+$campos = "`id` INT NOT NULL AUTO_INCREMENT ,`tag` VARCHAR( 100 ) NOT NULL, PRIMARY KEY ( `id` ), UNIQUE (`tag`)";
+echo db_crear_tabla("ventas_tag", $campos, true);
+
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_publicacion INT, id_tag INT";
+echo db_crear_tabla("ventas_tag_uso", $campos, true);
+
 ?>
 </body>
 </html>

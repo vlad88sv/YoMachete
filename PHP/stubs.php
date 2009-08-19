@@ -185,6 +185,9 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_publicacion = $f['id_publicacion'];
+    $ctags = sprintf("SELECT GROUP_CONCAT(tag SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$id_publicacion);
+    $tags_array = (mysql_fetch_array(db_consultar($ctags)));
+    $tags = $tags_array['tags'];
     $id_usuario = $f['id_usuario'];
     // ->
     $promocionado = ($f['promocionado'] == "1") ? " promocionado" : "";
@@ -206,6 +209,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="ubicacion">Ubicación: ' . $ubicacion.'</td></tr>';
+    $data .= '<tr><td colspan="2" class="ubicacion">Tags: ' . $tags.'</td></tr>';
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
     if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
     {
@@ -499,8 +503,25 @@ function CargarDatos($id_publicacion,$id_usuario)
     $ret = db_actualizar_datos("ventas_publicaciones",$datos,"id_publicacion='$id_publicacion'");
     unset($datos);
 
-    // Flags
+    // Tags
+        
+    // Procesamos los nuevos tags (eliminamos los espacios y hacemos array)
+    $tags = explode(",",preg_replace('/\s*/', '',@$_POST['tags']),5);
+    
+    // Insertamos los nuevos tags
+    $val_tags = implode("'),('",$tags);
+    db_consultar("INSERT IGNORE INTO ventas_tag (tag) VALUES('$val_tags')");
+    
+    // Ponemos los tags en referencia a la publicación actual
 
+    // +Eliminados los tags de esta publicación primero+++++++++++++++++++++++++
+    $val_tags = implode("','",$tags);
+    $c = "DELETE FROM ventas_tag_uso WHERE id_publicacion='$id_publicacion'";
+    $r = db_consultar($c);
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    db_consultar("INSERT INTO ventas_tag_uso (id_tag,id_publicacion) SELECT id, $id_publicacion FROM ventas_tag WHERE tag IN ('$val_tags')");
+    
     // Hay que eliminar los flags antes que nada.
     $c = "DELETE FROM ventas_flags_art WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
@@ -527,8 +548,14 @@ function ObtenerDatos($id_publicacion)
 
     $c = "SELECT id_publicacion, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_publicaciones AS a WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
+    
+    // Obtenemos los tags en el indice "tags".
+    $ret = mysql_fetch_array($r);
+    
+    $tags_array = (mysql_fetch_array(db_consultar(sprintf("SELECT GROUP_CONCAT(tag SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$ret['id_publicacion']))));
+    $ret['tags'] = $tags_array['tags'];
 
-    return mysql_fetch_array($r);
+    return $ret;
 }
 function ObtenerFlags($id_publicacion, $id_tabla)
 {

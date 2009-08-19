@@ -145,7 +145,7 @@ function GENERAR_ARTICULOS()
         $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
     }
 
-    $WHERE .= " AND fecha_fin >= '" . mysql_datetime() . "'";
+    $WHERE .= " AND fecha_fin >= CURDATE()";
     $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","indice");
     return $data;
 }

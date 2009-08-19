@@ -248,6 +248,9 @@ function CONTENIDO_VENDER()
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
     echo "Titulo " . ui_input("titulo",@$Buffer["titulo"],"","","width:50ex","MAXLENGTH='50'")."<br />";
+    echo "<li>Tags (palabras clave) para publicación</li>";
+    echo "<span class='explicacion'>Utilice palabras cortas separadas por coma (5 como máximo, no utilice espacios).</span><br />";
+    echo "Tags " . ui_input("tags",@$Buffer["tags"],"","","width:50ex","MAXLENGTH='50'")."<br />";
     echo "<li>Descripción corta de la publicación</li>";
     echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span><br />";
     echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Buffer["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
