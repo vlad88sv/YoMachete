@@ -77,21 +77,6 @@ img {
     overflow:auto;
 }
 
-#header {
-    display:block;
-    height: auto;
-    width:100%;
-    top:0px;
-    padding: 0px;
-    margin: 0px;
-    overflow:hidden;
-}
-
-#header #logotipo {
-    width:329px;
-    height:65px;
-}
-
 #footer {
     position:relative;
     bottom:0px;
@@ -105,16 +90,28 @@ img {
     font-size:0.8em
 }
 
+#header {
+    top:0px;
+    padding: 0px;
+    margin: 0px;
+}
+
+#header>table {
+    width:100%;
+}
+
+#header #logotipo {
+    width:329px;
+    height:65px;
+    display:inline;
+}
+
 #header #menu {
-    position:absolute;
-    right:1%;
-    top:0;
+    float:right;
     white-space: nowrap;
     font-size: 0.7em;
-}
-#header #menu #menu_url_der {
-position:absolute;
-right:0;
+    text-align:right;
+    display:inline;
 }
 
 #header #menu a.boton {
@@ -123,7 +120,7 @@ right:0;
     display:table-cell;
     vertical-align:middle;
     font-weight:bolder;
-    border-right:2px solid #FFF;
+    border-right:1px solid #FFF;
     font-family: sans-serif;
     height: 16px;
     padding-bottom: 6px;
@@ -135,10 +132,6 @@ right:0;
 }
 #header #menu a.boton:hover {
     color:#f00;
-}
-
-#header #menu a.boton.izq {
-   /*border-left:2px solid #CCC;*/
 }
 
 #secc_categorias {

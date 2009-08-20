@@ -85,13 +85,17 @@ $.jGrowl.defaults.position = "bottom-right";
 function GENERAR_CABEZA()
 {
     // Cargamos el logo.
-    echo "<div id='logotipo'>";
-    echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
-    echo "</div>";
-    echo "<div id='menu'>";
-    echo "<div>";
-        echo ui_href("","./","Comprar","boton izq");
-        echo ui_href("","vender","Vender","boton");
+    echo "<table>";
+    echo "<tr>";
+    echo "<td>";
+        echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
+    echo "</td>";
+    echo "<td id=\"menu\">";
+    echo "<table>";
+    echo "<tr>";
+    echo "<td>";
+    echo ui_href("","./","Comprar","boton izq");
+    echo ui_href("","vender","Vender","boton");
     if (!S_iniciado())
     {
         echo ui_href("","iniciar","Ingresar","boton");
@@ -107,9 +111,17 @@ function GENERAR_CABEZA()
         echo ui_href("","ayuda","Ayuda","boton");
         echo ui_href("","finalizar","Salir","boton");
     }
-    echo "</div>";
-    echo "<div id=\"menu_url_der\"><a>Contáctenos</a> | <a>Mapa del sitio</a></div>";
-    echo "</div>";
+    echo "</td>";
+    echo "</tr>";
+    echo "<tr>";
+    echo "<td>";
+    echo '<a>Contáctenos</a> | <a>Mapa del sitio</a>';
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
 }
 
 // Columna central
