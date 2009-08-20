@@ -10,10 +10,7 @@ function CONTENIDO_VIP()
 }
 
 function CONTENIDO_PUBLICACION($op="")
-{
-    require_once("parser.class.php");
-    $BBC = new parser;
-    
+{   
     if (!isset($_GET['publicacion']))
     {
         echo Mensaje("PUBLICACION: ERROR INTERNO", _M_ERROR);
@@ -37,9 +34,10 @@ function CONTENIDO_PUBLICACION($op="")
     }
 
     // Ya venció el tiempo de publicación?.
-    if (strtotime($publicacion['fecha_fin']) < time())
+    if (strtotime($publicacion['fecha_fin']) < strtotime('+1 day'))
     {
         echo Mensaje("disculpe, el tiempo de publicación para la publicación solicitada ha caducado.", _M_INFO);
+        echo "Esta publicacion caduco el ".$publicacion['fecha_fin']."<br />";
         if (_F_usuario_cache('id_usuario') == $publicacion['id_usuario'])
         {
             echo ui_href("","servicios?op=atp&pub=$ticket","¿Desea ampliar el tiempo de su publicación?");
@@ -91,7 +89,9 @@ function CONTENIDO_PUBLICACION($op="")
             echo Mensaje("Operación erronea.", _M_ERROR);
         }
     }
-
+    
+    require_once("parser.class.php");
+    $BBC = new parser;
     $Vendedor = _F_usuario_datos(@$publicacion['id_usuario']);
     $imagenes = ObtenerImagenesArr($ticket,"");
     // Grabamos cualquier consulta enviada
@@ -392,7 +392,7 @@ function CONTENIDO_PUB2MAIL($publicacion)
         if (validEmail($_POST['correo']))
         {
             $MensajeMail="";
-            if (email($_POST['correo'],"Publicación: " . $publicacion['titulo'], "Estimado(a) ".$_POST['nd'].",\nQuiero que revises la siguiente publicación: " . curPageURL(true) . " en " . PROY_NOMBRE . "\nGracias,\n".$_POST['nr']))
+            if (email($_POST['correo'],"Publicación: " . $publicacion['titulo'], "Estimado(a) ".$_POST['nd'].",<br />\nQuiero que revises la siguiente publicación: " . curPageURL(true) . " en " . PROY_NOMBRE . "<br />\nGracias,<br />\n".$_POST['nr']))
             {
                 echo Mensaje("Su mensaje ha sido enviado");
                 echo ui_href("",curPageURL(true),"Retornar a la publicación");

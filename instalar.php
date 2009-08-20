@@ -11,9 +11,10 @@
 
 <body>
 <?php
+$forzar = isset($_GET['forzar']);
 // Tabla de usuarios
 $campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) not null, clave VARCHAR(32) not null, nombre VARCHAR(32) not null, email VARCHAR(50) not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, registro DATETIME, FLAGS LONGTEXT, nDiasVigencia INT NOT NULL DEFAULT '7', nPubMax INT NOT NULL DEFAULT '5'";
-echo db_crear_tabla("ventas_usuarios", $campos, true);
+echo db_crear_tabla("ventas_usuarios", $campos, false||$forzar);
 
 // Agregamos al usuario Admin
 $usuario['usuario'] = 'admin';
@@ -49,7 +50,7 @@ unset ($usuario);
 
 // Tabla de categorias
 $campos = "id_categoria INT NOT NULL AUTO_INCREMENT PRIMARY KEY, padre INT, nombre VARCHAR(200), descripcion VARCHAR(500), rubro VARCHAR(15)";
-echo db_crear_tabla("ventas_categorias", $campos, true);
+echo db_crear_tabla("ventas_categorias", $campos, false||$forzar);
 $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => "Inmuebles", "descripcion" => "", "rubro" => "inmueble"));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Campo", "descripcion" => "", "rubro" => "inmueble"));
     db_agregar_datos("ventas_categorias", array("padre" => $uid, "nombre" => "Alquiler de apartamentos", "descripcion" => "", "rubro" => "inmueble"));
@@ -376,15 +377,15 @@ $uid = db_agregar_datos("ventas_categorias", array("padre" => NULL, "nombre" => 
 
 // Tabla de articulos
 $campos = "id_publicacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo INT, promocionado TINYINT(1), fecha_ini DATETIME, fecha_fin DATETIME, id_categoria INT, id_usuario INT, precio DECIMAL(12,2), titulo VARCHAR(200), descripcion_corta VARCHAR(500), descripcion LONGTEXT";
-echo db_crear_tabla("ventas_publicaciones", $campos, true);
+echo db_crear_tabla("ventas_publicaciones", $campos, false||$forzar);
 
 // Tabla imagenes
 $campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_publicacion INT, mime VARCHAR(100)";
-echo db_crear_tabla("ventas_imagenes", $campos, true);
+echo db_crear_tabla("ventas_imagenes", $campos, false||$forzar);
 
 // Tabla FLAGS ventas
 $campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
-echo db_crear_tabla("ventas_flags_ventas", $campos, true);
+echo db_crear_tabla("ventas_flags_ventas", $campos, false||$forzar);
 db_agregar_datos("ventas_flags_ventas",array("nombre" => "local_propio", "nombrep" => "Local disponible para ver el producto", "descripcion" => "Marque esta opción si Ud. dispone de un local o establecimiento donde exhiba el producto para su venta."));
 db_agregar_datos("ventas_flags_ventas",array("nombre" => "nuevo", "nombrep" => "Árticulo nuevo, jamás usado", "descripcion" => "Marque esta opción si el articulo se encuentra totalmente nuevo"));
 db_agregar_datos("ventas_flags_ventas",array("nombre" => "negociable", "nombrep" => "Negociable", "descripcion" => "Marque esta opción si acepta ofertas por un menor precio al establecido"));
@@ -395,7 +396,7 @@ db_agregar_datos("ventas_flags_ventas",array("nombre" => "credito", "nombrep" =>
 
 // Tabla FLAGS pagos
 $campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
-echo db_crear_tabla("ventas_flags_pago", $campos, true);
+echo db_crear_tabla("ventas_flags_pago", $campos, false||$forzar);
 db_agregar_datos("ventas_flags_pago",array("nombre" => "efectivo", "nombrep" => "Acepta efectivo", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo en efectivo"));
 db_agregar_datos("ventas_flags_pago",array("nombre" => "cheques", "nombrep" => "Acepta cheques", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo con cheques"));
 db_agregar_datos("ventas_flags_pago",array("nombre" => "tarjetas", "nombrep" => "Acepta tarjetas", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo con tarjetas de credito"));
@@ -403,29 +404,29 @@ db_agregar_datos("ventas_flags_pago",array("nombre" => "transferencia", "nombrep
 
 // Tabla FLAGS entregas
 $campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
-echo db_crear_tabla("ventas_flags_entrega", $campos, true);
+echo db_crear_tabla("ventas_flags_entrega", $campos, false||$forzar);
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Este producto puede ser entregado a domicilio a cualquier parte del país"));
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)"));
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "El producto es envíado mediante un courier o una empresa de entrega de paquetes"));
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional"));
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_publicacion INT";
-echo db_crear_tabla("ventas_flags_art", $campos, true);
+echo db_crear_tabla("ventas_flags_art", $campos, false||$forzar);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT, fecha DATETIME";
-echo db_crear_tabla("ventas_mensajes", $campos, true);
+echo db_crear_tabla("ventas_mensajes", $campos, false||$forzar);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_msj INT, id_usuario_dst INT, leido TINYINT(1), eliminado TINYINT(1)";
-echo db_crear_tabla("ventas_mensajes_dst", $campos, true);
+echo db_crear_tabla("ventas_mensajes_dst", $campos, false||$forzar);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario INT, id_publicacion INT, consulta VARCHAR(1000), respuesta VARCHAR(1000), tipo INT, fecha_consulta DATETIME, fecha_respuesta DATETIME";
-echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, true);
+echo db_crear_tabla("ventas_mensajes_publicaciones", $campos, false||$forzar);
 
 $campos = "`id` INT NOT NULL AUTO_INCREMENT ,`tag` VARCHAR( 100 ) NOT NULL, PRIMARY KEY ( `id` ), UNIQUE (`tag`)";
-echo db_crear_tabla("ventas_tag", $campos, true);
+echo db_crear_tabla("ventas_tag", $campos, false||$forzar);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_publicacion INT, id_tag INT";
-echo db_crear_tabla("ventas_tag_uso", $campos, true);
+echo db_crear_tabla("ventas_tag_uso", $campos, false||$forzar);
 
 ?>
 </body>

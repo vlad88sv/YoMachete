@@ -26,8 +26,8 @@ function CONTENIDO_BUSCAR()
     {
         $AND_adv ="AND precio>='%s' AND preccio<='%s' fecha_fin";
     }
-    
-    $WHERE = sprintf("MATCH (titulo,descripcion_corta,descripcion) AGAINST ('%s' IN BOOLEAN MODE) $AND_categoria",db_codex($_GET['b']));
+    $cadenaBusq = db_codex($_GET['b']);
+    $WHERE = sprintf("fecha_fin >= CURDATE() AND (MATCH (titulo,descripcion_corta,descripcion) AGAINST ('%s' IN BOOLEAN MODE) $AND_categoria OR id_publicacion IN (SELECT id_publicacion FROM ventas_tag_uso WHERE id_tag IN (SELECT ventas_tag.id FROM ventas_tag WHERE MATCH(ventas_tag.tag) AGAINST('%s' IN BOOLEAN MODE))))",$cadenaBusq,$cadenaBusq);
     echo '<h1>Resultados</h1>';
     echo VISTA_ListaPubs($WHERE);
     }
