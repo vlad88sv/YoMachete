@@ -6,10 +6,11 @@ setlocale                   (LC_ALL, 'es_AR.UTF-8', 'es_ES.UTF-8');
 date_default_timezone_set   ('America/El_Salvador');
 ini_set                     ('session.gc_maxlifetime', '600');
 $base = dirname(__FILE__);
+if(!file_exists("$base/secreto.php")) die("ERROR #1");
+require_once ("$base/secreto.php"); // Datos para la conexión a la base de datos
 require_once ("$base/ui.php"); // Generación de HTML: Comboboxes, etc.
 require_once ("$base/const.php"); // Constantes
 require_once ("$base/sesion.php"); // Sesión
-require_once ("$base/secreto.php"); // Datos para la conexión a la base de datos
 require_once ("$base/db.php"); // Conexión hacia la base de datos [depende de secreto.php]
 require_once ("$base/db-stubs.php"); // Generación de objetos UI desde la base de datos [depende de ui.php]
 require_once ("$base/db-ui.php"); // Generación de objetos UI desde la base de datos [depende de ui.php]
