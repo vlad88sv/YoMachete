@@ -98,20 +98,31 @@ img {
 
 #header>table {
     width:100%;
+    margin:0;
+    border:0;
+    padding:0;
+    border-collapse: collapse;
 }
 
+#header tr {
+    margin:0;
+    border:0;
+}
 #header #logotipo {
     width:329px;
     height:65px;
-    display:inline;
 }
 
 #header #menu {
-    float:right;
     white-space: nowrap;
     font-size: 0.7em;
     text-align:right;
-    display:inline;
+    vertical-align:top;
+    padding:0;
+}
+#header #menu_der {
+    float:right;
+    border-collapse: collapse;
 }
 
 #header #menu a.boton {
@@ -120,7 +131,7 @@ img {
     display:table-cell;
     vertical-align:middle;
     font-weight:bolder;
-    border-right:1px solid #FFF;
+    border-left:1px solid #FFF;
     font-family: sans-serif;
     height: 16px;
     padding-bottom: 6px;
@@ -489,5 +500,6 @@ background-color:transparent;
 }
 .col1-3 td
 {
+    vertical-align:top;
     font-size: 0.7em;
 }

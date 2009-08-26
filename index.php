@@ -87,14 +87,14 @@ function GENERAR_CABEZA()
     // Cargamos el logo.
     echo "<table>";
     echo "<tr>";
-    echo "<td>";
-        echo ui_href("logotipo","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
+    echo "<td id=\"logotipo\">";
+        echo ui_href("","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
     echo "</td>";
     echo "<td id=\"menu\">";
-    echo "<table>";
+    echo "<table id=\"menu_der\">";
     echo "<tr>";
     echo "<td>";
-    echo ui_href("","./","Comprar","boton izq");
+    echo ui_href("","./","Comprar","boton");
     echo ui_href("","vender","Vender","boton");
     if (!S_iniciado())
     {
