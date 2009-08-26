@@ -407,7 +407,7 @@ function CargarArchivos($input,$id_publicacion,$id_usuario)
 {
     $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
-
+    $usuario = _F_usuario_datos($id_usuario);
     if (!ComprobarTicket($id_publicacion))
     {
         return false;
@@ -426,6 +426,13 @@ function CargarArchivos($input,$id_publicacion,$id_usuario)
     foreach ($_FILES[$input]['tmp_name'] as $llave => $valor)
     {
         if (!$valor) continue;
+        // Cuantas imagenes tiene?
+        $NImgAct = db_contar('ventas_imagenes',"id_publicacion='$id_publicacion'");
+        if ($NImgAct >= 5)
+        {
+            echo Mensaje(sprintf("ha sobrepasado el límite aceptado de imagenes. Descartando '%s'",$_FILES[$input]['name'][$llave]),_M_ERROR);
+            continue;
+        }
         $datos['id_img'] = NULL;
         $datos['id_publicacion'] = $id_publicacion;
         $datos['mime'] = $_FILES[$input]['type'][$llave];
@@ -695,13 +702,16 @@ function curPageURL($stripArgs=false) {
  if ($stripArgs) {$pageURL = preg_replace("/\?.*/", "",$pageURL);}
  return $pageURL;
 }
+// Wrapper de envío de correo electrónico. HTML/utf-8
 function email($para, $asunto, $mensaje)
 {
 $headers = "MIME-Version: 1.0" . "\r\n";
-$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+$headers .= "Content-Type: text/html; charset=utf-8" . "\r\n";
 $headers .= 'From: <'. PROY_MAIL_POSTMASTER . ">\r\n";
+$mensaje = sprintf('<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></head><html><body>%s</body></html>',$mensaje);
 return mail($para,$asunto,$mensaje,$headers);
 }
+
 function email_x_nivel($id_nivel, $asunto, $mensaje)
 {
     $c = "SELECT email FROM ventas_usuarios WHERE nivel=$id_nivel";
