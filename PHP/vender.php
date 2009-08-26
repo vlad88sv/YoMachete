@@ -193,8 +193,7 @@ function CONTENIDO_VENDER()
             }
             else
             {
-                $vendedor = ObtenerDatos($Buffer['id_usuario']);
-                print_r($vendedor);
+                $vendedor = _F_usuario_datos($Buffer['id_usuario']);
                 email($vendedor['email'],PROY_NOMBRE." - Publicación \"".$Buffer['titulo']."\" ha sido recibida","Su publicación ha sido recibida en nuestro sistema y se encuentra en proceso de activación.<br />\nEsta activación puede demorar entre <strong>1 minuto y 1 hora</strong> dependiendo de la disponibilidad de los administradores en línea.<br />Esta corta espera es necesaria para realizar una revisión de las publiciaciones y así poder ofrecer el mejor contenido a nuestros visitantes.<br />\n!Gracias por preferir ".PROY_NOMBRE." para realizar sus publicaciones!");
                 echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
             }
