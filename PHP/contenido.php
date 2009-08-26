@@ -27,14 +27,14 @@ function CONTENIDO_PUBLICACION($op="")
     
     // Si no esta aprobado solo lo puede ver un Administrador
     
-    if ($publicacion['tipo'] != _A_aceptado && _F_usuario_cache('nivel') != _N_administrador)
+    if ($op != "previsualizacion" && $publicacion['tipo'] != _A_aceptado && _F_usuario_cache('nivel') != _N_administrador)
     {
         echo Mensaje("esta publicacion NO se encuentra disponible",_M_ERROR);
         return;
     }
 
     // Ya venció el tiempo de publicación?.
-    if (strtotime($publicacion['fecha_fin']) < strtotime('+1 day'))
+    if ($op != "previsualizacion" && strtotime($publicacion['fecha_fin']) < strtotime('+1 day'))
     {
         echo Mensaje("disculpe, el tiempo de publicación para la publicación solicitada ha caducado.", _M_INFO);
         echo "Esta publicacion caduco el ".$publicacion['fecha_fin']."<br />";
