@@ -512,8 +512,9 @@ function CargarDatos($id_publicacion,$id_usuario)
 
     // Tags
         
-    // Procesamos los nuevos tags (eliminamos los espacios y hacemos array)
-    $tags = explode(",",preg_replace('/\s*/', '',@$_POST['tags']),5);
+    // Procesamos los nuevos tags (eliminamos los espacios, las comas finales y hacemos array)
+    // Nota: no evaluamos las comas finales con posibles espacios porque se eliminan con la primera pasada
+    $tags = explode(",",preg_replace(array('/\s*/','/,$/'), '',@$_POST['tags']),5);
     
     // Insertamos los nuevos tags
     $val_tags = implode("'),('",$tags);
