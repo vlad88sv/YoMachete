@@ -185,7 +185,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_publicacion = $f['id_publicacion'];
-    $ctags = sprintf("SELECT GROUP_CONCAT(tag SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$id_publicacion);
+    $ctags = sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$id_publicacion);
     $tags_array = (mysql_fetch_array(db_consultar($ctags)));
     $tags = $tags_array['tags'];
     $id_usuario = $f['id_usuario'];
@@ -560,7 +560,7 @@ function ObtenerDatos($id_publicacion)
     // Obtenemos los tags en el indice "tags".
     $ret = mysql_fetch_array($r);
     
-    $tags_array = (mysql_fetch_array(db_consultar(sprintf("SELECT GROUP_CONCAT(tag SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$ret['id_publicacion']))));
+    $tags_array = (mysql_fetch_array(db_consultar(sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$ret['id_publicacion']))));
     $ret['tags'] = $tags_array['tags'];
 
     return $ret;
