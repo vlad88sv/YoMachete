@@ -25,7 +25,18 @@ function db_codex($datos){
     if ( !$db_link ) {
         db_conectar();
     }
-    return mysql_real_escape_string($datos, $db_link);
+    if (is_array($datos))
+    {
+        foreach($datos as $valor)
+        {
+            $arr[] = db_codex($valor);
+        }
+        return $arr;
+    }
+    else
+    {    
+        return mysql_real_escape_string($datos, $db_link);
+    }
 }
 function db_afectados(){
     global $db_link;

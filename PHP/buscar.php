@@ -62,6 +62,11 @@ function CONTENIDO_BUSCAR()
             $ANDs[] = sprintf("AND $operacion",db_codex($_GET['tpv']));
         }
         
+        // Opciones
+        //-Características del artículo
+        if (isset($_GET['v']) && is_array($_GET['v']))
+        $ANDs[] = sprintf("AND ",implode("','",db_codex($_GET['v'])));
+        
         $WHERE = sprintf("fecha_fin >= CURDATE() $AND_match1 $AND_match2 $AND_categoria %s",implode(" ",$ANDs));
     }
     else

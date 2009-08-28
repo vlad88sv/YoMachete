@@ -316,7 +316,7 @@ function DestruirTicket($id_publicacion,$tipo=_A_temporal)
         EliminarArchivosArr(ObtenerMiniImagenesArr($id_publicacion));
         $c = "DELETE FROM ventas_imagenes WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
-        $c = "DELETE FROM ventas_flags_art WHERE id_publicacion='$id_publicacion'";
+        $c = "DELETE FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
     }
     return $ret;
@@ -531,7 +531,7 @@ function CargarDatos($id_publicacion,$id_usuario)
     db_consultar("INSERT INTO ventas_tag_uso (id_tag,id_publicacion) SELECT id, $id_publicacion FROM ventas_tag WHERE tag IN ('$val_tags')");
     
     // Hay que eliminar los flags antes que nada.
-    $c = "DELETE FROM ventas_flags_art WHERE id_publicacion='$id_publicacion'";
+    $c = "DELETE FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
 
     $datos['id'] = NULL;
@@ -545,7 +545,7 @@ function CargarDatos($id_publicacion,$id_usuario)
             {
                 $datos['id_flag'] = $valor;
                 $datos['id_tabla'] = $campo;
-                db_agregar_datos("ventas_flags_art", $datos);
+                db_agregar_datos("ventas_flags_pub", $datos);
             }
         }
     }
@@ -570,7 +570,7 @@ function ObtenerFlags($id_publicacion, $id_tabla)
     $id_publicacion = db_codex($id_publicacion);
     $id_tabla = db_codex($id_tabla);
 
-    $c = "SELECT id_flag FROM ventas_flags_art WHERE id_publicacion='$id_publicacion' AND id_tabla='$id_tabla'";
+    $c = "SELECT id_flag FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion' AND id_tabla='$id_tabla'";
     $r = db_consultar($c);
 
     $arr = array();

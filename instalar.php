@@ -411,7 +411,7 @@ db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "no
 db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional"));
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_publicacion INT";
-echo db_crear_tabla("ventas_flags_art", $campos, false||$forzar);
+echo db_crear_tabla("ventas_flags_pub", $campos, false||$forzar);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT, fecha DATETIME";
 echo db_crear_tabla("ventas_mensajes", $campos, false||$forzar);
