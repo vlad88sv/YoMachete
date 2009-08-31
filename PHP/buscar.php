@@ -95,15 +95,15 @@ function CONTENIDO_BUSCAR()
         <tr>
             <td>
             <input title="Marque si desea que se muestren las publicaciones que no tengan las opciones seleccionadas" type="checkbox" name="neg_v" /> Excluir si contienen<hr />
-            <?php echo db_ui_checkboxes("v[]", "ventas_flags_ventas", "id_flag", "nombrep", "descripcion",@$_GET['v']); ?>
+            <?php echo db_ui_checkboxes("v[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['v'],"","tipo='venta'"); ?>
             </td>
             <td>
             <input title="Marque si desea que se muestren las publicaciones que no tengan las opciones seleccionadas" type="checkbox" name="neg_v" /> Excluir si contienen<hr />
-            <?php echo db_ui_checkboxes("e[]", "ventas_flags_entrega", "id_flag", "nombrep", "descripcion",@$_GET['e']); ?>
+            <?php echo db_ui_checkboxes("e[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['e'],"","tipo='entrega'"); ?>
             </td>
             <td>
             <input title="Marque si desea que se muestren las publicaciones que no tengan las opciones seleccionadas" type="checkbox" name="neg_v" /> Excluir si contienen<hr />
-            <?php echo db_ui_checkboxes("p[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",@$_GET['p']); ?>
+            <?php echo db_ui_checkboxes("p[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['p'],"","tipo='pago'"); ?>
             </td>
         </tr>
     </table>

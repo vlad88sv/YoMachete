@@ -383,32 +383,30 @@ echo db_crear_tabla("ventas_publicaciones", $campos, false||$forzar);
 $campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_publicacion INT, mime VARCHAR(100)";
 echo db_crear_tabla("ventas_imagenes", $campos, false||$forzar);
 
-// Tabla FLAGS ventas
-$campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
-echo db_crear_tabla("ventas_flags_ventas", $campos, false||$forzar);
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "local_propio", "nombrep" => "Local disponible para ver el producto", "descripcion" => "Marque esta opción si Ud. dispone de un local o establecimiento donde exhiba el producto para su venta."));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "nuevo", "nombrep" => "Árticulo nuevo, jamás usado", "descripcion" => "Marque esta opción si el articulo se encuentra totalmente nuevo"));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "negociable", "nombrep" => "Negociable", "descripcion" => "Marque esta opción si acepta ofertas por un menor precio al establecido"));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "cambalache", "nombrep" => "Cambalache", "descripcion" => "Marque esta opción si acepta otro producto en pago por este (incluido pago de diferencia)"));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "facturas", "nombrep" => "Entrega factura", "descripcion" => "Marque esta opción si Ud. puede entregar una factura *legal* sobre esta venta"));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "credito_fiscal", "nombrep" => "Acepta Crédito Físcal", "descripcion" => "Marque esta opción si Ud. puede aceptar esta compra con crédito físcal"));
-db_agregar_datos("ventas_flags_ventas",array("nombre" => "credito", "nombrep" => "Ofrece Crédito", "descripcion" => "Marque esta opción si Ud. puede ofrecer crédito o alguna otra forma de pago a plazos para esta venta"));
+// Tabla FLAGS entregas + Pagos + Ventas
+$campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200), tipo VARCHAR(10)";
+echo db_crear_tabla("ventas_flags", $campos, false||$forzar);
 
-// Tabla FLAGS pagos
-$campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
-echo db_crear_tabla("ventas_flags_pago", $campos, false||$forzar);
-db_agregar_datos("ventas_flags_pago",array("nombre" => "efectivo", "nombrep" => "Acepta efectivo", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo en efectivo"));
-db_agregar_datos("ventas_flags_pago",array("nombre" => "cheques", "nombrep" => "Acepta cheques", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo con cheques"));
-db_agregar_datos("ventas_flags_pago",array("nombre" => "tarjetas", "nombrep" => "Acepta tarjetas", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo con tarjetas de credito"));
-db_agregar_datos("ventas_flags_pago",array("nombre" => "transferencia", "nombrep" => "Acepta transferencias", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo vía transferencia bancaria"));
+// Entregas
+db_agregar_datos("ventas_flags",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Este producto puede ser entregado a domicilio a cualquier parte del país", "tipo" => "entrega"));
+db_agregar_datos("ventas_flags",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)", "tipo" => "entrega"));
+db_agregar_datos("ventas_flags",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "El producto es envíado mediante un courier o una empresa de entrega de paquetes", "tipo" => "entrega"));
+db_agregar_datos("ventas_flags",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional", "tipo" => "entrega"));
 
-// Tabla FLAGS entregas
-$campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200)";
-echo db_crear_tabla("ventas_flags_entrega", $campos, false||$forzar);
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Este producto puede ser entregado a domicilio a cualquier parte del país"));
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)"));
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "El producto es envíado mediante un courier o una empresa de entrega de paquetes"));
-db_agregar_datos("ventas_flags_entrega",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional"));
+// Pagos
+db_agregar_datos("ventas_flags",array("nombre" => "efectivo", "nombrep" => "Acepta efectivo", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo en efectivo", "tipo" => "pago"));
+db_agregar_datos("ventas_flags",array("nombre" => "cheques", "nombrep" => "Acepta cheques", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo con cheques", "tipo" => "pago"));
+db_agregar_datos("ventas_flags",array("nombre" => "tarjetas", "nombrep" => "Acepta tarjetas", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo con tarjetas de credito", "tipo" => "pago"));
+db_agregar_datos("ventas_flags",array("nombre" => "transferencia", "nombrep" => "Acepta transferencias", "descripcion" => "Marque esta opción si Ud. acepta el pago de este articulo vía transferencia bancaria", "tipo" => "pago"));
+
+// Ventas
+db_agregar_datos("ventas_flags",array("nombre" => "local_propio", "nombrep" => "Local disponible para ver el producto", "descripcion" => "Marque esta opción si Ud. dispone de un local o establecimiento donde exhiba el producto para su venta.", "tipo" => "venta"));
+db_agregar_datos("ventas_flags",array("nombre" => "nuevo", "nombrep" => "Árticulo nuevo, jamás usado", "descripcion" => "Marque esta opción si el articulo se encuentra totalmente nuevo", "tipo" => "venta"));
+db_agregar_datos("ventas_flags",array("nombre" => "negociable", "nombrep" => "Negociable", "descripcion" => "Marque esta opción si acepta ofertas por un menor precio al establecido", "tipo" => "venta"));
+db_agregar_datos("ventas_flags",array("nombre" => "cambalache", "nombrep" => "Cambalache", "descripcion" => "Marque esta opción si acepta otro producto en pago por este (incluido pago de diferencia)", "tipo" => "venta"));
+db_agregar_datos("ventas_flags",array("nombre" => "facturas", "nombrep" => "Entrega factura", "descripcion" => "Marque esta opción si Ud. puede entregar una factura *legal* sobre esta venta", "tipo" => "venta"));
+db_agregar_datos("ventas_flags",array("nombre" => "credito_fiscal", "nombrep" => "Acepta Crédito Físcal", "descripcion" => "Marque esta opción si Ud. puede aceptar esta compra con crédito físcal", "tipo" => "venta"));
+db_agregar_datos("ventas_flags",array("nombre" => "credito", "nombrep" => "Ofrece Crédito", "descripcion" => "Marque esta opción si Ud. puede ofrecer crédito o alguna otra forma de pago a plazos para esta venta", "tipo" => "venta"));
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_publicacion INT";
 echo db_crear_tabla("ventas_flags_pub", $campos, false||$forzar);

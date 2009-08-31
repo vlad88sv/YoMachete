@@ -565,12 +565,12 @@ function ObtenerDatos($id_publicacion)
 
     return $ret;
 }
-function ObtenerFlags($id_publicacion, $id_tabla)
+function ObtenerFlags($id_publicacion, $tipo)
 {
     $id_publicacion = db_codex($id_publicacion);
     $id_tabla = db_codex($id_tabla);
 
-    $c = "SELECT id_flag FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion' AND id_tabla='$id_tabla'";
+    $c = "SELECT id_flag FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion' AND tipo='$id_tabla'";
     $r = db_consultar($c);
 
     $arr = array();
