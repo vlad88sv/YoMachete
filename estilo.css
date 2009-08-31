@@ -125,6 +125,10 @@ img {
     border-collapse: collapse;
 }
 
+#header #menu_der td {
+    padding:0px;
+}
+
 #header #menu a.boton {
     background-color:#F1AF35;
     color:#FFF;
