@@ -182,7 +182,7 @@ function GENERAR_CATEGORIAS()
 function GENERAR_PIE()
 {
     $data = '';
-    $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 CEPASA de C.V. Todos los derechos reservados.</p>";
+    $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados.</p>";
     return $data;
 }
 ?>
