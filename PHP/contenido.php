@@ -89,9 +89,7 @@ function CONTENIDO_PUBLICACION($op="")
             echo Mensaje("Operación erronea.", _M_ERROR);
         }
     }
-    
-    require_once("parser.class.php");
-    $BBC = new parser;
+
     $Vendedor = _F_usuario_datos(@$publicacion['id_usuario']);
     $imagenes = ObtenerImagenesArr($ticket,"");
     // Grabamos cualquier consulta enviada
@@ -136,22 +134,21 @@ function CONTENIDO_PUBLICACION($op="")
     // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.
     echo "<b>Formas de entrega:</b>" ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_entrega\">ver...</a>]</span>";
     echo "<div id=\"detalle_entrega\" class=\"auto_ocultar\">";
-    echo db_ui_checkboxes("flags_entrega[]", "ventas_flags_entrega", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_entrega"),'disabled="disabled"');
-    //echo db_ui_checkboxes("flags_ventas[]", "ventas_flags_ventas", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_ventas"),'disabled="disabled"');
+    echo db_ui_checkboxes("", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"entrega"),'disabled="disabled"',"tipo='entrega'");
     echo "</div>";
     echo "<br />";
 
     // Caracteristicas adicionales:
     echo "<b>Características adicionales:</b>" ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_adicional\">ver...</a>]</span>";
     echo "<div id=\"detalle_adicional\" class=\"auto_ocultar\">";
-    echo db_ui_checkboxes("flags_ventas[]", "ventas_flags_ventas", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_ventas"),'disabled="disabled"');
+    echo db_ui_checkboxes("", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"venta"),'disabled="disabled"',"tipo='venta'");
     echo "</div>";
     echo "<br />";
 
     // Precio y formas de pago aceptadas
     echo "<b>Precio:</b> $" . number_format(@$publicacion['precio'],2,".",",") ." <span  class=\"auto_mostrar\">[<a id=\"ver_mas_precio\">ver formas de pago...</a>]</span>";
     echo "<div id=\"detalle_precio\" class=\"auto_ocultar\">";
-    echo db_ui_checkboxes("flags_pago[]", "ventas_flags_pago", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"flags_pago"),'disabled="disabled"');
+    echo db_ui_checkboxes("", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"pago"),'disabled="disabled"',"tipo='pago'");
     echo "</div>";
     echo "<br />";
 
@@ -177,7 +174,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "</center>";
     }
     echo "<hr /><h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
-    $descripcion = $BBC->parse((strip_html_tags(@$publicacion['descripcion'])));
+    $descripcion = @$publicacion['descripcion'];
     if( !is_array( $descripcion ) ) {
             echo $descripcion;
     } else {

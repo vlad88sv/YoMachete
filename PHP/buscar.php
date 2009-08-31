@@ -64,8 +64,8 @@ function CONTENIDO_BUSCAR()
         
         // Opciones
         //-Características del artículo
-        if (isset($_GET['v']) && is_array($_GET['v']))
-        $ANDs[] = sprintf("AND ",implode("','",db_codex($_GET['v'])));
+        if (isset($_GET['f']) && is_array($_GET['f']))
+        $ANDs[] = sprintf("AND id_publicacion IN (SELECT id_publicacion FROM ventas_flags_pub WHERE tipo='%s')",implode("' AND tipo='",db_codex($_GET['f'])));
         
         $WHERE = sprintf("fecha_fin >= CURDATE() $AND_match1 $AND_match2 $AND_categoria %s",implode(" ",$ANDs));
     }
@@ -95,15 +95,15 @@ function CONTENIDO_BUSCAR()
         <tr>
             <td>
             <input title="Marque si desea que se muestren las publicaciones que no tengan las opciones seleccionadas" type="checkbox" name="neg_v" /> Excluir si contienen<hr />
-            <?php echo db_ui_checkboxes("v[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['v'],"","tipo='venta'"); ?>
+            <?php echo db_ui_checkboxes("f[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['f'],"","tipo='venta'"); ?>
             </td>
             <td>
             <input title="Marque si desea que se muestren las publicaciones que no tengan las opciones seleccionadas" type="checkbox" name="neg_v" /> Excluir si contienen<hr />
-            <?php echo db_ui_checkboxes("e[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['e'],"","tipo='entrega'"); ?>
+            <?php echo db_ui_checkboxes("f[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['f'],"","tipo='entrega'"); ?>
             </td>
             <td>
             <input title="Marque si desea que se muestren las publicaciones que no tengan las opciones seleccionadas" type="checkbox" name="neg_v" /> Excluir si contienen<hr />
-            <?php echo db_ui_checkboxes("p[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['p'],"","tipo='pago'"); ?>
+            <?php echo db_ui_checkboxes("f[]", "ventas_flags", "id_flag", "nombrep", "descripcion",@$_GET['f'],"","tipo='pago'"); ?>
             </td>
         </tr>
     </table>

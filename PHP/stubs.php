@@ -495,6 +495,10 @@ function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
 }
 function CargarDatos($id_publicacion,$id_usuario)
 {
+    // HTML purifier
+    require_once("PHP/HTMLPurifier.standalone.php");
+    $purifier = new HTMLPurifier();
+
     $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
 
@@ -505,8 +509,8 @@ function CargarDatos($id_publicacion,$id_usuario)
     // $datos["id_usuario"] = $id_usuario; // No usar.
     $datos["precio"] = _F_form_cache("precio");
     $datos["titulo"] = _F_form_cache("titulo");
-    $datos["descripcion_corta"] = _F_form_cache("descripcion_corta");
-    $datos["descripcion"] = _F_form_cache("descripcion");
+    $datos["descripcion_corta"] = strip_html_tags(_F_form_cache("descripcion_corta"));
+    $datos["descripcion"] = $purifier->purify(_F_form_cache("descripcion"));
     $ret = db_actualizar_datos("ventas_publicaciones",$datos,"id_publicacion='$id_publicacion'");
     unset($datos);
 
@@ -537,14 +541,14 @@ function CargarDatos($id_publicacion,$id_usuario)
     $datos['id'] = NULL;
     $datos['id_publicacion'] = $id_publicacion;
 
-    foreach(array("flags_ventas", "flags_pago", "flags_entrega") as $campo)
+    foreach(array("venta", "pago", "entrega") as $campo)
     {
         if (isset($_POST[$campo]) && is_array($_POST[$campo]))
         {
             foreach($_POST[$campo] as $llave => $valor)
             {
                 $datos['id_flag'] = $valor;
-                $datos['id_tabla'] = $campo;
+                $datos['tipo'] = $campo;
                 db_agregar_datos("ventas_flags_pub", $datos);
             }
         }
@@ -568,9 +572,9 @@ function ObtenerDatos($id_publicacion)
 function ObtenerFlags($id_publicacion, $tipo)
 {
     $id_publicacion = db_codex($id_publicacion);
-    $id_tabla = db_codex($id_tabla);
+    $tipo = db_codex($tipo);
 
-    $c = "SELECT id_flag FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion' AND tipo='$id_tabla'";
+    $c = "SELECT id_flag FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion' AND tipo='$tipo'";
     $r = db_consultar($c);
 
     $arr = array();

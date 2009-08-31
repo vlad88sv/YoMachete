@@ -260,19 +260,19 @@ function CONTENIDO_VENDER()
     {
         echo "<li>Características del artículo</li>";
         echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span><br />";
-        echo db_ui_checkboxes("flags_ventas[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"venta"),"","tipo='venta'");
+        echo db_ui_checkboxes("venta[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"venta"),"","tipo='venta'");
     }
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
     echo "Précio " . ui_input("precio",@$Buffer["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
-    echo db_ui_checkboxes("flags_pago[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"pago"),"","tipo='pago'");
+    echo db_ui_checkboxes("pago[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"pago"),"","tipo='pago'");
     if (in_array(@$Buffer["rubro"], array("articulo")))
     {
         echo "<li>Formas de entrega admitidas</li>";
         echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span><br />";
-        echo db_ui_checkboxes("flags_entrega[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"entrega"),"","tipo='entrega'");
+        echo db_ui_checkboxes("entrega[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"entrega"),"","tipo='entrega'");
     }
     switch(@$Buffer["rubro"])
     {
@@ -324,20 +324,16 @@ function CONTENIDO_VENDER()
     $(\'#descripcion\').tinymce({
     script_url : \'JS/tinymce/jscripts/tiny_mce.js\',
     theme : "advanced",
-    mode : "none",
-    plugins : "bbcode",
-    theme_advanced_buttons1 : "bold,italic,underline,|,justifyleft,justifycenter,justifyright,|,undo,redo,link,unlink,forecolor,removeformat,cleanup,code",
-    theme_advanced_buttons2 : "",
+    mode : "textareas",
+    plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+    theme_advanced_buttons2 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
     theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location : "bottom",
-    theme_advanced_toolbar_align : "center",
-    theme_advanced_styles : "Code=codeStyle;Quote=quoteStyle",
-    content_css : "css/bbcode.css",
-    entity_encoding : "raw",
-    add_unload_trigger : false,
-    remove_linebreaks : false,
-    inline_styles : false,
-    convert_fonts_to_spans : false
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "left",
+    media_external_list_url : "js/media_list.js",
+    external_link_list_url : "js/link_list.js",
+    template_external_list_url : "js/template_list.js",
     });
     ');
 }

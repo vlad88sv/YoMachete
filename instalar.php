@@ -389,7 +389,7 @@ echo db_crear_tabla("ventas_flags", $campos, false||$forzar);
 
 // Entregas
 db_agregar_datos("ventas_flags",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Este producto puede ser entregado a domicilio a cualquier parte del país", "tipo" => "entrega"));
-db_agregar_datos("ventas_flags",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)", "tipo" => "entrega"));
+db_agregar_datos("ventas_flags",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)", "descripcion" => "Este producto puede ser entregado personalmente según acuerdo mutuo entre el comprador y vendedor", "tipo" => "entrega"));
 db_agregar_datos("ventas_flags",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "El producto es envíado mediante un courier o una empresa de entrega de paquetes", "tipo" => "entrega"));
 db_agregar_datos("ventas_flags",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional", "tipo" => "entrega"));
 
@@ -408,7 +408,7 @@ db_agregar_datos("ventas_flags",array("nombre" => "facturas", "nombrep" => "Entr
 db_agregar_datos("ventas_flags",array("nombre" => "credito_fiscal", "nombrep" => "Acepta Crédito Físcal", "descripcion" => "Marque esta opción si Ud. puede aceptar esta compra con crédito físcal", "tipo" => "venta"));
 db_agregar_datos("ventas_flags",array("nombre" => "credito", "nombrep" => "Ofrece Crédito", "descripcion" => "Marque esta opción si Ud. puede ofrecer crédito o alguna otra forma de pago a plazos para esta venta", "tipo" => "venta"));
 
-$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_tabla VARCHAR(100), id_flag INT, id_publicacion INT";
+$campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo VARCHAR(100), id_flag INT, id_publicacion INT";
 echo db_crear_tabla("ventas_flags_pub", $campos, false||$forzar);
 
 $campos = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_usuario_rmt INT, mensaje VARCHAR(500), tipo TINYINT, contexto INT, fecha DATETIME";
