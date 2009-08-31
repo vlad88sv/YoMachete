@@ -94,9 +94,9 @@ $resultado = db_consultar($c);
 
 }
 
-function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default = array(), $extra="")
+function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default = array(), $extra="", $where="")
 {
-    $c = "SELECT $valor, $texto, $explicacion FROM $tabla";
+    $c = "SELECT $valor, $texto, $explicacion FROM $tabla $where";
     $r = db_consultar($c);
     $html = '';
     if (is_array($default)) $arr = array_flip($default); else $arr = array();
