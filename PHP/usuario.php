@@ -17,9 +17,9 @@ if ($resultado) {
 }
 }
 
-function _F_usuario_datos($id_usuario){
+function _F_usuario_datos($id_usuario,$campo){
     global $tablaUsuarios;
-    $c = "SELECT * FROM $tablaUsuarios WHERE id_usuario='$id_usuario'";
+    $c = "SELECT * FROM $tablaUsuarios WHERE $campo='$id_usuario'";
     DEPURAR ($c, 0);
     $resultado = db_consultar ($c);
     return (mysql_num_rows($resultado) > 0) ? db_fila_a_array($resultado) : false;
