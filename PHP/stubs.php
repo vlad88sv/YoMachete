@@ -735,6 +735,13 @@ $max_size = 30;
 while($row = mysql_fetch_array($r)) {
     $tags[$row['tag']] = $row['hits'];
 }
+
+// No hay tags
+if (! isset($tags))
+{
+    return;
+}
+
 ksort($tags);
 
 $minimum_count = min(array_values($tags));
