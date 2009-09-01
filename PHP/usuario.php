@@ -17,7 +17,7 @@ if ($resultado) {
 }
 }
 
-function _F_usuario_datos($id_usuario,$campo){
+function _F_usuario_datos($id_usuario,$campo="id_usuario"){
     global $tablaUsuarios;
     $c = "SELECT * FROM $tablaUsuarios WHERE $campo='$id_usuario'";
     DEPURAR ($c, 0);
