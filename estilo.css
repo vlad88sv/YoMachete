@@ -333,10 +333,8 @@ text-align:left;
 }
 
 .ancha td {
-text-align:left;
 border:1px solid #111;
 padding:3px;
-width:auto;
 }
 
 .marginado-y {
@@ -354,6 +352,7 @@ background-color:transparent;
 }
 
 .limpio td {
+border:0;
 background-color:transparent;
 }
 
@@ -506,4 +505,20 @@ background-color:transparent;
 {
     vertical-align:top;
     font-size: 0.7em;
+}
+
+.fInput
+{
+    width:60%;
+}
+
+.fInput input, .fInput textarea
+{
+    width:90%;
+}
+
+.fDer 
+{
+    width:10%;
+    text-align:right;
 }
