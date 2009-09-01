@@ -2,7 +2,7 @@
 function CONTENIDO_BUSCAR()
 {
     //Será que ya envío la búsqueda?  
-    $flag_busq_valida = isset($_GET['b']) && isset($_GET['c']);
+    $flag_busq_valida = isset($_GET['b']);
 
     // Será que es una búsqueda avanzada?
     $flag_busq_adv = isset($_GET['ba']);
