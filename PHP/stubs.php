@@ -210,7 +210,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="ubicacion">Ubicación: ' . $ubicacion.'</td></tr>';
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
-    $data .= '<tr><td colspan="2"><strong>Tags:</strong> ' . $tags.'</td></tr>';
+    $data .= '<tr><td colspan="2"><strong>Etiquetas:</strong> ' . $tags.'</td></tr>';
     if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
     {
 
@@ -724,5 +724,39 @@ function email_x_nivel($id_nivel, $asunto, $mensaje)
     while ($f = mysql_fetch_array($r)) {
         email($f['email'],PROY_NOMBRE." - $asunto",$mensaje);
     }
+}
+
+// http://www.v-nessa.net/2007/02/12/how-to-make-a-sexy-tag-cloud
+function tag_cloud($r) {
+
+$min_size = 10;
+$max_size = 30;
+
+while($row = mysql_fetch_array($r)) {
+    $tags[$row['tag']] = $row['hits'];
+}
+ksort($tags);
+
+$minimum_count = min(array_values($tags));
+$maximum_count = max(array_values($tags));
+$spread = $maximum_count - $minimum_count;
+
+if($spread == 0) {
+$spread = 1;
+}
+
+$cloud_html = '';
+$cloud_tags = array();
+
+foreach ($tags as $tag => $count) {
+$size = $min_size + ($count - $minimum_count)
+* ($max_size - $min_size) / $spread;
+$cloud_tags[] = '<a style="font-size: '. floor($size) . 'px'
+. '" class="tag_cloud" href="'.curPageURL(true).'buscar?ba=1&inc_etiq=1&b=' . $tag
+. '" title="\'' . $tag . '\' returned a count of ' . $count . '">'
+. htmlspecialchars(stripslashes($tag)) . '</a>';
+}
+$cloud_html = join("\n", $cloud_tags) . "\n";
+return $cloud_html;
 }
 ?>

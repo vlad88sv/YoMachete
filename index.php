@@ -38,7 +38,7 @@ if (!isset($_GET['peticion']))
 </div>
 <div id="columnas">
 <div id="col2">
-<div id="secc_articulos"><?php echo GENERAR_ARTICULOS() ?></div>
+<div id="secc_articulos"><?php echo GENERAR_ARTICULOS(); echo GENERAR_TAG_CLOUD(); ?></div>
 </div>
 <div id="col1">
 <div id="secc_categorias"><?php echo GENERAR_CATEGORIAS() ?></div>
@@ -184,5 +184,11 @@ function GENERAR_PIE()
     $data = '';
     $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados.</p>";
     return $data;
+}
+function GENERAR_TAG_CLOUD()
+{
+$c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM ventas_tag_uso AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 20";
+$r = db_consultar($c);
+return '<h1>Nube de etiquetas</h1><center>'.tag_cloud($r).'</center>';
 }
 ?>
