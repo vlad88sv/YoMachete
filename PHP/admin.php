@@ -48,6 +48,12 @@ function CONTENIDO_ADMIN()
         case "publicaciones_admin":
             INTERFAZ__PUBLICACIONES_ADMIN();
         break;
+        case "tiendas":
+            INTERFAZ__ADMIN_TIENDAS();
+        break;
+        case "tienda_agregar":
+            INTERFAZ__ADMIN_TIENDAS_AGREGAR();
+        break;
         default:
             echo "ERROR: Interfaz '$op' no implementada";
     }
@@ -344,7 +350,6 @@ function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
 <select name="nivel">
     <option value="<?php echo _N_administrador; ?>">Administrador</option>
     <option value="<?php echo _N_moderador; ?>">Moderador</option>
-    <option value="<?php echo _N_tienda; ?>">Vendedor con Tienda</option>
     <option value="<?php echo _N_vendedor; ?>">Vendedor</option>
 </select>
 </td>
@@ -435,6 +440,7 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
             $datos["nPubMax"] = $_POST['nPubMax'];
             $datos["nDiasVigencia"] = $_POST['nDiasVigencia'];
             $datos["ultimo_acceso"] = mysql_datetime();
+            $datos["tienda"] = isset($_POST['tienda']) ? "1" : "0";
             if (db_actualizar_datos("ventas_usuarios",$datos,"id_usuario=".db_codex($_GET['usuario'])))
             {
                 echo Mensaje("Usuario editado exitosamente");
@@ -465,18 +471,19 @@ $usuario = _F_usuario_datos($_GET['usuario']);
 <tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="<?php echo $usuario['telefono1']; ?>" /></tr>
 <tr><td>Días de vigencia para publicaciones</td><td><input name="nDiasVigencia" value="<?php echo $usuario['nDiasVigencia']; ?>" /></tr>
 <tr><td>Publicaciones máximas</td><td><input name="nPubMax" value="<?php echo $usuario['nPubMax']; ?>" /></tr>
+<tr><td>Imagenes máximas</td><td><input name="nImgMax" value="<?php echo $usuario['nImgMax']; ?>" /></tr>
 <tr>
 <td>Nivel</td>
 <td>
 <select name="nivel">
     <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_administrador; ?>">Administrador</option>
     <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_moderador; ?>">Moderador</option>
-    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_tienda; ?>">Vendedor con Tienda</option>
     <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_vendedor; ?>">Vendedor</option>
 </select>
 </td>
 </tr>
 </table>
+<input name="tienda" value="1" <?php echo ($usuario['tienda'] == 1 ? 'checked="checked"' : "") ?> type="checkbox"/> Habilitar Tienda<br />
 <input name="enviar_notificacion" value="Si" checked="checked" type="checkbox"/> Enviar notificación sobre este cambio al usuario<br />
 <br />
 <input name="modificar" value="Modificar" type="submit"/>
@@ -522,22 +529,87 @@ function INTERFAZ__ADMIN_USUARIOS()
         }
     }
     
-    $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor+Tienda' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax` FROM ventas_usuarios WHERE 1",_N_administrador,_N_moderador,_N_tienda,_N_vendedor);
+    $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax`, `nImgMax`, IF(tienda=1,'Si','No') as 'tienda' FROM ventas_usuarios WHERE 1",_N_administrador,_N_moderador,_N_vendedor);
     $r = db_consultar($c);
 ?>
 <h1>Lista de usuarios</h1>
 <table class="ancha">
-    <tr><th>Usuario</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Nivel</th><th>Vigencia Pub.</th><th>Máx. Pubs.</th><th>Acciones</th></tr>
+    <tr><th>Usuario</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Nivel</th><th>Vigencia Pub.</th><th>Máx. Pubs.</th><th>Máx. Imgs.</th><th>Tienda</th><th>Acciones</th></tr>
 <?php
     while ($f = mysql_fetch_array($r))
     {
-        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['usuario'],$f['nombre'],$f['email'],$f['telefono1'],$f['nivel'],$f['nDiasVigencia']. " días",$f['nPubMax'],"[".ui_href("","admin_usuarios_admin?accion=editar&usuario=".$f['id_usuario'],"Editar")."] [".ui_href("","admin_usuarios_admin?accion=eliminar&usuario=".$f['id_usuario'],"Eliminar")."]");
+        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['usuario'],$f['nombre'],$f['email'],$f['telefono1'],$f['nivel'],$f['nDiasVigencia']. " días",$f['nPubMax'],$f['nImgMax'],$f['tienda'],"[".ui_href("","admin_usuarios_admin?accion=editar&usuario=".$f['id_usuario'],"Editar")."] [".ui_href("","admin_usuarios_admin?accion=eliminar&usuario=".$f['id_usuario'],"Eliminar")."]");
     }
 ?>
 </table>
 <?php
 echo '<h1>Opciones</h1>';
 echo ui_href("","admin","Retornar a Administración");
+}
+
+function INTERFAZ__ADMIN_TIENDAS()
+{
+$c = "SELECT * FROM ventas_tienda";
+$r = db_consultar($c);
+if (mysql_numrows($r) == 0)
+{
+    echo Mensaje("No hay tiendas que mostrar");
+    echo ui_href("","admin_tienda_agregar","¿Desea agregar una nueva tienda al sistema?");
+    return;
+}
+?>
+    <h1>Lista de tiendas</h1>
+    <table class="ancha">
+    <tbody>
+    <tr><th width="10%">Id. Tienda</th><th width="15%">Usuario</th><th width="30%">URL</th><th width="35%">Titulo</th><th width="10%">Acción</th></tr>
+    <?php
+    while ($f = mysql_fetch_array($r))
+    {
+        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['id_tienda'],$f['id_tienda'],$f['id_tienda'],$f['id_tienda'],'[E][X]');
+    }
+    ?>
+    </tbody>
+    <table>
+
+<?php
+}
+function INTERFAZ__ADMIN_TIENDAS_AGREGAR()
+{
+if (isset($_POST['crear']))
+{
+    $flag_valido=true;
+    $usuario = _F_usuario_datos($_POST['email'],'email');
+    if (!is_array($usuario))
+    {
+        $flag_valido = false;
+        echo Mensaje("abortado porque el usuario no existe");
+    }
+    if ($flag_valido)
+    {
+        $datos['id_usuario'] = $usuario['id_usuario'];
+        $datos['tiendaURL'] = db_codex(@$_POST['url']);
+        $datos['tiendaTitulo'] = db_codex(@$_POST['titulo']);
+        $datos['tiendaSubtitulo'] = db_codex(@$_POST['subtitulo']);
+        $datos['tiendaCSS'] = db_codex(@$_POST['css']);
+        $r = db_agregar_datos('ventas_tienda',$datos);
+        if ($r)
+        {
+            echo Mensaje("Agregado correctamente");
+        }
+    }
+}
+?>
+<form action="./admin_tienda_agregar" method="post">
+<table class="ancha limpio">
+    <tr><td class="fDer">Correo Usuario</td><td class="fInput"><input name="email" type="text" value=""/></td><tr>
+    <tr><td class="fDer">URL</td><td class="fInput"><input name="url" type="text" value=""/></td><tr>
+    <tr><td class="fDer">Titulo</td><td class="fInput"><input name="titulo" type="text" value=""/></td><tr>
+    <tr><td class="fDer">Subtitulo</td><td class="fInput"><input name="subitulo" type="text" value=""/></td><tr>
+    <tr><td class="fDer">CSS</td><td class="fInput"><textarea name="css"></textarea></td><tr>
+</table>
+<input type="submit" name="crear" value="Crear">
+</form>
+<?php
 }
 ?>
 

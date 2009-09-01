@@ -8,7 +8,6 @@ define('PROY_MAIL_REPLYTO',PROY_MAIL_POSTMASTER);
 // Niveles
 define('_N_administrador',      9);
 define('_N_moderador',          7);
-define('_N_tienda',             4);
 define('_N_vendedor',           3);
 
 // Estados

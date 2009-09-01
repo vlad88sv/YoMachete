@@ -336,7 +336,16 @@ if (!empty($_GET['id']))
 function CONTENIDO_TIENDA()
 {
 $data = '';
-$Vendedor = _F_usuario_datos($_GET['tienda']);
+$c = sprintf("SELECT * FROM ventas_tienda WHERE tiendaURL='%s' LIMIT 1",db_codex($_GET['tienda']));
+$r = db_consultar($c);
+if (mysql_num_rows($r) != 1)
+{
+    echo Mensaje("La tienda solicitada no existe");
+    return;
+}
+
+$Tienda = db_fila_a_array($r);
+$Vendedor = _F_usuario_datos($Tienda['id_usuario']);
 echo "Viendo tienda de: <b>".$Vendedor['usuario']."</b><hr /><br />";
 $nivel = (!empty($_GET['categoria'])) ? "padre='".db_codex($_GET['categoria'])."' AND " : "";
 $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE $nivel id_categoria IN (SELECT padre FROM ventas_categorias WHERE id_categoria IN (SELECT id_categoria FROM ventas_publicaciones WHERE id_usuario='".$Vendedor['id_usuario']."')) ORDER BY nombre";
