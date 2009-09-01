@@ -712,7 +712,7 @@ function email($para, $asunto, $mensaje)
 {
 $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-Type: text/html; charset=utf-8" . "\r\n";
-$headers .= 'From: <'. PROY_MAIL_POSTMASTER . ">\r\n";
+$headers .= 'From: '. PROY_NOMBRE .' <'. PROY_MAIL_POSTMASTER . ">\r\n";
 $mensaje = sprintf('<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></head><html><body>%s</body></html>',$mensaje);
 return mail($para,$asunto,$mensaje,$headers);
 }
