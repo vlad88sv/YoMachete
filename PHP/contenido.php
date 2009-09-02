@@ -417,17 +417,38 @@ function CONTENIDO_PUB2MAIL($publicacion)
     }
     echo '<p>Enviar la publicación "<strong>'.$publicacion['titulo'].'</strong>" a un amigo</p>';
     echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
-    echo '<table>';
-    echo ui_tr(ui_td('Nombre remitente: '). ui_td(ui_input("nr",(_F_form_cache('nr') ? _F_form_cache('comentario') : _F_usuario_cache('usuario')),"text","","width:100%")));
-    echo ui_tr(ui_td('Nombre destinatario: '). ui_td(ui_input("nd",_F_form_cache('nd'),"text","","width:100%")));
-    echo ui_tr(ui_td('Correo electrónico destinatario: '). ui_td(ui_input("correo",_F_form_cache('correo'),"text","","width:100%")));
-    echo ui_tr(ui_td('Comentario: '). ui_td(ui_textarea("comentario",_F_form_cache('comentario'),"","width:100%")));
+    echo '<table  class="semi-ancha limpio centrado">';
+    echo ui_tr(ui_td('Nombre remitente','fDer'). ui_td(ui_input("nr",(_F_form_cache('nr') ? _F_form_cache('comentario') : _F_usuario_cache('usuario')),"text","","width:100%"),"fInput"));
+    echo ui_tr(ui_td('Nombre destinatario','fDer'). ui_td(ui_input("nd",_F_form_cache('nd'),"text","","width:100%"),"fInput"));
+    echo ui_tr(ui_td('Correo electrónico destinatario','fDer'). ui_td(ui_input("correo",_F_form_cache('correo'),"text","","width:100%"),"fInput"));
+    echo ui_tr(ui_td('Comentario','fDer'). ui_td(ui_textarea("comentario",_F_form_cache('comentario'),"","width:100%"),"fInput"));
+    echo '<tr><td colspan="2" class="fDer">'.ui_input("enviar_pub2mail","Enviar","submit").'</td></tr>';
     echo '</table>';
-    echo ui_input("enviar_pub2mail","Enviar","submit").'<br />';
     echo '</form>';
 }
 function CONTENIDO_PUBREP($publicacion)
 {
-    email_x_nivel(_N_administrador, "Reporte de publicación", "La siguiente publicación ha sido reportada:\n\"%s\"\nURL: %s",$publicacion['titulo'],curPageURL(true));
+    if (isset($_POST['enviar']))
+    {
+        if (empty($_POST['razon']))
+        {
+            echo Mensaje("no se ingresó razón de reporte",_M_ERROR);
+        }
+        else
+        {
+        email_x_nivel(_N_administrador, "Reporte de publicación", "La siguiente publicación ha sido reportada:<br />\n\"%s\"<br />\nURL: %s<br />\nComentario del reportador:<br />\n%s",$publicacion['titulo'],curPageURL(true), htmlentities(@$_POST['razon']));
+        echo Mensaje("Su reporte ha sido enviado, ¡gracias!");
+        echo ui_href("",curPageURL(true),"Retornar a la publicación");
+        return;
+        }
+    }
+    echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+    ?>
+    <table  class="semi-ancha limpio centrado">
+        <tr><td class="fDer">Razón</td><td class="fInput"><input name="razon" type="text" /></td></tr>
+        <tr><td colspan="2" class="fDer"><input name="enviar" type="submit" /></td></tr>
+    </table>
+    </form>
+    <?php
 }
 ?>
