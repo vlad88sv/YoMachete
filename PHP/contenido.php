@@ -398,7 +398,7 @@ function CONTENIDO_PUB2MAIL($publicacion)
         if (validEmail($_POST['correo']))
         {
             $MensajeMail="";
-            if (email($_POST['correo'],"Publicación: " . $publicacion['titulo'], "Estimado(a) ".$_POST['nd'].",<br />\nQuiero que revises la siguiente publicación: " . curPageURL(true) . " en " . PROY_NOMBRE . "<br />\nGracias,<br />\n".$_POST['nr']))
+            if (email($_POST['correo'],"Publicación: " . $publicacion['titulo'], "Estimado(a) ".$_POST['nd'].",<br />\nQuiero que revises la siguiente publicación: " . curPageURL(true) . " en " . PROY_NOMBRE . "<br />\n".(!empty($_POST['comentario']) ? "<br />\nEl usuario también ha includio el siguiente comentario para Ud.<br />\n".$_POST['comentario']."<br />\n<br />\n" : "")."Gracias,<br />\n".$_POST['nr']))
             {
                 echo Mensaje("Su mensaje ha sido enviado");
                 echo ui_href("",curPageURL(true),"Retornar a la publicación");
@@ -418,9 +418,9 @@ function CONTENIDO_PUB2MAIL($publicacion)
     echo '<p>Enviar la publicación "<strong>'.$publicacion['titulo'].'</strong>" a un amigo</p>';
     echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
     echo '<table>';
-    echo ui_tr(ui_td('Nombre remitente: '). ui_td(ui_input("nr",(_F_form_cache('nr') ? _F_form_cache('comentario') : _F_usuario_cache('usuario')),"","","width:100%")));
-    echo ui_tr(ui_td('Nombre destinatario: '). ui_td(ui_input("nd",_F_form_cache('nd'),"","","width:100%")));
-    echo ui_tr(ui_td('Correo Electrónico: '). ui_td(ui_input("correo",_F_form_cache('correo'),"","","width:100%")));
+    echo ui_tr(ui_td('Nombre remitente: '). ui_td(ui_input("nr",(_F_form_cache('nr') ? _F_form_cache('comentario') : _F_usuario_cache('usuario')),"text","","width:100%")));
+    echo ui_tr(ui_td('Nombre destinatario: '). ui_td(ui_input("nd",_F_form_cache('nd'),"text","","width:100%")));
+    echo ui_tr(ui_td('Correo electrónico destinatario: '). ui_td(ui_input("correo",_F_form_cache('correo'),"text","","width:100%")));
     echo ui_tr(ui_td('Comentario: '). ui_td(ui_textarea("comentario",_F_form_cache('comentario'),"","width:100%")));
     echo '</table>';
     echo ui_input("enviar_pub2mail","Enviar","submit").'<br />';
