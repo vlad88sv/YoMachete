@@ -264,7 +264,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo '<hr />';
         echo '<div class="cuadro_importante centrado">';
         echo '<h1>Publicaciones similares</h1>';
-        echo VISTA_ArticuloEnBarra("id_categoria='".$publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_publicacion <> '".$publicacion['id_publicacion']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
+        echo VISTA_ArticuloEnBarra("id_categoria IN (SELECT id_categoria FROM ventas_categorias WHERE padre = (SELECT padre from ventas_categorias WHERE id_categoria='".$publicacion['id_categoria']."' LIMIT 1)) AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_publicacion <> '".$publicacion['id_publicacion']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
 
 
