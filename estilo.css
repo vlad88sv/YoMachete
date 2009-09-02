@@ -322,6 +322,11 @@ color:#42B4E6;
 color:#32A4D6;
 }
 
+.semi-ancha {
+width:50%;
+border-collapse:collapse;
+}
+
 .ancha {
 width:100%;
 border-collapse:collapse;
@@ -514,11 +519,16 @@ background-color:transparent;
 
 .fInput input, .fInput textarea
 {
-    width:90%;
+    width:100%;
 }
 
 .fDer
 {
-    width:10%;
+    width:auto;
     text-align:right;
+}
+
+.centrado
+{
+    margin: 0 auto 0 auto;
 }

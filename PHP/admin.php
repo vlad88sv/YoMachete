@@ -600,7 +600,7 @@ if (isset($_POST['crear']))
 }
 ?>
 <form action="./admin_tienda_agregar" method="post">
-<table class="ancha limpio">
+<table class="semi-ancha limpio">
     <tr><td class="fDer">Correo Usuario</td><td class="fInput"><input name="email" type="text" value=""/></td><tr>
     <tr><td class="fDer">URL</td><td class="fInput"><input name="url" type="text" value=""/></td><tr>
     <tr><td class="fDer">Titulo</td><td class="fInput"><input name="titulo" type="text" value=""/></td><tr>
