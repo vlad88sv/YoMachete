@@ -338,15 +338,15 @@ function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
 <h1>Registro de usuario</h1>
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" >
 <table>
-<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="" /></tr>
-<tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="" /></tr>
-<tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="" /></tr>
-<tr><td>Clave</td><td><input name="registrar_campo_clave" type="password" value="" /></tr>
-<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" type="password" value="" /></tr>
-<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="" /></tr>
+<tr><td>Correo electrónico</td><td class="fInput"><input name="registrar_campo_email" type="text" value="" /></tr>
+<tr><td>Usuario</td><td class="fInput"><input name="registrar_campo_usuario" type="text" value="" /></tr>
+<tr><td>Nombre</td><td class="fInput"><input name="registrar_campo_nombre" type="text" value="" /></tr>
+<tr><td>Clave</td><td class="fInput"><input name="registrar_campo_clave" type="password" value="" /></tr>
+<tr><td>Clave (confirmar)</td><td class="fInput"><input name="registrar_campo_clave_2" type="password" value="" /></tr>
+<tr><td>Teléfono de contacto</td><td class="fInput"><input name="registrar_campo_telefono" type="text" value="" /></tr>
 <tr>
 <td>Nivel</td>
-<td>
+<td class="fInput">
 <select name="nivel">
     <option value="<?php echo _N_administrador; ?>">Administrador</option>
     <option value="<?php echo _N_moderador; ?>">Moderador</option>
@@ -354,9 +354,9 @@ function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
 </select>
 </td>
 </tr>
+<tr><td class="fDer" colspan="2"><input name="registrar" value="Registrar" type="submit"/></tr>
 </table>
-<br />
-<input name="registrar" value="Registrar" type="submit"/>
+<br /
 </form>
 <?php
 echo JS_onload('
