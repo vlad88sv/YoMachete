@@ -438,6 +438,7 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
             $datos["estado"] = _N_activo;
             $datos["nivel"] = $_POST['nivel'];
             $datos["nPubMax"] = $_POST['nPubMax'];
+            $datos["nImgMax"] = $_POST['nImgMax'];
             $datos["nDiasVigencia"] = $_POST['nDiasVigencia'];
             $datos["ultimo_acceso"] = mysql_datetime();
             $datos["tienda"] = isset($_POST['tienda']) ? "1" : "0";
