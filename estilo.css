@@ -515,11 +515,13 @@ background-color:transparent;
 .fInput
 {
     width:60%;
+    padding:0;
 }
 
-.fInput input, .fInput textarea
+.fInput input, .fInput textarea, .fInput select
 {
     width:100%;
+    margin:0;
 }
 
 .fDer
