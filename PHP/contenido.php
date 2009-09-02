@@ -415,6 +415,7 @@ function CONTENIDO_PUB2MAIL($publicacion)
         echo Mensaje("Parece que el correo electronico esta mal escrito",_M_ERROR);
         }
     }
+    echo '<h1>Envío de publicación</h1>';
     echo '<p>Enviar la publicación "<strong>'.$publicacion['titulo'].'</strong>" a un amigo</p>';
     echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
     echo '<table  class="semi-ancha limpio centrado">';
@@ -425,6 +426,8 @@ function CONTENIDO_PUB2MAIL($publicacion)
     echo '<tr><td colspan="2" class="fDer">'.ui_input("enviar_pub2mail","Enviar","submit").'</td></tr>';
     echo '</table>';
     echo '</form>';
+    echo '<h1>Opciones</h1>';
+    echo ui_href("",curPageURL(true),"Cancelar y retornar a la publicación");
 }
 function CONTENIDO_PUBREP($publicacion)
 {
@@ -436,12 +439,13 @@ function CONTENIDO_PUBREP($publicacion)
         }
         else
         {
-        email_x_nivel(_N_administrador, "Reporte de publicación", "La siguiente publicación ha sido reportada:<br />\n\"%s\"<br />\nURL: %s<br />\nComentario del reportador:<br />\n%s",$publicacion['titulo'],curPageURL(true), htmlentities(@$_POST['razon']));
+        email_x_nivel(_N_administrador, "Reporte de publicación", sprintf("La siguiente publicación ha sido reportada:<br />\n\"%s\"<br />\nURL: %s<br />\nComentario del reportador:<br />\n%s",$publicacion['titulo'],curPageURL(true), htmlentities(@$_POST['razon'])));
         echo Mensaje("Su reporte ha sido enviado, ¡gracias!");
         echo ui_href("",curPageURL(true),"Retornar a la publicación");
         return;
         }
     }
+    echo '<h1>Reporte de publicaciones</h1>';
     echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
     ?>
     <table  class="semi-ancha limpio centrado">
@@ -450,5 +454,7 @@ function CONTENIDO_PUBREP($publicacion)
     </table>
     </form>
     <?php
+    echo '<h1>Opciones</h1>';
+    echo ui_href("",curPageURL(true),"Cancelar y retornar a la publicación");
 }
 ?>
