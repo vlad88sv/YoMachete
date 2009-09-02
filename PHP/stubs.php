@@ -434,7 +434,7 @@ function CargarArchivos($input,$id_publicacion,$id_usuario)
         if (!$valor) continue;
         // Cuantas imagenes tiene?
         $NImgAct = db_contar('ventas_imagenes',"id_publicacion='$id_publicacion'");
-        if ($NImgAct >= 5)
+        if ($NImgAct >= $usuario['nImgMax'])
         {
             echo Mensaje(sprintf("ha sobrepasado el límite aceptado de imagenes. Descartando '%s'",$_FILES[$input]['name'][$llave]),_M_ERROR);
             continue;

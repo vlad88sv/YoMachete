@@ -138,6 +138,10 @@ function CONTENIDO_VENDER()
 
     // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
     
+    $Publicacion = ObtenerDatos($ticket);
+    $imagenes = ObtenerImagenesArr($ticket,"");
+    $Vendedor=_F_usuario_datos($Publicacion['id_usuario']);
+    
     echo '<script type="text/javascript" src="JS/tinymce/jscripts/jquery.tinymce.js"></script>';
 
     if(isset($_GET['eliminar']))
@@ -174,9 +178,6 @@ function CONTENIDO_VENDER()
         header("location: ./vender?ticket=$ticket");
     }
 
-    $Buffer = ObtenerDatos($ticket);
-    $imagenes = ObtenerImagenesArr($ticket,"");
-
     if ($flag_enviar)
     {
         // Al fin lo terminó de editar y lo esta enviando... Aleluya!
@@ -193,8 +194,8 @@ function CONTENIDO_VENDER()
             }
             else
             {
-                $vendedor = _F_usuario_datos($Buffer['id_usuario']);
-                email($vendedor['email'],PROY_NOMBRE." - Publicación \"".$Buffer['titulo']."\" ha sido recibida","Su publicación ha sido recibida en nuestro sistema y se encuentra en proceso de activación.<br />\nEsta activación puede demorar entre <strong>1 minuto y 1 hora</strong> dependiendo de la disponibilidad de los administradores en línea.<br />Esta corta espera es necesaria para realizar una revisión de las publiciaciones y así poder ofrecer el mejor contenido a nuestros visitantes.<br />\n!Gracias por preferir ".PROY_NOMBRE." para realizar sus publicaciones!");
+                $vendedor = _F_usuario_datos($Publicacion['id_usuario']);
+                email($vendedor['email'],PROY_NOMBRE." - Publicación \"".$Publicacion['titulo']."\" ha sido recibida","Su publicación ha sido recibida en nuestro sistema y se encuentra en proceso de activación.<br />\nEsta activación puede demorar entre <strong>1 minuto y 1 hora</strong> dependiendo de la disponibilidad de los administradores en línea.<br />Esta corta espera es necesaria para realizar una revisión de las publiciaciones y así poder ofrecer el mejor contenido a nuestros visitantes.<br />\n!Gracias por preferir ".PROY_NOMBRE." para realizar sus publicaciones!");
                 echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
             }
         }
@@ -212,7 +213,7 @@ function CONTENIDO_VENDER()
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Enviar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
-        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex(@$Buffer['id_categoria']),false))."</b><br/><br/>";
+        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex(@$Publicacion['id_categoria']),false))."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
         echo VISTA_ListaPubs("id_publicacion=$ticket","","previsualizacion","Woops!, ¡problemas intentando cargar la previsualización!");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
@@ -242,21 +243,21 @@ function CONTENIDO_VENDER()
     echo "<ol class=\"ventas\">";
     echo "<li>Selección de categoría</li>";
     echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span><br />";
-    echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",@$Buffer["rubro"])), @$Buffer["id_categoria"])."<br />";
+    echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",@$Publicacion["rubro"])), @$Publicacion["id_categoria"])."<br />";
 
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
-    echo "Titulo " . ui_input("titulo",@$Buffer["titulo"],"","","width:50ex","MAXLENGTH='50'")."<br />";
+    echo "Titulo " . ui_input("titulo",@$Publicacion["titulo"],"","","width:50ex","MAXLENGTH='50'")."<br />";
     echo "<li>Tags (palabras clave) para publicación</li>";
     echo "<span class='explicacion'>Utilice palabras cortas separadas por coma (5 como máximo, no utilice espacios).</span><br />";
-    echo "Tags " . ui_input("tags",@$Buffer["tags"],"","","width:50ex","MAXLENGTH='50'")."<br />";
+    echo "Tags " . ui_input("tags",@$Publicacion["tags"],"","","width:50ex","MAXLENGTH='50'")."<br />";
     echo "<li>Descripción corta de la publicación</li>";
     echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span><br />";
-    echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Buffer["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
+    echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Publicacion["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
-    echo "Descripción larga<br />" . ui_textarea("descripcion",@$Buffer["descripcion"],"","width:50em;height:20em;")."<br />";
-    if (in_array(@$Buffer["rubro"], array("articulo","automotor")))
+    echo "Descripción larga<br />" . ui_textarea("descripcion",@$Publicacion["descripcion"],"","width:50em;height:20em;")."<br />";
+    if (in_array(@$Publicacion["rubro"], array("articulo","automotor")))
     {
         echo "<li>Características del artículo</li>";
         echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span><br />";
@@ -264,17 +265,17 @@ function CONTENIDO_VENDER()
     }
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
-    echo "Précio " . ui_input("precio",@$Buffer["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
+    echo "Précio " . ui_input("precio",@$Publicacion["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
     echo db_ui_checkboxes("pago[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"pago"),"","tipo='pago'");
-    if (in_array(@$Buffer["rubro"], array("articulo")))
+    if (in_array(@$Publicacion["rubro"], array("articulo")))
     {
         echo "<li>Formas de entrega admitidas</li>";
         echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span><br />";
         echo db_ui_checkboxes("entrega[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"entrega"),"","tipo='entrega'");
     }
-    switch(@$Buffer["rubro"])
+    switch(@$Publicacion["rubro"])
     {
         case "articulo":
             echo "<li>Fotografías del artículo</li>";
@@ -303,7 +304,7 @@ function CONTENIDO_VENDER()
     }
 
 
-    $NoMaxImg = (in_array(@$Buffer["rubro"], array("servicio"))) ? 1 : 5;
+    $NoMaxImg = (in_array(@$Publicacion["rubro"], array("servicio"))) ? 1 : $Vendedor['nImgMax'];
     $inicio = isset($imagenes) ? count($imagenes) : 0;
     for ($i = $inicio; $i < $NoMaxImg; $i++)
     {
