@@ -389,12 +389,12 @@ $campos = "id_img INT NOT NULL AUTO_INCREMENT PRIMARY KEY, id_publicacion INT, m
 echo db_crear_tabla("ventas_imagenes", $campos, false||$forzar);
 
 // Tabla FLAGS entregas + Pagos + Ventas
-$campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(50), descripcion VARCHAR(200), tipo VARCHAR(10)";
+$campos = "id_flag INT NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50), nombrep VARCHAR(200), descripcion VARCHAR(200), tipo VARCHAR(10)";
 echo db_crear_tabla("ventas_flags", $campos, false||$forzar);
 
 // Entregas
 db_agregar_datos("ventas_flags",array("nombre" => "entrega_sv", "nombrep" => "Entrega a domicilio nivel a nacional", "descripcion" => "Este producto puede ser entregado a domicilio a cualquier parte del país", "tipo" => "entrega"));
-db_agregar_datos("ventas_flags",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será definido por las partes (vendedor y comprador)", "descripcion" => "Este producto puede ser entregado personalmente según acuerdo mutuo entre el comprador y vendedor", "tipo" => "entrega"));
+db_agregar_datos("ventas_flags",array("nombre" => "entrega_pactada", "nombrep" => "El lugar de entrega será acordado mutuamente", "descripcion" => "Este producto puede ser entregado personalmente según acuerdo mutuo entre el comprador y vendedor", "tipo" => "entrega"));
 db_agregar_datos("ventas_flags",array("nombre" => "entrega_courier", "nombrep" => "Entrega vía courier o compañías de mensajería", "descripcion" => "El producto es envíado mediante un courier o una empresa de entrega de paquetes", "tipo" => "entrega"));
 db_agregar_datos("ventas_flags",array("nombre" => "entrega_correo", "nombrep" => "Entrega vía correo nacional", "descripcion" => "El producto es envíado a travez de correo nacional", "tipo" => "entrega"));
 
