@@ -5,8 +5,8 @@ RewriteRule ^\+(.*)(_dpt-([0-9].*?)-.*|.*)$ index.php?peticion=tienda&tienda=$1&
 RewriteRule ^(iniciar|finalizar|registrar|perfil|vender|comprar|buscar|ayuda|ayuda|vip|admin|mp|buscar)$ index.php?peticion=$1&%{QUERY_STRING} [L]
 RewriteRule ^registro_(.+)_existe:(.*)$ PHP/traductor.php?peticion=registro_usuarios_$1&op=$2 [L]
 RewriteRule ^admin_(.+)$ index.php?peticion=admin&op=$1&%{QUERY_STRING} [L]
-RewriteRule ^imagen_([0-9]+){0,1}$ PHP/traductor.php?peticion=imagen&op=$1 [L]
 RewriteRule ^imagen_([0-9]*m)$ PHP/traductor.php?peticion=imagen&op=$1&miniatura=si [L]
+RewriteRule ^imagen_([0-9]*).*$ PHP/traductor.php?peticion=imagen&op=$1 [L]
 RewriteRule ^imagen_c_([0-9]{1,10})$ PHP/traductor.php?peticion=correo&op=$1 [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

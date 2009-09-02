@@ -10,7 +10,7 @@ function CONTENIDO_VIP()
 }
 
 function CONTENIDO_PUBLICACION($op="")
-{   
+{
     if (!isset($_GET['publicacion']))
     {
         echo Mensaje("PUBLICACION: ERROR INTERNO", _M_ERROR);
@@ -24,9 +24,9 @@ function CONTENIDO_PUBLICACION($op="")
         echo Mensaje("disculpe, la publicación solicitada no existe.", _M_INFO);
         return;
     }
-    
+
     // Si no esta aprobado solo lo puede ver un Administrador
-    
+
     if ($op != "previsualizacion" && $publicacion['tipo'] != _A_aceptado && _F_usuario_cache('nivel') != _N_administrador)
     {
         echo Mensaje("esta publicacion NO se encuentra disponible",_M_ERROR);
@@ -168,7 +168,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "<hr /><h1>Fotografías y/o ilustraciones</h1><center>";
         foreach($imagenes as $archivo)
         {
-            echo "<div style='display:inline-block;margin:0 10px;'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"lightbox\"><img src=\"./imagen_".$archivo."m\" /></a><br /></div>";
+            echo "<div style='display:inline-block;margin:0 10px;'><a class=\"fancybox\" href=\"./imagen_".$archivo.".jpg\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"contenido\"><img src=\"./imagen_".$archivo."m\" /></a><br /></div>";
         }
         echo "<div style=\"clear:both\"></div>";
         echo "</center>";
@@ -267,16 +267,16 @@ function CONTENIDO_PUBLICACION($op="")
         echo VISTA_ArticuloEnBarra("id_categoria='".$publicacion['id_categoria']."' AND precio >= '$PrecioMin' AND precio <= '$PrecioMax' AND id_publicacion <> '".$publicacion['id_publicacion']."' AND tipo='"._A_aceptado."' AND fecha_fin >= '" . mysql_datetime() . "'");
         echo '</div>';
 
-   
+
     // Mostrar opciones adicionales
-    
+
     echo '
     <a href="'.$_SERVER['REQUEST_URI'].'?se=pub2pdf"><img src="IMG/pub_extop_ipdf.gif" title="Obtener una copia de esta venta en formato PDF" alt="[descargar venta en PDF]" /></a>
     <a href="'.$_SERVER['REQUEST_URI'].'?se=pub2mail"><img src="IMG/pub_extop_mail.gif" title="Enviar esta publicación a un amigo" alt="[enviar por email]" /></a>
     <a href="'.$_SERVER['REQUEST_URI'].'?se=pubrep"><img src="IMG/pub_extop_reportar.gif" title="Notificar a los administradores de una publicación fraudulenta" alt="[reportar publicación]" /></a>
     ';
     }
-    
+
     echo JS_onload('
     $(".auto_ocultar").hide();
     $(".auto_mostrar").show();
@@ -402,7 +402,7 @@ function CONTENIDO_PUB2MAIL($publicacion)
             {
                 echo Mensaje("Su mensaje ha sido enviado");
                 echo ui_href("",curPageURL(true),"Retornar a la publicación");
-                
+
             }
             else
             {

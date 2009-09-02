@@ -12,15 +12,34 @@
     <meta name="robots" content="index, follow" />
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="estilo.css" />
-    <link rel="stylesheet" type="text/css" href="CSS/jquery.lightbox-0.5.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="JS/fancybox/jquery.fancybox.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.jgrowl.css" />
-    <script src="JS/jquery-1.3.1.min.js" type="text/javascript"></script>
+    <script src="JS/jquery-1.3.2.min.js" type="text/javascript"></script>
     <script src="JS/jquery.cookie.js" type="text/javascript"></script>
-    <script src="JS/jquery.lightbox-0.5.pack.js" type="text/javascript"></script>
+    <script src="JS/fancybox/jquery.easing.1.3.js" type="text/javascript"></script>
+    <script src="JS/fancybox/jquery.fancybox-1.2.1.pack.js" type="text/javascript"></script>
     <script src="JS/jquery.jgrowl.js" type="text/javascript"></script>
     <style>
     div.jGrowl div.aviso {z-index:50;background-color: #F1AF35;color: #FFF;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
     </style>
+    <?php
+    $mensaje="";
+    if (_F_usuario_cache('nivel') == _N_administrador)
+    {
+        $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
+        $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
+        if ($PPA || $UPA)
+        {
+            $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
+            $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+        }
+    }
+    echo JS_onload('
+    $("a.fancybox").fancybox();
+    $.jGrowl.defaults.position = "bottom-right";
+    '.($mensaje ? JS_growl($mensaje) : "").'
+    ');
+    ?>
 </head>
 <body>
 <div id="wrapper">
@@ -57,27 +76,6 @@ else
 <div style="clear:both"></div>
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
-<?php
-
-$mensaje="";
-
-if (_F_usuario_cache('nivel') == _N_administrador)
-{
-    $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
-    $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
-    if ($PPA || $UPA)
-    {
-        $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
-        $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
-    }
-}
-echo JS('
-$("a[rel=\'lightbox\']").lightBox();
-$.jGrowl.defaults.position = "bottom-right";
-'.($mensaje ? JS_growl($mensaje) : "").'
-');
-
-?>
 </body>
 </html>
 

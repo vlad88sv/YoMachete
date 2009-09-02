@@ -182,7 +182,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
-    $imagen="<a href=\"./imagen_".$f['imagen']."\" target=\"_blank\" rel=\"lightbox\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
+    $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_publicacion = $f['id_publicacion'];
     $ctags = sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$id_publicacion);
@@ -515,15 +515,15 @@ function CargarDatos($id_publicacion,$id_usuario)
     unset($datos);
 
     // Tags
-        
+
     // Procesamos los nuevos tags (eliminamos los espacios, las comas finales y hacemos array)
     // Nota: no evaluamos las comas finales con posibles espacios porque se eliminan con la primera pasada
     $tags = explode(",",preg_replace(array('/\s*/','/,$/'), '',@$_POST['tags']),5);
-    
+
     // Insertamos los nuevos tags
     $val_tags = implode("'),('",$tags);
     db_consultar("INSERT IGNORE INTO ventas_tag (tag) VALUES('$val_tags')");
-    
+
     // Ponemos los tags en referencia a la publicación actual
 
     // +Eliminados los tags de esta publicación primero+++++++++++++++++++++++++
@@ -531,9 +531,9 @@ function CargarDatos($id_publicacion,$id_usuario)
     $c = "DELETE FROM ventas_tag_uso WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+
     db_consultar("INSERT INTO ventas_tag_uso (id_tag,id_publicacion) SELECT id, $id_publicacion FROM ventas_tag WHERE tag IN ('$val_tags')");
-    
+
     // Hay que eliminar los flags antes que nada.
     $c = "DELETE FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion'";
     $r = db_consultar($c);
@@ -560,10 +560,10 @@ function ObtenerDatos($id_publicacion)
 
     $c = "SELECT id_publicacion, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_publicaciones AS a WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
-    
+
     // Obtenemos los tags en el indice "tags".
     $ret = mysql_fetch_array($r);
-    
+
     $tags_array = (mysql_fetch_array(db_consultar(sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$ret['id_publicacion']))));
     $ret['tags'] = $tags_array['tags'];
 
