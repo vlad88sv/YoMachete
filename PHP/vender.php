@@ -169,7 +169,7 @@ function CONTENIDO_VENDER()
     if ($flag_modo_escritura)
     {
         DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
-        CargarArchivos("vender_imagenes",$ticket,_F_usuario_cache('id_usuario'));
+        CargarArchivos("vender_imagenes",$ticket,$Vendedor['id_usuario']);
         CargarDatos($ticket,_F_usuario_cache('id_usuario'));
     }
 

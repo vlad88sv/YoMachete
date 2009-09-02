@@ -436,7 +436,7 @@ function CargarArchivos($input,$id_publicacion,$id_usuario)
         $NImgAct = db_contar('ventas_imagenes',"id_publicacion='$id_publicacion'");
         if ($NImgAct >= $usuario['nImgMax'])
         {
-            echo Mensaje(sprintf("ha sobrepasado el límite aceptado de imagenes. Descartando '%s'",$_FILES[$input]['name'][$llave]),_M_ERROR);
+            echo Mensaje(sprintf("ha sobrepasado el límite aceptado de imagenes para Ud. (".$usuario['nImgMax']."). Descartando '%s'",$_FILES[$input]['name'][$llave]),_M_ERROR);
             continue;
         }
         $datos['id_img'] = NULL;
@@ -487,16 +487,16 @@ function DescargarArchivos($input,$id_publicacion,$id_usuario)
 }
 function Imagen__Redimenzionar($Origen,$Ancho,$Alto)
 {
-    return Imagen__CrearMiniatura($Origen,$Origen,$Ancho,$Alto);
+    return Imagen__CrearMiniatura($Origen,$Origen,$Ancho,$Alto,1);
 }
 /*
  * Imagen__CrearMiniatura()
  * Crea una versión reducida de la imagen en $Origen
 */
-function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
+function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100, $Aspecto=0)
 {
     $image = new Imagick($Origen);
-    $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, 0);
+    $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, $Aspecto);
     return $image->writeImage($Destino);
 }
 function CargarDatos($id_publicacion,$id_usuario)
