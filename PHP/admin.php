@@ -477,8 +477,8 @@ $usuario = _F_usuario_datos($_GET['usuario']);
 <td>
 <select name="nivel">
     <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_administrador; ?>">Administrador</option>
-    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_moderador; ?>">Moderador</option>
-    <option <? echo ($usuario['nivel'] == _N_administrador ? 'selected="selected"' : ""); ?> value="<?php echo _N_vendedor; ?>">Vendedor</option>
+    <option <? echo ($usuario['nivel'] == _N_moderador ? 'selected="selected"' : ""); ?> value="<?php echo _N_moderador; ?>">Moderador</option>
+    <option <? echo ($usuario['nivel'] == _N_vendedor? 'selected="selected"' : ""); ?> value="<?php echo _N_vendedor; ?>">Vendedor</option>
 </select>
 </td>
 </tr>
