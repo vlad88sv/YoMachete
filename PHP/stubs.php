@@ -572,15 +572,10 @@ function ObtenerDatos($id_publicacion)
 {
     $id_publicacion = db_codex($id_publicacion);
 
-    $c = "SELECT id_publicacion, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_publicaciones AS a WHERE id_publicacion='$id_publicacion' LIMIT 1";
+    $SELECT_TAG = "(SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1) AS tags";
+    $c = "SELECT $SELECT_TAG, id_publicacion, tipo, fecha_ini, fecha_fin, id_categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, id_usuario, precio, titulo, descripcion_corta, descripcion FROM ventas_publicaciones AS a WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
-
-    // Obtenemos los tags en el indice "tags".
-    $ret = mysql_fetch_array($r);
-
-    $tags_array = (mysql_fetch_array(db_consultar(sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$ret['id_publicacion']))));
-    $ret['tags'] = $tags_array['tags'];
-
+    $ret = mysql_fetch_assoc($r);
     return $ret;
 }
 function ObtenerFlags($id_publicacion, $tipo)
