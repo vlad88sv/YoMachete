@@ -14,6 +14,7 @@ function db_consultar($consulta){
     if ( !$db_link ) {
         db_conectar();
     }
+    DEPURAR($consulta,0);
     $resultado = @mysql_query($consulta, $db_link);
     if ( mysql_error($db_link) ) {
         echo '<pre>MySQL:' . mysql_error() . '</pre>';
@@ -34,7 +35,7 @@ function db_codex($datos){
         return $arr;
     }
     else
-    {    
+    {
         return mysql_real_escape_string($datos, $db_link);
     }
 }

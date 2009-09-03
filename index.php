@@ -136,7 +136,6 @@ function GENERAR_ARTICULOS()
         $c = "SELECT * FROM ventas_categorias WHERE id_categoria='$categoria'";
         $resultado = db_consultar($c);
 
-
         if (db_resultado($resultado, 'padre') > 0)
         {
             $data .= "<h1>Mostrando publicaciones de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";

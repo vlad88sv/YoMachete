@@ -32,28 +32,20 @@ function despachar_notificaciones_sms($mensaje){
 }
 
 // http://www.sitepoint.com/article/hierarchical-data-database/
+// Optimizado para 1 sub-nivel
 function get_path($node,$url=true,$prefijo="categoria-") {
-   // look up the parent of this node
-   $result = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE id_categoria='$node'");
-   $row = mysql_fetch_array($result);
 
-   // save the path in this array
-   $path = array();
-
-   // only continue if this $node isn't the root node (that's the node with no parent)
-   if ($row['padre']!='') {
-       // the last part of the path to $node, is the name of the parent of $node
-        if ($url)
-        {
-            $path[] = sprintf('<a href="%s">%s</a>',$prefijo.$row['id_categoria']."-".SEO($row['nombre']), $row['nombre']);
-        }
-        else
-        {
-            $path[] =  $row['nombre'];
-        }
-       // we should add the path to the parent of this node to the path
-       $path = array_merge(get_path($row['padre'],$url,$prefijo), $path);
-   }
+    $c = "SELECT b.id_categoria AS cPadre, a.id_categoria AS cHijo, b.nombre AS nPadre, a.nombre AS nHijo FROM ventas_categorias AS a LEFT JOIN ventas_categorias AS b ON b.id_categoria=a.padre WHERE a.id_categoria=$node";
+    $r = db_consultar($c);
+    $f = mysql_fetch_array($r);
+    if ($url)
+    {
+        $path[] = ui_href("",$prefijo.$f['cPadre']."-".SEO($f['nPadre']), $f['nPadre']) . " > " . ui_href("",$prefijo.$f['cHijo']."-".SEO($f['nHijo']), $f['nHijo']);
+    }
+    else
+    {
+        $path[] =  (!empty($f['nPadre']) ? $f['nPadre'] . " > " : "") . (!empty($f['nHijo']) ? $f['nHijo'] : "" );
+    }
    return $path;
 }
 
@@ -62,6 +54,12 @@ function get_path($node,$url=true,$prefijo="categoria-") {
 function ver_hijos($padre = "", $rubro="articulo", $nivel = 0, $profundidad = 5) {
     $AND_padre = $padre ? "AND padre='$padre'" : "";
     $AND_rubro = $rubro ? "AND t0.rubro='$rubro'" : "";
+
+    // ---- CACHE ->
+    if (isset($_SESSION['cache']['cmbCat'][$rubro][$padre]))
+    return $_SESSION['cache']['cmbCat'][$rubro][$padre];
+    // ---- CACHE ->
+
     $c = "SELECT t0.id_categoria AS id_padre, t0.nombre AS nombre_padre, t1.id_categoria AS id_categoria, t1.nombre as nombre_categoria FROM ventas_categorias AS t0 LEFT JOIN ventas_categorias AS t1 ON t1.padre = t0.id_categoria WHERE t1.padre IS NOT NULL $AND_rubro ORDER BY t0.nombre, t1.nombre";
     $r = db_consultar($c);
     $arbol = array();
@@ -79,6 +77,8 @@ function ver_hijos($padre = "", $rubro="articulo", $nivel = 0, $profundidad = 5)
         }
     }
     $arbol[] = '</optgroup>';
+    unset($_SESSION['cache']['cmbCat']);
+    $_SESSION['cache']['cmbCat'][$rubro][$padre] = $arbol;
     return $arbol;
 }
 
@@ -173,7 +173,6 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
 {
     $data = '';
     $c = "SELECT id_categoria, id_publicacion, promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=a.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_publicaciones AS a WHERE 1 AND $Where $OrderBy";
-    DEPURAR($c,0);
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
