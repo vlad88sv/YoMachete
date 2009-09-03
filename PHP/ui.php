@@ -1,7 +1,7 @@
 <?php
 function ui_destruir_vacios($cadena)
 {
-return preg_replace("/\s.*=\"\"/","",$cadena);
+return preg_replace("/(\s)?\w+=\"\"/","",$cadena);
 }
 function ui_img ($id_gui, $src,$alt="[Imagen no puso ser cargada]"){
 	return ui_destruir_vacios('<img id="'.$id_gui.'" alt="'.$alt.'" src="'.$src.'" />');
