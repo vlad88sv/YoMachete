@@ -431,6 +431,15 @@ function CONTENIDO_PUB2MAIL($publicacion)
 }
 function CONTENIDO_PUBREP($publicacion)
 {
+    // Comprobamos que ya haya ingresado al sistema
+    if (!S_iniciado())
+    {
+        echo "Necesitas iniciar sesión para poder <b>reportar publicaciones</b>.<br />Esto es con el fin de evitar el mal uso de esta herramienta de moderacion.<br />";
+        require_once("PHP/inicio.php");
+        CONTENIDO_INICIAR_SESION();
+        return;
+    }
+    
     if (isset($_POST['enviar']))
     {
         if (empty($_POST['razon']))
@@ -447,13 +456,8 @@ function CONTENIDO_PUBREP($publicacion)
     }
     echo '<h1>Reporte de publicaciones</h1>';
     echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
-    ?>
-    <table  class="semi-ancha limpio centrado">
-        <tr><td class="fDer">Razón</td><td class="fInput"><input name="razon" type="text" /></td></tr>
-        <tr><td colspan="2" class="fDer"><input name="enviar" type="submit" /></td></tr>
-    </table>
-    </form>
-    <?php
+    echo 'Razón del reporte <td class="fInput"><input name="razon" type="text" /><input name="enviar" type="submit" value="Enviar reporte" />';
+    echo '</form>';
     echo '<h1>Opciones</h1>';
     echo ui_href("",curPageURL(true),"Cancelar y retornar a la publicación");
 }
