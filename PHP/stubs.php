@@ -45,7 +45,7 @@ function get_path($node,$url=true,$prefijo="categoria-") {
        // the last part of the path to $node, is the name of the parent of $node
         if ($url)
         {
-            $path[] = ui_href("principal_ubicacion_link[]",$prefijo.$row['id_categoria']."-".SEO($row['nombre']), $row['nombre']);
+            $path[] = sprintf('<a href="%s">%s</a>',$prefijo.$row['id_categoria']."-".SEO($row['nombre']), $row['nombre']);
         }
         else
         {
@@ -716,14 +716,14 @@ function curPageURL($stripArgs=false) {
  if ($stripArgs) {$pageURL = preg_replace("/\?.*/", "",$pageURL);}
  return $pageURL;
 }
+
 // Wrapper de envío de correo electrónico. HTML/utf-8
 function email($para, $asunto, $mensaje)
 {
-$headers = "MIME-Version: 1.0" . "\r\n";
-$headers .= "Content-Type: text/html; charset=utf-8" . "\r\n";
-$headers .= 'From: '. PROY_NOMBRE .' <'. PROY_MAIL_POSTMASTER . ">\r\n";
-$mensaje = sprintf('<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8" ></head><html><body>%s</body></html>',$mensaje);
-return mail($para,$asunto,$mensaje,$headers);
+    $headers = 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/html; charset=UTF-8' . "\r\n";
+    $headers .= 'From: '. PROY_NOMBRE .' <'. PROY_MAIL_POSTMASTER . ">\r\n";
+    $mensaje = sprintf('<html><head><title>%s</title></head><body>%s</body>',PROY_NOMBRE,$mensaje);
+    return mail($para,'=?UTF-8?B?'.base64_encode($asunto).'?=',$mensaje,$headers);
 }
 
 function email_x_nivel($id_nivel, $asunto, $mensaje)

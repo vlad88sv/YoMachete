@@ -448,7 +448,7 @@ function CONTENIDO_PUBREP($publicacion)
         }
         else
         {
-        email_x_nivel(_N_administrador, "Reporte de publicación", sprintf("La siguiente publicación ha sido reportada:<br />\n\"%s\"<br />\nURL: %s<br />\nComentario del reportador:<br />\n%s",$publicacion['titulo'],curPageURL(true), htmlentities(@$_POST['razon'])));
+        email_x_nivel(_N_administrador, "Reporte de publicación", sprintf("La siguiente publicación ha sido reportada:<br />\n\"%s\"<br />\nURL: %s<br />\nComentario del reportador:<br />\n%s",$publicacion['titulo'],curPageURL(true), @$_POST['razon']));
         echo Mensaje("Su reporte ha sido enviado, ¡gracias!");
         echo ui_href("",curPageURL(true),"Retornar a la publicación");
         return;

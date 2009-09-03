@@ -1,9 +1,13 @@
 <?php
-function ui_img ($id_gui, $src){
-	return '<img id="'.$id_gui.'" src="'.$src.'" />';
+function ui_destruir_vacios($cadena)
+{
+return preg_replace("/\s.*=\"\"/","",$cadena);
+}
+function ui_img ($id_gui, $src,$alt="[Imagen no puso ser cargada]"){
+	return ui_destruir_vacios('<img id="'.$id_gui.'" alt="'.$alt.'" src="'.$src.'" />');
 }
 function ui_href ($id_gui, $href, $texto, $clase="", $extra=""){
-	return '<a id="'.$id_gui.'" href="'.$href.'" class="' . $clase . '" ' . $extra . '>'.$texto.'</a>';
+	return ui_destruir_vacios('<a id="'.$id_gui.'" href="'.$href.'" class="' . $clase . '" ' . $extra . '>'.$texto.'</a>');
 }
 function ui_A ($id_gui, $texto, $clase="", $extra=""){
 	return '<a id="'.$id_gui.'" class="' . $clase . '" ' . $extra . '>'.$texto.'</a>';

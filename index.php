@@ -1,12 +1,14 @@
 <?php require_once ("PHP/vital.php"); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>Compra y Venta de articulos en El Salvador</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta http-equiv="Content-Style-type" content="text/css" />
     <meta http-equiv="Content-Script-type" content="text/javascript" />
     <meta http-equiv="Content-Language" content="es" />
+    <title>Compra y Venta de articulos en El Salvador</title>
     <meta name="description" content="Servicio de compra y venta en línea." />
     <meta name="keywords" content="El Salvador, Comprar, Vender, Clasificados" />
     <meta name="robots" content="index, follow" />
@@ -19,7 +21,7 @@
     <script src="JS/fancybox/jquery.easing.1.3.js" type="text/javascript"></script>
     <script src="JS/fancybox/jquery.fancybox-1.2.1.pack.js" type="text/javascript"></script>
     <script src="JS/jquery.jgrowl.js" type="text/javascript"></script>
-    <style>
+    <style type="text/css">
     div.jGrowl div.aviso {z-index:50;background-color: #F1AF35;color: #FFF;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
     </style>
     <?php
@@ -50,10 +52,12 @@ if (!isset($_GET['peticion']))
 ?>
 <div id="buscador" class="principal">
     <form action="buscar" method="get">
+    <div>
         <input id="busqueda" name="b" type="text" value="<?php echo @$_GET["b"]; ?>" />
         <?php echo ui_combobox("c",'<option value="">Todas las categorias</option>'.join("",ver_hijos("","")),@$_GET["c"]); ?>
         <input type="submit" value="Buscar" />
-    </form>
+    </div>
+    <form>
 </div>
 <div id="columnas">
 <div id="col2">
@@ -86,7 +90,7 @@ function GENERAR_CABEZA()
     echo "<table>";
     echo "<tr>";
     echo "<td id=\"logotipo\">";
-        echo ui_href("","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg"));
+        echo ui_href("","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg","Logotipo YoMachete.com"));
     echo "</td>";
     echo "<td id=\"menu\">";
     echo "<table id=\"menu_der\">";
