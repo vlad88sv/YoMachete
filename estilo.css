@@ -534,3 +534,9 @@ background-color:transparent;
 {
     margin: 0 auto 0 auto;
 }
+
+#nube_etiquetas
+{
+    width:100%;
+    text-align:center;
+}

@@ -78,6 +78,7 @@ function ver_hijos($padre = "", $rubro="articulo", $nivel = 0, $profundidad = 5)
             $arbol[] = '<option value="'.$f['id_categoria'].'">'.$f['nombre_categoria'] . '</option>';
         }
     }
+    $arbol[] = '</optgroup>';
     return $arbol;
 }
 
@@ -184,7 +185,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
-    $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" /></a>";
+    $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" alt=\"articulo\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_publicacion = $f['id_publicacion'];
     $ctags = sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$id_publicacion);
@@ -202,11 +203,11 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<tr>';
     if ($tipo != "previsualizacion")
     {
-        $data .= '<td class="titulo"><a id="titulo" href="'.$lnkTitulo.'">'.htmlentities($titulo,ENT_QUOTES,'utf-8').'</a></td>';
+        $data .= '<td class="titulo"><a href="'.$lnkTitulo.'">'.htmlentities($titulo,ENT_QUOTES,'utf-8').'</a></td>';
     }
     else
     {
-        $data .= '<td class="titulo"><a id="titulo">'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
+        $data .= '<td class="titulo"><a>'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
     }
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio

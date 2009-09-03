@@ -57,7 +57,7 @@ if (!isset($_GET['peticion']))
         <?php echo ui_combobox("c",'<option value="">Todas las categorias</option>'.join("",ver_hijos("","")),@$_GET["c"]); ?>
         <input type="submit" value="Buscar" />
     </div>
-    <form>
+    </form>
 </div>
 <div id="columnas">
 <div id="col2">
@@ -191,6 +191,6 @@ function GENERAR_TAG_CLOUD()
 {
 $c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM ventas_tag_uso AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 20";
 $r = db_consultar($c);
-return '<h1>Nube de etiquetas</h1><center>'.tag_cloud($r).'</center>';
+return '<h1>Nube de etiquetas</h1><div id="nube_etiquetas">'.tag_cloud($r).'</div>';
 }
 ?>
