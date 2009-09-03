@@ -172,7 +172,7 @@ function validEmail($email)
 function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron publicaciones")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_publicacion, promocionado, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_publicaciones AS a WHERE 1 AND $Where $OrderBy";
+    $c = "SELECT id_categoria, id_publicacion, promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=a.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_publicaciones AS a WHERE 1 AND $Where $OrderBy";
     DEPURAR($c,0);
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
@@ -188,9 +188,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" alt=\"articulo\" /></a>";
     $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
     $id_publicacion = $f['id_publicacion'];
-    $ctags = sprintf("SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') AS tags FROM ventas_tag WHERE id IN (SELECT id_tag FROM ventas_tag_uso WHERE id_publicacion='%s') LIMIT 1",$id_publicacion);
-    $tags_array = (mysql_fetch_array(db_consultar($ctags)));
-    $tags = $tags_array['tags'];
+    $tags = $f['tags'];
     $id_usuario = $f['id_usuario'];
     // ->
     $promocionado = ($f['promocionado'] == "1") ? " promocionado" : "";
