@@ -18,7 +18,21 @@ require_once ("$base/stubs.php"); // Funciones varias
 require_once ("$base/publicaciones.php"); // Gestión de publicaciones
 require_once ("$base/usuario.php"); // Gestión de usuarios
 require_once ("$base/todosv.com.php");  // Envío de SMS
-function DEPURAR($s,$f=0){if($f||isset($_GET['depurar'])){echo '<pre>'.$s.'</pre><br />';}}
+function parse_backtrace(){
+
+    $raw = debug_backtrace();
+    $output="";
+
+    foreach($raw as $entry)
+    {
+            $output.="\nFile: ".$entry['file']." (Line: ".$entry['line'].")\n";
+            $output.="Function: ".$entry['function']."\n";
+            $output.="Args: ".implode(", ", $entry['args'])."\n";
+    }
+
+    return $output;
+}
+function DEPURAR($s,$f=0){if($f||isset($_GET['depurar'])){echo '<pre>'.$s.'</pre><br /><pre>'.parse_backtrace().'</pre><br />';}}
 function Mensaje ($texto, $tipo=_M_INFO){
     switch ( $tipo ) {
         case _M_INFO:
