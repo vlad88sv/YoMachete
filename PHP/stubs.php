@@ -508,9 +508,12 @@ function CargarDatos($id_publicacion,$id_usuario)
     $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
 
-    if (_F_usuario_cache('nivel') != _N_administrador) {$datos["tipo"] = _A_temporal;}
-    $datos["fecha_ini"] = mysql_datetime();
-    $datos["fecha_fin"] = mysql_datetime();
+    if (_F_usuario_cache('nivel') != _N_administrador)
+    {
+        $datos["tipo"] = _A_temporal;
+        $datos["fecha_ini"] = mysql_datetime();
+        $datos["fecha_fin"] = mysql_datetime();
+    }
     $datos["id_categoria"] = _F_form_cache("id_categoria");
     // $datos["id_usuario"] = $id_usuario; // No usar.
     $datos["precio"] = _F_form_cache("precio");
