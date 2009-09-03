@@ -57,26 +57,28 @@ function get_path($node,$url=true,$prefijo="categoria-") {
    return $path;
 }
 
-// http://www.sitepoint.com/article/hierarchical-data-database/
-function ver_hijos($padre, $rubro="articulo", $nivel = 0, $profundidad = 5) {
-    $AND_rubro = $rubro ? "AND rubro='$rubro'" : "";
-$r = db_consultar("SELECT id_categoria, padre, nombre FROM ventas_categorias WHERE padre='$padre' $AND_rubro ORDER BY nombre ASC");
-$arbol = array();
-while ($row = mysql_fetch_array($r)) {
-    if ($nivel == 0)
-    {
-        $arbol[] = '<optgroup label="'.$row['nombre'].'">';
+// Original: http://www.sitepoint.com/article/hierarchical-data-database/
+// Optimizado con: http://blog.richardknop.com/2009/05/adjacency-list-model/
+function ver_hijos($padre = "", $rubro="articulo", $nivel = 0, $profundidad = 5) {
+    $AND_padre = $padre ? "AND padre='$padre'" : "";
+    $AND_rubro = $rubro ? "AND t0.rubro='$rubro'" : "";
+    $c = "SELECT t0.id_categoria AS id_padre, t0.nombre AS nombre_padre, t1.id_categoria AS id_categoria, t1.nombre as nombre_categoria FROM ventas_categorias AS t0 LEFT JOIN ventas_categorias AS t1 ON t1.padre = t0.id_categoria WHERE t1.padre IS NOT NULL $AND_rubro ORDER BY t0.nombre, t1.nombre";
+    $r = db_consultar($c);
+    $arbol = array();
+    $Categoria = "";
+    while ($f = mysql_fetch_array($r)) {
+        if ($Categoria != $f['nombre_padre'])
+        {
+            $Categoria = $f['nombre_padre'];
+            if (count($arbol) > 0) $arbol[] = '</optgroup>';
+            $arbol[] = '<optgroup label="'.$f['nombre_padre'].'">';
+        }
+        else
+        {
+            $arbol[] = '<option value="'.$f['id_categoria'].'">'.$f['nombre_categoria'] . '</option>';
+        }
     }
-    else
-    {
-        $arbol[] = '<option value="'.$row['id_categoria'].'">' . str_repeat('·',$nivel-1).$row['nombre'] . '</option>';
-    }
-    if ($nivel+1 < $profundidad)
-    {
-        $arbol = array_merge($arbol, ver_hijos($row['id_categoria'], $rubro, $nivel+1));
-    }
-}
-return $arbol;
+    return $arbol;
 }
 
 function Truncar($cadena, $largo) {
