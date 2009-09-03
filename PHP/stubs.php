@@ -316,11 +316,11 @@ function DestruirTicket($id_publicacion,$tipo=_A_temporal)
         EliminarArchivosArr(ObtenerMiniImagenesArr($id_publicacion));
         $c = "DELETE FROM ventas_imagenes WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
-        
+
         // Borrar los flags relacionados
         $c = "DELETE FROM ventas_flags_pub WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
-        
+
         //Borrar los tags relacionados
         $c = "DELETE FROM ventas_tag_uso WHERE id_publicacion='$id_publicacion'";
         $r = db_consultar($c);
@@ -765,7 +765,7 @@ foreach ($tags as $tag => $count) {
 $size = $min_size + ($count - $minimum_count)
 * ($max_size - $min_size) / $spread;
 $cloud_tags[] = '<a style="font-size: '. floor($size) . 'px'
-. '" class="tag_cloud" href="'.curPageURL(true).'buscar?ba=1&inc_etiq=1&b=' . $tag
+. '" class="tag_cloud" href="'.curPageURL(true).'e+' . $tag
 . '" title="\'' . $tag . '\' returned a count of ' . $count . '">'
 . htmlspecialchars(stripslashes($tag)) . '</a>';
 }
