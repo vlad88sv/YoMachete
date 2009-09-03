@@ -139,7 +139,7 @@ function GENERAR_ARTICULOS()
         if (db_resultado($resultado, 'padre') > 0)
         {
             $data .= "<h1>Mostrando publicaciones de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
-            $data .= "Ubicación: " . join(" > ", get_path($categoria)) . "<br />";
+            $data .= "Ubicación: " . get_path($categoria) . "<br />";
             $data .= "<hr />";
             $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
             $data .= "<hr />";

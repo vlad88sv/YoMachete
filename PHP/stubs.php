@@ -37,16 +37,20 @@ function get_path($node,$url=true,$prefijo="categoria-") {
 
     $c = "SELECT b.id_categoria AS cPadre, a.id_categoria AS cHijo, b.nombre AS nPadre, a.nombre AS nHijo FROM ventas_categorias AS a LEFT JOIN ventas_categorias AS b ON b.id_categoria=a.padre WHERE a.id_categoria=$node";
     $r = db_consultar($c);
-    $f = mysql_fetch_array($r);
+    $f = mysql_fetch_assoc($r);
+    return get_path_format($f);
+}
+function get_path_format($f,$url=true,$prefijo="categoria-")
+{
     if ($url)
     {
-        $path[] = ui_href("",$prefijo.$f['cPadre']."-".SEO($f['nPadre']), $f['nPadre']) . " > " . ui_href("",$prefijo.$f['cHijo']."-".SEO($f['nHijo']), $f['nHijo']);
+        $path = ui_href("",$prefijo.$f['cPadre']."-".SEO($f['nPadre']), $f['nPadre']) . " > " . ui_href("",$prefijo.$f['cHijo']."-".SEO($f['nHijo']), $f['nHijo']);
     }
     else
     {
-        $path[] =  (!empty($f['nPadre']) ? $f['nPadre'] . " > " : "") . (!empty($f['nHijo']) ? $f['nHijo'] : "" );
+        $path =  (!empty($f['nPadre']) ? $f['nPadre'] . " > " : "") . (!empty($f['nHijo']) ? $f['nHijo'] : "" );
     }
-   return $path;
+    return $path;
 }
 
 // Original: http://www.sitepoint.com/article/hierarchical-data-database/
@@ -172,7 +176,8 @@ function validEmail($email)
 function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron publicaciones")
 {
     $data = '';
-    $c = "SELECT id_categoria, id_publicacion, promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=a.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = a.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, id_usuario, precio FROM ventas_publicaciones AS a WHERE 1 AND $Where $OrderBy";
+    $JOIN_UBICACION = " LEFT JOIN ventas_categorias AS y ON y.id_categoria=z.id_categoria LEFT JOIN ventas_categorias AS x ON x.id_categoria=y.padre";
+    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE 1 AND $Where $OrderBy";
     $r = db_consultar($c);
     if (mysql_num_rows($r) < 1)
     {
@@ -185,7 +190,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
     $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" alt=\"articulo\" /></a>";
-    $ubicacion=join(" > ", get_path($f['id_categoria'],($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-")));
+    $ubicacion=get_path_format($f,($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-"));
     $id_publicacion = $f['id_publicacion'];
     $tags = $f['tags'];
     $id_usuario = $f['id_usuario'];
@@ -255,7 +260,7 @@ function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se enc
     $titulo=$f['titulo'];
     $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
-    $ubicacion=join(" > ", get_path($f['id_categoria']));
+    $ubicacion=get_path($f['id_categoria']);
     $id_publicacion = $f['id_publicacion'];
     // ->
     $data .= "<div style='display:inline-block;margin:0 10px;'><a href=\"./$lnkTitulo\"><img src=\"./imagen_".$f['imagen']."m\" /></a></div>";

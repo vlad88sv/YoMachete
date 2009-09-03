@@ -32,7 +32,7 @@ function CONTENIDO_VENDER()
             echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
             echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?op=articulo", "artículo");
         }
-        
+
         // Mostrar las ventas publicadas:
 
         $c = "SELECT id_publicacion, titulo, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";
@@ -137,11 +137,11 @@ function CONTENIDO_VENDER()
     }
 
     // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
-    
+
     $Publicacion = ObtenerDatos($ticket);
     $imagenes = ObtenerImagenesArr($ticket,"");
     $Vendedor=_F_usuario_datos($Publicacion['id_usuario']);
-    
+
     echo '<script type="text/javascript" src="JS/tinymce/jscripts/jquery.tinymce.js"></script>';
 
     if(isset($_GET['eliminar']))
@@ -213,7 +213,7 @@ function CONTENIDO_VENDER()
     {
         echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Enviar\"",_M_INFO);
         echo "<hr style=\"margin-top:50px\" />";
-        echo "Ud. ha escogido la siguiente categoría: <b>" . join(" > ", get_path(db_codex(@$Publicacion['id_categoria']),false))."</b><br/><br/>";
+        echo "Ud. ha escogido la siguiente categoría: <b>" . get_path(db_codex(@$Publicacion['id_categoria']),false)."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
         echo VISTA_ListaPubs("id_publicacion=$ticket","","previsualizacion","Woops!, ¡problemas intentando cargar la previsualización!");
         echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
