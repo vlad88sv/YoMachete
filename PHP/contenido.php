@@ -124,7 +124,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<hr />";
 
     // Categoria en la que se encuentra ubicado el producto
-    echo "<b>Categoría de la publicación:</b> " . get_path(@$publicacion['id_categoria']);
+    echo "<b>Categoría de la publicación:</b> " . get_path_format(@$publicacion);
     echo "<br />";
 
     // Categoria en la que se encuentra ubicado el producto
