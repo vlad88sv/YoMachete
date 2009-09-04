@@ -12,7 +12,7 @@ function CONTENIDO_ADMIN()
             CONTENIDO_INICIAR_SESION();
             return;
         }
-    
+
         return;
     }
     if (empty($_GET['op']))
@@ -70,7 +70,7 @@ function INTERFAZ__ACTIVACION_USUARIOS()
         if ($ret == 1)
         {
             $usuario = _F_usuario_datos($_GET['activar']);
-            email($usuario['email'],"Su cuenta en " . PROY_NOMBRE . " ha sido aprobada","Gracias por su espera, su cuenta puede ser accedida en: ".PROY_URL."/iniciar");
+            email($usuario['email'],"Su cuenta en " . PROY_NOMBRE . " ha sido aprobada","Gracias por su espera, su cuenta puede ser accedida en: ".PROY_URL."iniciar");
             echo Mensaje("Usuario exitosamente activado",_M_INFO);
         }
         else
@@ -120,14 +120,14 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
         $ret = 0;
         $usuario = _F_usuario_datos($id_usuario);
         $publicacion = ObtenerDatos($_GET['id_publicacion']);
-        
+
         switch ($_GET['operacion'])
         {
             case "aprobar":
                 $ret = Publicacion_Aprobar($id_publicacion);
                 if($ret)
                 {
-                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("",PROY_URL."/publicacion_".$id_publicacion,"ver")."]";
+                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("",PROY_URL."publicacion_".$id_publicacion,"ver")."]";
                 }
             break;
             case "rechazar":
@@ -158,7 +158,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                 $c = "UPDATE ventas_publicaciones SET tipo="._A_temporal." WHERE tipo!='"._A_temporal."' AND id_publicacion='$id_publicacion' AND id_usuario='$id_usuario' LIMIT 1";
                 $r = db_consultar($c);
                 $ret = db_afectados();
-                $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("",PROY_URL."/vender?ticket=".$id_publicacion,"ver y editar esta publicación")."]<br />El motivo del retorno de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
+                $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido retornada, favor verifiquela e intene de nuevo! [".ui_href("",PROY_URL."vender?ticket=".$id_publicacion,"ver y editar esta publicación")."]<br />El motivo del retorno de esta publicación es: \"". db_codex($_POST['motivo']) ."\"";
             break;
             // Esta opción tiene logica si la ejecutan una vez aprobada la publicación, Ej. desde una VISTA__articulos()
             case "desaprobar":
@@ -370,7 +370,7 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
     if(!empty($_POST['modificar']))
     {
         $flag_registroExitoso=true;
-        
+
         if (!empty($_POST['registrar_campo_email']))
         {
             if (!validEmail($_POST['registrar_campo_email']))
@@ -508,7 +508,7 @@ function INTERFAZ__ADMIN_USUARIOS_ELIMINAR()
     {
         echo Mensaje("Usuario no pudo ser eliminado",_M_ERROR);
     }
-    
+
     echo '<h1>Opciones</h1>';
     echo ui_href("","admin_usuarios_admin","Retornar a lista de usuarios");
 }
@@ -529,7 +529,7 @@ function INTERFAZ__ADMIN_USUARIOS()
         break;
         }
     }
-    
+
     $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax`, `nImgMax`, IF(tienda=1,'Si','No') as 'tienda' FROM ventas_usuarios WHERE 1",_N_administrador,_N_moderador,_N_vendedor);
     $r = db_consultar($c);
 ?>
@@ -613,4 +613,3 @@ if (isset($_POST['crear']))
 <?php
 }
 ?>
-
