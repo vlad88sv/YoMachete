@@ -772,8 +772,8 @@ foreach ($tags as $tag => $count) {
 $size = $min_size + ($count - $minimum_count)
 * ($max_size - $min_size) / $spread;
 $cloud_tags[] = '<a style="font-size: '. floor($size) . 'px'
-. '" class="tag_cloud" href="'.curPageURL(true).'e+' . $tag
-. '" title="\'' . $tag . '\' returned a count of ' . $count . '">'
+. '" class="tag_cloud" href="'.PROY_URL.'/e+' . $tag
+. '" title="\'' . $tag . '\' (' . $count . ')">'
 . htmlspecialchars(stripslashes($tag)) . '</a>';
 }
 $cloud_html = join("\n", $cloud_tags) . "\n";
