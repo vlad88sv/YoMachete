@@ -456,7 +456,7 @@ function CargarArchivos($input,$id_publicacion,$id_usuario)
         if ($ret)
         {
             move_uploaded_file($valor, "RCS/IMG/$ret");
-            Imagen__Redimenzionar("RCS/IMG/$ret",600,468);
+            Imagen__Redimenzionar("RCS/IMG/$ret",600,480);
         }
     }
     return true;
@@ -492,23 +492,27 @@ function DescargarArchivos($input,$id_publicacion,$id_usuario)
 }
 function Imagen__Redimenzionar($Origen,$Ancho,$Alto)
 {
-    return Imagen__CrearMiniatura($Origen,$Origen,$Ancho,$Alto,1);
+    return Imagen__CrearMiniatura($Origen,$Origen,0,$Alto,false);
 }
 /*
  * Imagen__CrearMiniatura()
  * Crea una versión reducida de la imagen en $Origen
 */
-function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100, $Aspecto=0)
+function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100, $Fit=true)
 {
     $image = new Imagick($Origen);
-    $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, $Aspecto);
+    $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, 0, $Fit);
     return $image->writeImage($Destino);
 }
 function CargarDatos($id_publicacion,$id_usuario)
 {
     // HTML purifier
     require_once("PHP/HTMLPurifier.standalone.php");
-    $purifier = new HTMLPurifier();
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('HTML.Doctype', 'XHTML 1.0 Strict');
+    $config->set('Filter.YouTube', true);
+    $purifier = new HTMLPurifier($config);
+    HTMLPurifier_Bootstrap::autoload('HTMLPurifier_Filter_YouTube');
 
     $id_publicacion = db_codex($id_publicacion);
     $id_usuario = db_codex($id_usuario);
@@ -573,7 +577,7 @@ function ObtenerDatos($id_publicacion)
     $id_publicacion = db_codex($id_publicacion);
     $JOIN_UBICACION = " LEFT JOIN ventas_categorias AS y ON y.id_categoria=z.id_categoria LEFT JOIN ventas_categorias AS x ON x.id_categoria=y.padre";
     $SELECT_TAG = "(SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags";
-    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_categoria, z.id_publicacion, z.promocionado, $SELECT_TAG, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, z.id_usuario, z.precio, z.tipo, z.fecha_fin, z.fecha_ini FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE id_publicacion='$id_publicacion' LIMIT 1";
+    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_categoria, z.id_publicacion, z.promocionado, $SELECT_TAG, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, z.descripcion_corta,z.descripcion, z.id_usuario, z.precio, z.tipo, z.fecha_fin, z.fecha_ini FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
     $ret = mysql_fetch_assoc($r);
     return $ret;
