@@ -143,12 +143,12 @@ function GENERAR_ARTICULOS()
             $data .= "<hr />";
             $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
             $data .= "<hr />";
-            $WHERE = "id_categoria='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
+            $WHERE = "z.id_categoria='$categoria' AND z.tipo IN ("._A_aceptado . ","._A_promocionado.")";
         }
         else
         {
             $data .= "<h1>Mostrando publicaciones recientes de la categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
-            $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=a.id_categoria)='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
+            $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=z.id_categoria)='$categoria' AND z.tipo IN ("._A_aceptado . ","._A_promocionado.")";
         }
     }
     else
