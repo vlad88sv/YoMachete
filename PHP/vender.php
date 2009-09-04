@@ -138,10 +138,6 @@ function CONTENIDO_VENDER()
 
     // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
 
-    $Publicacion = ObtenerDatos($ticket);
-    $imagenes = ObtenerImagenesArr($ticket,"");
-    $Vendedor=_F_usuario_datos($Publicacion['id_usuario']);
-
     echo '<script type="text/javascript" src="JS/tinymce/jscripts/jquery.tinymce.js"></script>';
 
     if(isset($_GET['eliminar']))
@@ -166,12 +162,23 @@ function CONTENIDO_VENDER()
         return;
     }
 
+    /* Advertencia:
+      Hay que recargar los datos luego de la edición para evitar problemas de que los cambios anteriores queden "en cache"
+    */
+
+    $Publicacion = ObtenerDatos($ticket);
+
     if ($flag_modo_escritura)
     {
-        DescargarArchivos("vender_deshabilitar",$ticket,_F_usuario_cache('id_usuario'));
-        CargarArchivos("vender_imagenes",$ticket,$Vendedor['id_usuario']);
-        CargarDatos($ticket,_F_usuario_cache('id_usuario'));
+        DescargarArchivos("vender_deshabilitar",$ticket,$Publicacion['id_usuario']);
+        CargarArchivos("vender_imagenes",$ticket,$Publicacion['id_usuario']);
+        CargarDatos($ticket,$Publicacion['id_usuario']);
+        // Refrescamos los datos de la publicación
+        $Publicacion = ObtenerDatos($ticket);
     }
+
+    $Vendedor=_F_usuario_datos($Publicacion['id_usuario']);
+    $imagenes = ObtenerImagenesArr($ticket,"");
 
     if ($flag_op_y_saltar)
     {
@@ -298,7 +305,7 @@ function CONTENIDO_VENDER()
     {
         foreach($imagenes as $archivo)
         {
-            echo "<div style='display:inline-block'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"lightbox\"><img src=\"./imagen_".$archivo."m\" /></a><br />".ui_input("vender_deshabilitar[]",$archivo,"checkbox")."&nbsp;Eliminar</div>";
+            echo "<div style='display:inline-block'><a href=\"./imagen_".$archivo."\" title=\"IMAGEN CARGADA\" target=\"_blank\"><img src=\"./imagen_".$archivo."m\" /></a><br />".ui_input("vender_deshabilitar[]",$archivo,"checkbox")."&nbsp;Eliminar</div>";
         }
         echo "<div style=\"clear:both\"></div>";
     }
