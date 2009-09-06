@@ -127,8 +127,8 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<b>Categoría de la publicación:</b> " . get_path_format(@$publicacion);
     echo "<br />";
 
-    // Categoria en la que se encuentra ubicado el producto
-    echo "<b>Fin de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_fin']);
+    // Fechas de publicación
+    echo "<b>Inicio de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_ini']) . " / <b>Fin de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_fin']);
     echo "<br />";
 
     // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.
