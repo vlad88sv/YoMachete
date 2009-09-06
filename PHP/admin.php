@@ -566,7 +566,7 @@ if (mysql_numrows($r) == 0)
     <?php
     while ($f = mysql_fetch_array($r))
     {
-        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['id_tienda'],$f['id_tienda'],$f['id_tienda'],$f['id_tienda'],'[E][X]');
+        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['id_tienda'],$f['id_usuario'],$f['tiendaURL'],$f['tiendaTitulo'],sprintf('[<a href="%s">E</a>][<a href="%s">X</a>]'));
     }
     ?>
     </tbody>

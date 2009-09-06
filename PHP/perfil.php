@@ -23,9 +23,24 @@ function CONTENIDO_PERFIL()
     echo (_F_usuario_cache('id_usuario') != $usuario['id_usuario'] ? "<p><b>Contacto:</b> ". ui_href("","mp?id=".$usuario['id_usuario'],"Mensaje Privado") : ""."</p>");
     echo "<p><b>Registrado desde:</b> " .  fechatiempo_desde_mysql_datetime(@$usuario['registro'])."</p>";
     echo "<p><b>Ultima actividad:</b> " . fechatiempo_desde_mysql_datetime(@$usuario['ultimo_acceso'])."</p>";
-    $usuario['cantidad_publicaciones'] = ObtenerEstadisticasUsuario(@$usuario['id_usuario'],_EST_CANT_PUB_ACEPT) . " (" . ui_href("","tienda_".(empty($usuario['tienda']) ? $usuario['id_usuario'] : $usuario['tienda']).".html", "ver tienda") . ")";
+    $usuario['cantidad_publicaciones'] = ObtenerEstadisticasUsuario(@$usuario['id_usuario'],_EST_CANT_PUB_ACEPT);
     echo "<p><b>Cantidad de publicaciones:</b> " . $usuario['cantidad_publicaciones']."</p>";
 
+    // Mostrar las tiendas - si tiene
+
+    if ($usuario['tienda'])
+    {
+        $c = sprintf("SELECT tiendaURL, tiendaTitulo FROM ventas_tienda WHERE id_usuario='%s'",$usuario['id_usuario']);
+        $r = db_consultar($c);
+        if (mysql_num_rows($r) > 0)
+        {
+            echo '<h2>Tiendas</h2>';
+            while ($f = mysql_fetch_assoc($r))
+            {
+                echo ui_href("","./+".$f['tiendaURL'],$f['tiendaTitulo']);
+            }
+        }
+    }
     // Si el que esta viendo su propio perfil, mostrale sus mensajes del sistema y mensajes privados
 
     if(_F_usuario_cache('id_usuario')==$usuario['id_usuario'])
@@ -43,7 +58,7 @@ function CONTENIDO_PERFIL()
             }
             echo '</table>';
         }
-        
+
         // Mostrarle sus mensajes privados
         echo '<h1>Mensajes privados</h1>';
     }
