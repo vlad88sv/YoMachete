@@ -159,7 +159,7 @@ function GENERAR_ARTICULOS()
     }
 
     $WHERE .= " AND fecha_fin >= CURDATE()";
-    $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","indice");
+    $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin ASC LIMIT 10","indice");
     return $data;
 }
 
