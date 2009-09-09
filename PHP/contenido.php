@@ -34,10 +34,10 @@ function CONTENIDO_PUBLICACION($op="")
     }
 
     // Ya venció el tiempo de publicación?.
-    if ($op != "previsualizacion" && strtotime($publicacion['fecha_fin']) < strtotime('+1 day'))
+    if ($op != "previsualizacion" && strtotime($publicacion['fecha_fin']) < strtotime(date('d-m-Y',time())))
     {
         echo Mensaje("disculpe, el tiempo de publicación para la publicación solicitada ha caducado.", _M_INFO);
-        echo "Esta publicacion caduco el ".$publicacion['fecha_fin']."<br />";
+        echo "Esta publicacion caducó el ".$publicacion['fecha_fin']."<br />";
         if (_F_usuario_cache('id_usuario') == $publicacion['id_usuario'])
         {
             echo ui_href("","servicios?op=atp&pub=$ticket","¿Desea ampliar el tiempo de su publicación?");
