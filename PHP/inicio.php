@@ -4,11 +4,13 @@ function CONTENIDO_INICIAR_SESION()
 
 if (isset($_POST['iniciar_proceder']))
 {
+    ob_start();
     $ret = _F_usuario_acceder($_POST['iniciar_campo_correo'],$_POST['iniciar_campo_clave']);
-
+    $buffer = ob_get_clean();
     if ($ret != 1)
     {
         echo mensaje ("Datos de acceso erroneos, por favor intente de nuevo",_M_ERROR);
+        echo mensaje ($buffer,_M_INFO);
     }
 }
 

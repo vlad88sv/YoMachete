@@ -57,7 +57,7 @@ function CONTENIDO_REGISTRAR()
                 //Tamaño adecuado?
                 if(strlen($_POST['registrar_campo_clave']) >= 6 && strlen($_POST['registrar_campo_clave']) <= 100)
                 {
-                    $datos['clave'] = sha1($datos['usuario'].trim($_POST['registrar_campo_clave']));
+                    $datos['clave'] = sha1(strtolower($datos['usuario']).trim($_POST['registrar_campo_clave']));
                 }
                 else
                 {
