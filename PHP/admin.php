@@ -464,15 +464,15 @@ $usuario = _F_usuario_datos($_GET['usuario']);
 <h1>Edición de usuario</h1>
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" >
 <table>
-<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" value="<?php echo $usuario['email']; ?>" /></tr>
-<tr><td>Usuario</td><td><input name="registrar_campo_usuario" value="<?php echo $usuario['usuario']; ?>" /></tr>
-<tr><td>Nombre</td><td><input name="registrar_campo_nombre" value="<?php echo $usuario['nombre']; ?>" /></tr>
-<tr><td>Clave</td><td><input name="registrar_campo_clave" value="" /></tr>
-<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" value="" /></tr>
-<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" value="<?php echo $usuario['telefono1']; ?>" /></tr>
-<tr><td>Días de vigencia para publicaciones</td><td><input name="nDiasVigencia" value="<?php echo $usuario['nDiasVigencia']; ?>" /></tr>
-<tr><td>Publicaciones máximas</td><td><input name="nPubMax" value="<?php echo $usuario['nPubMax']; ?>" /></tr>
-<tr><td>Imagenes máximas</td><td><input name="nImgMax" value="<?php echo $usuario['nImgMax']; ?>" /></tr>
+<tr><td>Correo electrónico</td><td><input name="registrar_campo_email" type="text" value="<?php echo $usuario['email']; ?>" /></tr>
+<tr><td>Usuario</td><td><input name="registrar_campo_usuario" type="text" value="<?php echo $usuario['usuario']; ?>" /></tr>
+<tr><td>Nombre</td><td><input name="registrar_campo_nombre" type="text" value="<?php echo $usuario['nombre']; ?>" /></tr>
+<tr><td>Clave</td><td><input name="registrar_campo_clave" type="password" value="" /></tr>
+<tr><td>Clave (confirmar)</td><td><input name="registrar_campo_clave_2" type="password" value="" /></tr>
+<tr><td>Teléfono de contacto</td><td><input name="registrar_campo_telefono" type="text" value="<?php echo $usuario['telefono1']; ?>" /></tr>
+<tr><td>Días de vigencia para publicaciones</td><td><input name="nDiasVigencia" type="text" value="<?php echo $usuario['nDiasVigencia']; ?>" /></tr>
+<tr><td>Publicaciones máximas</td><td><input name="nPubMax" type="text" value="<?php echo $usuario['nPubMax']; ?>" /></tr>
+<tr><td>Imagenes máximas</td><td><input name="nImgMax" type="text" value="<?php echo $usuario['nImgMax']; ?>" /></tr>
 <tr>
 <td>Nivel</td>
 <td>
@@ -566,7 +566,7 @@ if (mysql_numrows($r) == 0)
     <?php
     while ($f = mysql_fetch_array($r))
     {
-        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['id_tienda'],$f['id_usuario'],$f['tiendaURL'],$f['tiendaTitulo'],sprintf('[<a href="%s">E</a>][<a href="%s">X</a>]'));
+        echo sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",$f['id_tienda'],$f['id_usuario'],$f['tiendaURL'],$f['tiendaTitulo'],sprintf('[<a href="%s">Editar</a>][<a href="%s">X</a>]',"",""));
     }
     ?>
     </tbody>
