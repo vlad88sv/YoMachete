@@ -298,7 +298,6 @@ if (!S_iniciado())
     CONTENIDO_INICIAR_SESION();
     return;
 }
-
 // Si hay un id entonces quiere enviar un MP a ese ID
 if (!empty($_GET['id']))
 {
@@ -312,6 +311,34 @@ if (!empty($_GET['id']))
         return;
     }
 
+    if (isset($_POST['enviar_mp']) && isset($_POST['asunto']) && isset($_POST['mensaje']))
+    {
+        //Agregamos el mensaje
+        $datos["id_usuario_rmt"] =  _F_usuario_cache('id_usuario');
+        $datos["mensaje"] = $_POST['mensaje'];
+        $datos["tipo"] = _MC_privado;
+        $datos["contexto"] = 'privado';
+        $datos["fecha"] = mysql_datetime();
+        $id_msj = db_agregar_datos("ventas_mensajes",$datos);
+        unset($datos);
+
+        //Agregamos el destinatario
+        $datos["id_msj"] = $id_msj;
+        $datos["id_usuario_dst"] = $id_usuario;
+        $datos["leido"] = 0;
+        $datos["eliminado"] = 0;
+        $id_msj = db_agregar_datos("ventas_mensajes_dst",$datos);
+        unset($datos);
+
+        echo Mensaje("¡Su mensaje privado ha sido enviado!");
+        echo '<h1>Opciones</h1>';
+        echo '<ul>';
+        echo '<li><a href="/">Pagina de inicio</a></li>';
+        echo '<li><a href="/">Mis mensajes privados</a></li>';
+        echo '</ul>';
+        return;
+    }
+
     //Existe el usuario al cual quiere enviar el mensaje?
     if (_F_usuario_existe($id_usuario,'id_usuario'))
     {
@@ -319,10 +346,10 @@ if (!empty($_GET['id']))
         echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
         echo 'Este mensaje será enviado al usuario <b>'.$usuario_destino['usuario'].'</b><br />';
         echo '<table>';
-        echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto","","","","width:100%")));
+        echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto","","text","","width:100%")));
         echo ui_tr(ui_td('Mensaje: '). ui_td(ui_textarea("mensaje","","","width:100%")));
         echo '</table>';
-        echo ui_input("enviar_mp","Enviar","Button").'<br />';
+        echo ui_input("enviar_mp","Enviar","submit").'<br />';
         echo '</form>';
     }
     else
