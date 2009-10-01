@@ -54,12 +54,12 @@ if(mysql_connect($db_server,$db_user,$db_passwd))
             echo "<div>".mysql_error()."</div>";
             echo "<div>".$c."</div>";
             */
-            die ("NO");
+            die ("Su usuario/email tampoco se encontró en http://svcommunity.org");
         }
     }
     else
     {
-        die ("ERROR #2");
+        die ("ERROR #2 | No se pudo conectar con http://svcommunity.org por problemas técnicos, intente mas tarde.");
     }
 }
 else
