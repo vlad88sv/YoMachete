@@ -33,12 +33,12 @@ function _F_usuario_agregar($datos){
     }
 }
 
-function _F_usuario_acceder($email, $clave){
+function _F_usuario_acceder($email, $clave,$enlazar=true){
     global $tablaUsuarios;
     $email = db_codex (trim($email));
-    $clave = md5 (trim($clave));
+    $clave =db_codex (trim($clave));
 
-    $c = "SELECT * FROM $tablaUsuarios WHERE email='$email' AND clave='$clave' AND estado!="._N_esp_activacion;
+    $c = "SELECT * FROM $tablaUsuarios WHERE (LOWER(email)=LOWER('$email') OR LOWER(usuario)=LOWER('$email')) AND clave=SHA1(CONCAT(LOWER(usuario),'$clave')) AND estado!="._N_esp_activacion;
     DEPURAR($c,0);
     $resultado = db_consultar ($c);
     if ($resultado) {
@@ -46,10 +46,37 @@ function _F_usuario_acceder($email, $clave){
     if ( $n_filas == 1 ) {
         $_SESSION['autenticado'] = true;
         $_SESSION['cache_datos_usuario'] = db_fila_a_array($resultado);
-        $c = "UPDATE $tablaUsuarios SET ultimo_acceso='".mysql_datetime()."' WHERE email='$email'";
+        $c = "UPDATE $tablaUsuarios SET ultimo_acceso=NOW() WHERE email='$email'";
         $resultado = db_consultar ($c);
         return 1;
     } else {
+        if ($enlazar)
+        {
+            // 30/09/2009
+            /*
+             Con la integración de enlace.php en svcommunity.org, intentaremos
+             verificar si el usuario existe ahí y crear la cuenta acá.
+             Si no existe ni en SVC entonces fallar silenciosamente.
+            */
+            $url = "http://www.svcommunity.org/forum/enlace.php?m=$email&p=$clave";
+            $SVC = @file_get_contents($url);
+            if (strstr($SVC,'<?xml version="1.0" encoding="UTF-8"?>'))
+            {
+                $XML = new SimpleXMLElement($SVC);
+                echo $XML->member_name;
+                $datos["estado"] = _N_activo;
+                $datos["nivel"] = _N_vendedor;
+                $datos["ultimo_acceso"] = mysql_datetime();
+                $datos["registro"]=date( 'Y-m-d H:i:s',(double) $XML->date_registered);
+                $datos["usuario"]=$XML->member_name;
+                $datos["nombre"]=$XML->real_name;
+                $datos["email"]=$XML->email_address;
+                $datos["clave"]=$XML->passwd;
+
+                db_agregar_datos("ventas_usuarios",$datos);
+                return _F_usuario_acceder($email, $clave,false);
+            }
+        }
         unset ($_SESSION['autenticado']);
         unset ($_SESSION['id_usuario']);
         return -1;

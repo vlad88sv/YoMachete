@@ -277,7 +277,7 @@ function INTERFAZ__ADMIN_USUARIOS_AGREGAR()
                 //Tamaño adecuado?
                 if(strlen($_POST['registrar_campo_clave']) >= 6 && strlen($_POST['registrar_campo_clave']) <= 100)
                 {
-                    $datos['clave'] = md5(trim($_POST['registrar_campo_clave']));
+                    $datos['clave'] = sha1($datos['usuario'].trim($_POST['registrar_campo_clave']));
                 }
                 else
                 {
@@ -409,7 +409,7 @@ function INTERFAZ__ADMIN_USUARIOS_EDITAR()
                 //Tamaño adecuado?
                 if(strlen($_POST['registrar_campo_clave']) >= 6 && strlen($_POST['registrar_campo_clave']) <= 100)
                 {
-                    $datos['clave'] = md5(trim($_POST['registrar_campo_clave']));
+                    $datos['clave'] = sha1($datos['usuario'].trim($_POST['registrar_campo_clave']));
                 }
                 else
                 {

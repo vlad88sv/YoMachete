@@ -31,10 +31,11 @@ echo "<form action=\"iniciar\" method=\"POST\">";
 echo ui_input("iniciar_retornar", $retorno, "hidden");
 echo "<table>";
 echo "<span class=\"explicacion\">Utilice el mismo correo y contraseña que utilizó al registrarse en el sistema</span>";
-echo ui_tr(ui_td("Correo electronico (e-mail)") . ui_td(ui_input("iniciar_campo_correo")));
+echo ui_tr(ui_td("Correo electronico (e-mail) / Usuario") . ui_td(ui_input("iniciar_campo_correo")));
 echo ui_tr(ui_td("Constraseña") . ui_td(ui_input("iniciar_campo_clave","","password")));
 echo "</table>";
 echo ui_input("iniciar_proceder", "Iniciar sesión", "submit")."<br />";
+echo "<span class=\"explicacion\">¡Puedes utilizar tu usuario y contraseña de <b>http://svcommunity.org</b>!</span>";
 echo "</form>";
 }
 ?>

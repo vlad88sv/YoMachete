@@ -13,12 +13,12 @@
 <?php
 $forzar = isset($_GET['forzar']);
 // Tabla de usuarios
-$campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) not null, clave VARCHAR(32) not null, nombre VARCHAR(32) not null, email VARCHAR(50) not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, registro DATETIME, FLAGS LONGTEXT, nDiasVigencia INT NOT NULL DEFAULT '7', nPubMax INT NOT NULL DEFAULT '5', nImgMax INT NOT NULL DEFAULT '5', tienda TINYINT DEFAULT '0'";
+$campos = "id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, usuario VARCHAR(100) UNIQUE not null, clave VARCHAR(40) not null, nombre VARCHAR(32) not null, email VARCHAR(50)  UNIQUE not null, telefono1 VARCHAR(20), telefono2 VARCHAR(20), avatar INT, notas TEXT, nivel TINYINT UNSIGNED NOT NULL, estado TINYINT UNSIGNED NOT NULL, contraclave VARCHAR(32), ultimo_acceso DATETIME, registro DATETIME, FLAGS LONGTEXT, nDiasVigencia INT NOT NULL DEFAULT '7', nPubMax INT NOT NULL DEFAULT '5', nImgMax INT NOT NULL DEFAULT '5', tienda TINYINT DEFAULT '0'";
 echo db_crear_tabla("ventas_usuarios", $campos, false||$forzar);
 
 // Agregamos al usuario Admin
 $usuario['usuario'] = 'admin';
-$usuario['clave']   = md5('admin');
+$usuario['clave']   = sha1($usuario['usuario'].'admin');
 $usuario['nombre']  = 'Administrador';
 $usuario['email']   = 'admin@localhost.com';
 $usuario['nivel']   = _N_administrador;
@@ -28,7 +28,7 @@ _F_usuario_agregar ($usuario);
 
 // Agregamos al usuario Vendedor
 $usuario['usuario'] = 'vendedor';
-$usuario['clave']   = md5('vendedor');
+$usuario['clave']   = sha1($usuario['usuario'].'vendedor');
 $usuario['nombre']  = 'Vendedor Ejemplo';
 $usuario['email']   = 'vendedor@localhost.com';
 $usuario['nivel']   = _N_vendedor;
@@ -38,7 +38,7 @@ _F_usuario_agregar ($usuario);
 
 // Agregamos al usuario Tienda
 $usuario['usuario'] = 'tienda';
-$usuario['clave']   = md5('tienda');
+$usuario['clave']   = sha1($usuario['usuario'].'tienda');
 $usuario['nombre']  = 'Tienda Ejemplo';
 $usuario['email']   = 'tienda@localhost.com';
 $usuario['nivel']   = _N_vendedor;
