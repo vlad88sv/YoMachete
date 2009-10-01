@@ -19,16 +19,15 @@
  * Use:         echo array2xml($products,'products');
  *              die;
 */
-
 // Si no es YoMachete.com, morir
-if ($_SERVER['REMOTE_ADDR'] != '96.30.8.9')
+if ($_SERVER['REMOTE_ADDR'] != '96.30.8.8')
 {
-    die ("NOIP");
+    die ("NO:".$_SERVER['REMOTE_ADDR']);
 }
 
 if (empty($_GET['m']) || empty($_GET['p']))
 {
-    die ("ERROR");
+    die ("ERROR #1");
 }
 else
 {
@@ -60,12 +59,12 @@ if(mysql_connect($db_server,$db_user,$db_passwd))
     }
     else
     {
-        die ("ERROR");
+        die ("ERROR #2");
     }
 }
 else
 {
-    die ("ERROR");
+    die ("ERROR #3 | No se pudo conectar con http://svcommunity.org, intente mas tarde.");
 }
 
 /*

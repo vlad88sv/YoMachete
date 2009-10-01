@@ -63,7 +63,6 @@ function _F_usuario_acceder($email, $clave,$enlazar=true){
             if (strstr($SVC,'<?xml version="1.0" encoding="UTF-8"?>'))
             {
                 $XML = new SimpleXMLElement($SVC);
-                echo $XML->member_name;
                 $datos["estado"] = _N_activo;
                 $datos["nivel"] = _N_vendedor;
                 $datos["ultimo_acceso"] = mysql_datetime();
@@ -74,7 +73,12 @@ function _F_usuario_acceder($email, $clave,$enlazar=true){
                 $datos["clave"]=$XML->passwd;
 
                 db_agregar_datos("ventas_usuarios",$datos);
+                echo "DATOS IMPORTADOS<br />";
                 return _F_usuario_acceder($email, $clave,false);
+            }
+            else
+            {
+                echo $SVC;
             }
         }
         unset ($_SESSION['autenticado']);
