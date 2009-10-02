@@ -1,7 +1,7 @@
 <?php
 function CONTENIDO_BUSCAR()
 {
-    //Será que ya envío la búsqueda?  
+    //Será que ya envío la búsqueda?
     $flag_busq_valida = isset($_GET['b']);
 
     // Será que es una búsqueda avanzada?
@@ -17,29 +17,29 @@ function CONTENIDO_BUSCAR()
         4. Descripcion
         5. Todo lo demas / x orden
     */
-        
+
     // Construimos el Query de la búsqueda
     $AND_categoria = !empty($_POST['c']) ? sprintf("AND id_categoria='%s'",db_codex($_GET['c'])) : "";
     $cadenaBusq = db_codex($_GET['b']);
-    
+
     // Construimos la parte avanzada si fué solicitada
     if($flag_busq_adv)
     {
         $ANDs = array();
         $LUGARES = array();
-        
+
         // Lugares
-        if (!empty($_GET['inc_titulo'])) $LUGARES[] = 'titulo';
-        if (!empty($_GET['inc_sub'])) $LUGARES[] = 'descripcion_corta';
-        if (!empty($_GET['inc_desc'])) $LUGARES[] = 'descripcion';
+        if (!empty($_GET['inc_titulo'])) $LUGARES[] = 'z.titulo';
+        if (!empty($_GET['inc_sub'])) $LUGARES[] = 'z.descripcion_corta';
+        if (!empty($_GET['inc_desc'])) $LUGARES[] = 'z.descripcion';
 
         $AND_match1 = (count($LUGARES) > 0) ? sprintf("AND MATCH (%s) AGAINST ('%s' IN BOOLEAN MODE)",implode(",",$LUGARES),$cadenaBusq) : "";
-        
+
         // Tags
         $AND_match2 = (!empty($_GET['inc_etiq'])) ? sprintf("AND id_publicacion IN (SELECT id_publicacion FROM ventas_tag_uso WHERE id_tag IN (SELECT ventas_tag.id FROM ventas_tag WHERE MATCH(ventas_tag.tag) AGAINST('%s' IN BOOLEAN MODE)))",$cadenaBusq) : "";
-        
+
         // Precios
-        
+
         if (!empty($_GET['pmin']) && is_numeric($_GET['pmin'])) $ANDs[] = sprintf("AND precio>='%s'",db_codex($_GET['pmin']));
         if (!empty($_GET['pmax']) && is_numeric($_GET['pmax'])) $ANDs[] = sprintf("AND precio<='%s'",db_codex($_GET['pmax']));
 
@@ -61,7 +61,7 @@ function CONTENIDO_BUSCAR()
             }
             $ANDs[] = sprintf("AND $operacion",db_codex($_GET['tpv']));
         }
-        
+
         // Opciones
         //-Características del artículo
         if (isset($_GET['f']) && is_array($_GET['f']) && isset($_GET['mf']))
@@ -88,8 +88,10 @@ function CONTENIDO_BUSCAR()
     else
     {
         // Búsqueda simple
-        $WHERE = sprintf("fecha_fin >= CURDATE() AND (MATCH (titulo,descripcion_corta,descripcion) AGAINST ('%s' IN BOOLEAN MODE) $AND_categoria OR id_publicacion IN (SELECT id_publicacion FROM ventas_tag_uso WHERE id_tag IN (SELECT ventas_tag.id FROM ventas_tag WHERE MATCH(ventas_tag.tag) AGAINST('%s' IN BOOLEAN MODE))))",$cadenaBusq,$cadenaBusq);
+        $WHERE = sprintf("fecha_fin >= CURDATE() AND (MATCH (z.titulo,z.descripcion_corta,z.descripcion) AGAINST ('%s' IN BOOLEAN MODE) $AND_categoria OR id_publicacion IN (SELECT id_publicacion FROM ventas_tag_uso WHERE id_tag IN (SELECT ventas_tag.id FROM ventas_tag WHERE MATCH(ventas_tag.tag) AGAINST('%s' IN BOOLEAN MODE))))",$cadenaBusq,$cadenaBusq);
     }
+    $WHERE .= "  AND z.tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE()";
+
     echo '<h1>Resultados</h1>';
     echo VISTA_ListaPubs($WHERE);
     }
@@ -103,7 +105,7 @@ function CONTENIDO_BUSCAR()
         <input id="busqueda" name="b" type="text" value="<?php echo @$_GET["b"]; ?>" />
         <?php echo ui_combobox("c",'<option value="">Todas las categorias</option>'.join("",ver_hijos("","")),@$_GET["c"]); ?>
         <br />
-        Incluir 
+        Incluir
         <input type="checkbox" name="inc_titulo" value="1" <?php echo (isset($_GET['inc_titulo']) || !$flag_busq_adv ? 'checked="checked"' : ""); ?> /> Título
         <input type="checkbox" name="inc_sub" value="1" <?php echo (isset($_GET['inc_sub']) || !$flag_busq_adv ? 'checked="checked"' : ""); ?> /> Sub-título
         <input type="checkbox" name="inc_desc" value="1" <?php echo (isset($_GET['inc_desc']) ? 'checked="checked"' : ""); ?> /> Descripción
