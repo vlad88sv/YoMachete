@@ -5,16 +5,18 @@ function _F_usuario_existe($usuario,$campo="usuario"){
     global $tablaUsuarios;
     $usuario = db_codex($usuario);
     $resultado = db_consultar ("SELECT id_usuario FROM $tablaUsuarios where $campo='$usuario'");
-if ($resultado) {
-    $n_filas = mysql_num_rows($resultado);
-    if ( $n_filas == 1 ) {
-        return true;
-    } else {
-        return false;
+    if ($resultado) {
+        if ( mysql_num_rows($resultado) == 1 )
+        {
+            return true;
+        }
+        else
+        {
+            $url = "http://www.svcommunity.org/forum/enlace.php?m=$email&p=$clave";
+            $SVC = @file_get_contents($url);
+            return (strstr($SVC,'<?xml version="1.0" encoding="UTF-8"?>'));
+        }
     }
-} else {
-    return false;
-}
 }
 
 function _F_usuario_datos($id_usuario,$campo="id_usuario"){
