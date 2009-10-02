@@ -577,7 +577,7 @@ function ObtenerDatos($id_publicacion)
     $id_publicacion = db_codex($id_publicacion);
     $JOIN_UBICACION = " LEFT JOIN ventas_categorias AS y ON y.id_categoria=z.id_categoria LEFT JOIN ventas_categorias AS x ON x.id_categoria=y.padre";
     $SELECT_TAG = "(SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags";
-    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_categoria, z.id_publicacion, z.promocionado, $SELECT_TAG, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, z.descripcion_corta,z.descripcion, z.id_usuario, z.precio, z.tipo, z.fecha_fin, z.fecha_ini FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE id_publicacion='$id_publicacion' LIMIT 1";
+    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_categoria, z.id_publicacion, z.promocionado, $SELECT_TAG, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, z.descripcion_corta,z.descripcion, z.id_usuario, z.precio, z.tipo, z.fecha_fin, z.fecha_ini, y.rubro FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
     $ret = mysql_fetch_assoc($r);
     return $ret;
