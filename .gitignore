@@ -1,2 +1,3 @@
 RCS/IMG/*
 secreto.php
+PHP/standalone/HTMLPurifier/DefinitionCache/Serializer/HTML/*
