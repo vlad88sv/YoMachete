@@ -159,7 +159,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<li>Registrado desde: " .  fechatiempo_desde_mysql_datetime(@$Vendedor['registro']) . "</li>";
     echo "<li>Ultima actividad: " . fechatiempo_desde_mysql_datetime(@$Vendedor['ultimo_acceso']) . "</li>";
     $Vendedor['cantidad_publicaciones'] = ObtenerEstadisticasUsuario(@$Vendedor['id_usuario'],_EST_CANT_PUB_ACEPT);
-    echo "<li>Cantidad de publicaciones: " . $Vendedor['cantidad_publicaciones']  . " (" . ui_href("","tienda_".(empty($Vendedor['tienda']) ? $Vendedor['id_usuario'] : $Vendedor['tienda']), "ver tienda") . ")</li>";
+    echo "<li>Cantidad de publicaciones: " . $Vendedor['cantidad_publicaciones']  ."</li>";
     echo "</ul>";
     echo "</div>";
 
