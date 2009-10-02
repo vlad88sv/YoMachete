@@ -143,22 +143,22 @@ function GENERAR_ARTICULOS()
             $data .= "<hr />";
             $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
             $data .= "<hr />";
-            $WHERE = "z.id_categoria='$categoria' AND z.tipo IN ("._A_aceptado . ","._A_promocionado.")";
+            $WHERE = "z.id_categoria='$categoria'";
         }
         else
         {
             $data .= "<h1>Mostrando publicaciones recientes de la categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
-            $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=z.id_categoria)='$categoria' AND z.tipo IN ("._A_aceptado . ","._A_promocionado.")";
+            $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=z.id_categoria)='$categoria'";
         }
     }
     else
     {
         $data .= "<h1>Publicaciones mas recientes</h1>";
-        // Mostrar todos los articulos en la categoría
-        $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
+        // Mostrar todos los articulos recientes
+        $WHERE = "1";
     }
 
-    $WHERE .= " AND fecha_fin >= CURDATE()";
+    $WHERE .= "  AND z.tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE()";
     $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin ASC LIMIT 10","indice");
     return $data;
 }
@@ -188,7 +188,7 @@ function GENERAR_PIE()
 }
 function GENERAR_TAG_CLOUD()
 {
-$c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM ventas_tag_uso AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 20";
+$c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM (SELECT * FROM ventas_tag_uso AS b WHERE b.id_publicacion IN (SELECT c.id_publicacion FROM ventas_publicaciones AS c WHERE tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE())) AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 20";
 $r = db_consultar($c);
 return '<h1>Nube de etiquetas</h1><div id="nube_etiquetas">'.tag_cloud($r).'</div>';
 }
