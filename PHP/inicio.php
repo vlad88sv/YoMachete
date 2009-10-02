@@ -28,7 +28,7 @@ if (S_iniciado())
 }
 
 echo "¿Deseas comprar y vender pero aún no tienes una cuenta? ". ui_href("iniciar_sesion_crear_cuenta","./registrar","¡entonces registrate ahora!") . ", es gratis, fácil y rápido.<br />";
-echo "<span class=\"explicacion\">¡Puedes utilizar tu usuario y contraseña de <b><a target=\"_blank\" href=\"http://svcommunity.org/constancias/constancia-yomachete.com.html\">SVCommunity.org</a></b>!</span>";
+echo "<span class=\"explicacion\">¡Puedes utilizar tu usuario (o el correo electronico) y contraseña de <b><a target=\"_blank\" href=\"http://svcommunity.org/constancias/constancia-yomachete.com.html\">SVCommunity.org</a></b>!</span>";
 $retorno = empty($_POST['iniciar_retornar']) ? "http://".$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : $_POST['iniciar_retornar'];
 echo "<form action=\"iniciar\" method=\"POST\">";
 echo ui_input("iniciar_retornar", $retorno, "hidden");
