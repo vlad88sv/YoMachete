@@ -262,8 +262,9 @@ function CONTENIDO_VENDER()
     echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span><br />";
     echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Publicacion["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
     echo "<li>Descripción del artículo</li>";
-    echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />Se admite código HTML (".ui_href("vender_ayuda_limitacionesHMTL","ayuda#limitacionesHTML","con algunas limitantes","",'target="_blank"').").</span><br />";
+    echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />¡Puedes usar <a href=\"http://www.bbcode-to-html.com/\">bbcode-to-html</a> para convertir tus mensajes de SVCommunity.org a HTML!, si lo haces de esta forma utiliza el botón \"html\" para ingresar el texto resultante.</span><br />";
     echo "Descripción larga<br />" . ui_textarea("descripcion",@$Publicacion["descripcion"],"","width:50em;height:20em;")."<br />";
+    
     if (in_array(@$Publicacion["rubro"], array("articulo","automotor")))
     {
         echo "<li>Características del artículo</li>";
