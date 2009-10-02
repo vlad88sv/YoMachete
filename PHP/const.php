@@ -56,6 +56,6 @@ define('_EST_CANT_PUB_NOTEMP',2); //Cantidad de publicaciones (aprobadas+Esperan
 /*
  Paginación
 */
-define('_MAX_PUB_X_PAG',5);
+define('_MAX_PUB_X_PAG',10);
 define('_MAX_PAGS',10);
 ?>

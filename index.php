@@ -86,6 +86,9 @@ else
 <?php
 function GENERAR_CABEZA()
 {
+    $usuarios = db_contar("ventas_usuarios");
+    $publicaciones = db_contar("ventas_publicaciones","tipo IN("._A_aceptado.","._A_promocionado.")");
+    
     // Cargamos el logo.
     echo "<table>";
     echo "<tr>";
@@ -117,7 +120,7 @@ function GENERAR_CABEZA()
     echo "</tr>";
     echo "<tr>";
     echo "<td>";
-    echo '<a>Contáctenos</a> | <a>Mapa del sitio</a>';
+    echo sprintf('¡%s publicaciones! | ¡%s usuarios! | <a>Contáctenos</a> | <a>Mapa del sitio</a>', $publicaciones,$usuarios);
     echo "</td>";
     echo "</tr>";
     echo "</table>";
@@ -159,7 +162,7 @@ function GENERAR_ARTICULOS()
     }
 
     $WHERE .= "  AND z.tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE()";
-    $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin ASC LIMIT 10","indice");
+    $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin ASC","indice");
     return $data;
 }
 
@@ -182,8 +185,9 @@ function GENERAR_CATEGORIAS()
 }
 function GENERAR_PIE()
 {
+    global $db_contador;
     $data = '';
-    $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados.</p>";
+    $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados. [$db_contador]</p>";
     return $data;
 }
 function GENERAR_TAG_CLOUD()

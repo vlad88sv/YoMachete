@@ -1,5 +1,6 @@
 <?php
 $db_link = NULL;
+static $db_contador;
 db_conectar(); // Iniciamos la conexión a la base de datos.
 
 function db_conectar(){
@@ -11,6 +12,7 @@ function db_conectar(){
 
 function db_consultar($consulta){
     global $db_link;
+    global $db_contador;
     if ( !$db_link ) {
         db_conectar();
     }
@@ -19,7 +21,9 @@ function db_consultar($consulta){
     if ( mysql_error($db_link) ) {
         echo '<pre>MySQL:' . mysql_error() . '</pre>';
     }
+    $db_contador++;
     return $resultado;
+    
 }
 function db_codex($datos){
     global $db_link;
