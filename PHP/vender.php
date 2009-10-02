@@ -83,7 +83,7 @@ function CONTENIDO_VENDER()
 
         // Mostrar las ventas caducadas
 
-        $c = "SELECT id_publicacion, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo = '"._A_aceptado."' AND fecha_fin >= CURDATE()";
+        $c = "SELECT id_publicacion, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo = '"._A_aceptado."' AND fecha_fin < CURDATE()";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
