@@ -80,6 +80,15 @@ else
 <div style="clear:both"></div>
 </div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-10926809-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 </body>
 </html>
 
@@ -88,7 +97,7 @@ function GENERAR_CABEZA()
 {
     $usuarios = db_contar("ventas_usuarios");
     $publicaciones = db_contar("ventas_publicaciones","tipo IN("._A_aceptado.","._A_promocionado.")");
-    
+
     // Cargamos el logo.
     echo "<table>";
     echo "<tr>";
