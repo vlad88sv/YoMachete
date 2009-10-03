@@ -175,16 +175,16 @@ function validEmail($email)
 
 function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron publicaciones")
 {
-    
+
     /* Paginación */
-    $LIMIT_INI = (isset($_GET['p']) && is_numeric($_GET['p'])) ? db_codex($_GET['p']) : 0;
+    $LIMIT_INI = (isset($_GET['p']) && is_numeric($_GET['p'])) ? ((int) db_codex($_GET['p']) - 1) : 0;
     $LIMIT = ($LIMIT_INI * _MAX_PUB_X_PAG).','._MAX_PUB_X_PAG;
     /* ---------- */
     $data = '';
     $JOIN_UBICACION = " LEFT JOIN ventas_categorias AS y ON y.id_categoria=z.id_categoria LEFT JOIN ventas_categorias AS x ON x.id_categoria=y.padre";
     $c = "SELECT SQL_CALC_FOUND_ROWS x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
     $r = db_consultar($c);
-    
+
     // --- Calculemos las paginas
     $Paginacion = mysql_fetch_assoc(db_consultar("SELECT FOUND_ROWS() AS cuenta"));
     $Paginacion['paginas'] = intval($Paginacion['cuenta'] / _MAX_PUB_X_PAG);
@@ -253,12 +253,18 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '</tbody>';
     $data .= '</table>';
     $data .= '<br />';
+    }
     // -- Mostramos los links de paginación
     if ($Paginacion['paginas'] > 0)
     {
-        $data .= '<:PAGINADOR:>';
-    }
-    
+        $data .= '<div id="paginador">';
+        $data .= 'Páginas: ';
+        for ($i = 1; $i < $Paginacion['paginas'] + 2; $i++)
+        {
+            $URL = URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => $i));
+            $data .= sprintf('<a href="%s">%s</a> ',$URL, $i);
+        }
+        $data .= '</div>';
     }
     return $data;
 }
@@ -795,5 +801,15 @@ $cloud_tags[] = '<a style="font-size: '. floor($size) . 'px'
 }
 $cloud_html = join("\n", $cloud_tags) . "\n";
 return $cloud_html;
+}
+
+function URL_agregar_parametros($URL, $params){
+    $URL = preg_replace('/\?$/','',$URL).'?';
+    foreach($params AS $llave => $valor)
+    {
+        $parametros[] = $llave.'='.$valor;
+    }
+    $URL .= implode('&',$parametros);
+    return $URL;
 }
 ?>

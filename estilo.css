@@ -540,3 +540,7 @@ background-color:transparent;
     width:100%;
     text-align:center;
 }
+#paginador a
+{
+    text-decoration:overline;
+}
