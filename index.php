@@ -171,7 +171,7 @@ function GENERAR_ARTICULOS()
     }
 
     $WHERE .= "  AND z.tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE()";
-    $data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin ASC","indice");
+    $data .= VISTA_ListaPubs($WHERE,"ORDER BY promocionado DESC, fecha_ini DESC","indice");
     return $data;
 }
 
