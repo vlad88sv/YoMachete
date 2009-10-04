@@ -119,8 +119,8 @@ echo ui_input("registrar_proceder", "Proceder", "submit")."<br />";
 echo "</form>";
 echo "<strong>Su correo electrónico y teléfono no serán revelados al público ni vendidos a terceras personas.</strong>";
 echo JS_onload('
-$("#registrar_campo_email").keyup(function(){$("#registrar_respuesta_email").load("./registro_correo_existe:"+$("#registrar_campo_email").val());});
-$("#registrar_campo_usuario").keyup(function(){$("#registrar_respuesta_usuario").load("./registro_usuario_existe:"+$("#registrar_campo_usuario").val());});
+$("#registrar_campo_email").blur(function(){$("#registrar_respuesta_email").load("./registro_correo_existe:"+$("#registrar_campo_email").val());});
+$("#registrar_campo_usuario").blur(function(){$("#registrar_respuesta_usuario").load("./registro_usuario_existe:"+$("#registrar_campo_usuario").val());});
 ');
 }
 ?>
