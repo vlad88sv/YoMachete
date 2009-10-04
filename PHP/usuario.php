@@ -12,7 +12,7 @@ function _F_usuario_existe($usuario,$campo="usuario"){
         }
         else
         {
-            $url = "http://www.svcommunity.org/forum/enlace.php?m=$email&p=$clave";
+            $url = "http://www.svcommunity.org/forum/enlace.php?e=$usuario";
             $SVC = @file_get_contents($url);
             return (strstr($SVC,'<?xml version="1.0" encoding="UTF-8"?>'));
         }

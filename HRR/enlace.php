@@ -39,6 +39,12 @@ if(mysql_connect($db_server,$db_user,$db_passwd))
 {
     if(mysql_selectdb($db_name))
     {
+        if (!empty($_GET['e']))
+        {
+            $c = sprintf("SELECT * FROM %s WHERE (LOWER(member_name)=LOWER('%s') OR LOWER(email_address)=LOWER('%s')) LIMIT 1",$db_prefix."members",$member_name,$member_name);
+            $r = mysql_query($c);
+            return (mysql_numrows($r) > 0);
+        }
         //mysql_set_charset('utf8');
         $c = sprintf("SELECT * FROM %s WHERE (LOWER(member_name)=LOWER('%s') OR LOWER(email_address)=LOWER('%s')) AND passwd=SHA1(CONCAT(LOWER(member_name),'%s')) LIMIT 1",$db_prefix."members",$member_name,$member_name,$passwd);
         //$c = sprintf("SELECT * FROM %s WHERE member_name='%s' AND passwd=SHA1(CONCAT('%s','%s')) LIMIT 1",$db_prefix."members",$member_name,$member_name,$passwd);
