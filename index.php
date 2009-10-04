@@ -24,24 +24,6 @@
     <style type="text/css">
     div.jGrowl div.aviso {z-index:50;background-color: #F1AF35;color: #FFF;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
     </style>
-    <?php
-    $mensaje="";
-    if (_F_usuario_cache('nivel') == _N_administrador)
-    {
-        $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
-        $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
-        if ($PPA || $UPA)
-        {
-            $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
-            $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
-        }
-    }
-    echo JS_onload('
-    $("a.fancybox").fancybox();
-    $.jGrowl.defaults.position = "bottom-right";
-    '.($mensaje ? JS_growl($mensaje) : "").'
-    ');
-    ?>
 </head>
 <body>
 <div id="wrapper">
@@ -79,6 +61,26 @@ else
 ?>
 <div style="clear:both"></div>
 </div>
+<?php
+/// NOTIFICACION DE PUBLICACIONES PENDIENTES O USUARIOS PENDIENTES
+$mensaje="";
+if (_F_usuario_cache('nivel') == _N_administrador)
+{
+    $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
+    $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
+    if ($PPA || $UPA)
+    {
+        $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
+        $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+    }
+}
+echo JS_onload('
+$("a.fancybox").fancybox();
+$.jGrowl.defaults.position = "bottom-right";
+'.($mensaje ? JS_growl($mensaje) : "").'
+');
+// -----------------------------------------------------------------
+?>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
