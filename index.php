@@ -16,11 +16,14 @@
     <link rel="stylesheet" type="text/css" href="estilo.css" />
     <link rel="stylesheet" type="text/css" href="JS/fancybox/jquery.fancybox.css" />
     <link rel="stylesheet" type="text/css" href="CSS/jquery.jgrowl.css" />
+    <link rel="stylesheet" type="text/css" href="JS/jquery.bookmark.css"  />
     <script src="JS/jquery-1.3.2.min.js" type="text/javascript"></script>
     <script src="JS/jquery.cookie.js" type="text/javascript"></script>
     <script src="JS/fancybox/jquery.easing.1.3.js" type="text/javascript"></script>
     <script src="JS/fancybox/jquery.fancybox-1.2.1.pack.js" type="text/javascript"></script>
     <script src="JS/jquery.jgrowl.js" type="text/javascript"></script>
+    <script src="JS/jquery.fav-1.0.js" type="text/javascript"></script>
+    <script src="JS/jquery.bookmark.pack.js" type="text/javascript"></script>
     <style type="text/css">
     div.jGrowl div.aviso {z-index:50;background-color: #F1AF35;color: #FFF;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
     </style>
@@ -91,6 +94,12 @@ try {
 var pageTracker = _gat._getTracker("UA-10926809-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
+<script type="text/javascript">
+$(document).ready(function(){
+$("#bookmark").jFav();
+$("#bookmarks").bookmark({title: 'YoMachete.com - Ventas en línea en El Salvador',url: 'http://yomachete.com',sites: ['delicious', 'twitter','digg', 'facebook', 'stumbleupon','google','yahoo','windows']});
+});
+</script>
 </body>
 </html>
 
@@ -181,7 +190,9 @@ function GENERAR_ARTICULOS()
 function GENERAR_CATEGORIAS()
 {
     $data = '';
-    $data .= (isset($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./">Mostrar categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
+    $data .= '<h1>¡Compartenos!</h1>';
+    $data .= '<center><a id="bookmark">¡agreganos a tus favoritos!</a> <br /> <span id="bookmarks"></span></center>';
+    $data .= (isset($_GET['categoria'])) ? '<hr /><div class="item_cat item_cat_todos"><a href="./">Mostrar categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
     $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
     $resultado = db_consultar($c);
@@ -203,7 +214,7 @@ function GENERAR_PIE()
 }
 function GENERAR_TAG_CLOUD()
 {
-$c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM (SELECT * FROM ventas_tag_uso AS b WHERE b.id_publicacion IN (SELECT c.id_publicacion FROM ventas_publicaciones AS c WHERE tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE())) AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 20";
+$c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM (SELECT * FROM ventas_tag_uso AS b WHERE b.id_publicacion IN (SELECT c.id_publicacion FROM ventas_publicaciones AS c WHERE tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE())) AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 40";
 $r = db_consultar($c);
 return '<h1>Nube de etiquetas</h1><div id="nube_etiquetas">'.tag_cloud($r).'</div>';
 }
