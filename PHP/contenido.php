@@ -367,7 +367,7 @@ $c = sprintf("SELECT * FROM ventas_tienda WHERE tiendaURL='%s' LIMIT 1",db_codex
 $r = db_consultar($c);
 if (mysql_num_rows($r) != 1)
 {
-    echo Mensaje("La tienda solicitada no existe");
+    echo Mensaje("La tienda solicitada [".$_GET['tienda']."] no existe");
     return;
 }
 
@@ -379,11 +379,11 @@ $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE $nivel id_categor
 $resultado = db_consultar($c);
 $n_campos = mysql_num_rows($resultado);
 $data = ' <div id="secc_categorias">';
-$data .= (!empty($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./tienda_'.$Vendedor['id_usuario'].'.html">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
+$data .= (!empty($_GET['categoria'])) ? '<div class="item_cat item_cat_todos"><a href="./+'.$Tienda['tiendaURL'].'">Ver todas las categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
 $data .= "<div id=\"contenedor_categorias\">";
 for ($i = 0; $i < $n_campos; $i++) {
     $r = mysql_fetch_row($resultado);
-    $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="tienda_'.$Vendedor['id_usuario'].'_dpt-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
+    $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="+'.$Tienda['tiendaURL'].'_dpt-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
 }
 $data .= '</div></div>';
 
@@ -399,11 +399,11 @@ if ($categoria)
         $data .= "<hr />";
         $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
         $data .= "<hr />";
-        $WHERE = "id_categoria='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
+        $WHERE = "z.id_categoria='$categoria'";
     }
     else
     {
-        $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=a.id_categoria)='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
+        $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=z.id_categoria)='$categoria' AND tipo IN ("._A_aceptado . ","._A_promocionado.")";
     }
 }
 else
@@ -412,8 +412,8 @@ else
     // Mostrar todos los articulos en la categoría
     $WHERE = "tipo IN ("._A_aceptado . ","._A_promocionado.")";
 }
-$WHERE .= " AND fecha_fin >= '" . mysql_datetime() . "'";
-$data .= VISTA_ListaPubs($WHERE,"ORDER by promocionado DESC,fecha_fin DESC LIMIT 10","tienda");
+$WHERE .= " AND id_usuario = ".$Tienda['id_usuario'];
+$data .= VISTA_ListaPubs($WHERE,"","tienda","",$Tienda['tiendaURL']);
 echo $data;
 }
 

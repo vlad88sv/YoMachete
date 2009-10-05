@@ -173,7 +173,7 @@ function validEmail($email)
    return $isValid;
 }
 
-function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron publicaciones")
+function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se encontraron publicaciones",$tienda="")
 {
 
     /* Paginación */
@@ -201,7 +201,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
     $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" alt=\"articulo\" /></a>";
-    $ubicacion=get_path_format($f,($tipo != "previsualizacion"),($tipo == "tienda" ? "tienda_".$f['id_usuario']."_dpt-" : "categoria-"));
+    $ubicacion=get_path_format($f,($tipo != "previsualizacion"),($tipo == "tienda" ? "+".$tienda."_dpt-" : "categoria-"));
     $id_publicacion = $f['id_publicacion'];
     $tags = $f['tags'];
     $id_usuario = $f['id_usuario'];
