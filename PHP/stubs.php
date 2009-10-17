@@ -177,36 +177,44 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
 {
 
     /* Paginación */
-    $LIMIT_INI = (isset($_GET['p']) && is_numeric($_GET['p'])) ? ((int) db_codex($_GET['p']) - 1) : 0;
-    $LIMIT = ($LIMIT_INI * _MAX_PUB_X_PAG).','._MAX_PUB_X_PAG;
-    /* ---------- */
-    $data = '';
-    $JOIN_UBICACION = " LEFT JOIN ventas_categorias AS y ON y.id_categoria=z.id_categoria LEFT JOIN ventas_categorias AS x ON x.id_categoria=y.padre";
-    $c = "SELECT SQL_CALC_FOUND_ROWS x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
+    if (isset($_GET['p']) && is_numeric($_GET['p']) && $_GET['p'] > 1)
+    {
+        $LIMIT_INI = $_GET['p'] - 1;
+        $LIMIT = ($LIMIT_INI * _MAX_PUB_X_PAG).','._MAX_PUB_X_PAG;
+    }
+    else
+    {
+        $LIMIT = '0,'._MAX_PUB_X_PAG;
+    }
+
+    /* Encontremos las publicaciones */
+    $c = "SELECT SQL_CALC_FOUND_ROWS z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ',') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
     $r = db_consultar($c);
 
-    // --- Calculemos las paginas
-    $Paginacion = mysql_fetch_assoc(db_consultar("SELECT FOUND_ROWS() AS cuenta"));
-    $Paginacion['paginas'] = intval($Paginacion['cuenta'] / _MAX_PUB_X_PAG);
-    DEPURAR( "Cantidad de paginas: ".$Paginacion['paginas']);
-    // ---
+    /* Será que no encontramos nada? */
     if (mysql_num_rows($r) < 1)
     {
         return Mensaje($SiVacio, _M_INFO);
     }
+
+    /* Calculemos las paginas */
+    $Paginacion = mysql_fetch_assoc(db_consultar("SELECT FOUND_ROWS() AS cuenta"));
+    $Paginacion['paginas'] = floor($Paginacion['cuenta'] / _MAX_PUB_X_PAG);
+
+
+    $data = '';
     while ($f = mysql_fetch_array($r))
     {
-    $titulo=$f['titulo'];
     $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
     $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" alt=\"articulo\" /></a>";
-    $ubicacion=get_path_format($f,($tipo != "previsualizacion"),($tipo == "tienda" ? "+".$tienda."_dpt-" : "categoria-"));
     $id_publicacion = $f['id_publicacion'];
-    $tags = $f['tags'];
+    $tags = preg_replace('/(.*?)(,|$)/', '<a href="/e+$1">$1</a>$2', $f['tags']);
     $id_usuario = $f['id_usuario'];
     // ->
     $promocionado = ($f['promocionado'] == "1") ? " promocionado" : "";
+
     $data .= '<table class="articulo'.$promocionado.'">';
     $data .= '<tbody>';
     $data .= '<tr>';
@@ -216,11 +224,11 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<tr>';
     if ($tipo != "previsualizacion")
     {
-        $data .= '<td class="titulo"><a href="'.$lnkTitulo.'">'.htmlentities($titulo,ENT_QUOTES,'utf-8').'</a></td>';
+        $data .= '<td class="titulo"><a href="'.$lnkTitulo.'">'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</a></td>';
     }
     else
     {
-        $data .= '<td class="titulo"><a>'.htmlentities(strip_tags($titulo),ENT_QUOTES,'utf-8').'</a></td>';
+        $data .= '<td class="titulo"><a>'.htmlentities(strip_tags($f['titulo']),ENT_QUOTES,'utf-8').'</a></td>';
     }
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio
@@ -258,11 +266,18 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     {
         $data .= '<div id="paginador">';
         $data .= 'Páginas: ';
+        $data .= @$_GET['p'] > 1 ? '<a href="'.URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => @$_GET['p'] - 1)).'"><< </a>' : '';
         for ($i = 1; $i < $Paginacion['paginas'] + 2; $i++)
         {
+            if ($i == @$_GET['p'])
+            {
+                $data .= "<strong>$i</strong> ";
+                continue;
+            }
             $URL = URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => $i));
             $data .= sprintf('<a href="%s">%s</a> ',$URL, $i);
         }
+        $data .= @$_GET['p'] < $Paginacion['paginas'] ? '<a href="'.URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => @$_GET['p'] + 1)).'">>></a>' : '';
         $data .= '</div>';
     }
     return $data;

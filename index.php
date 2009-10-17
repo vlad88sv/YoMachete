@@ -191,7 +191,7 @@ function GENERAR_CATEGORIAS()
 {
     $data = '';
     $data .= '<h1>¡Compartenos!</h1>';
-    $data .= '<center><a id="bookmark">¡agreganos a tus favoritos!</a> <br /> <span id="bookmarks"></span></center>';
+    $data .= '<center><span id="bookmarks"></span><hr /><a id="bookmark">agregar a favoritos</a></center>';
     $data .= (isset($_GET['categoria'])) ? '<hr /><div class="item_cat item_cat_todos"><a href="./">Mostrar categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
     $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";

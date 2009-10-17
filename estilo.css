@@ -227,12 +227,16 @@ font-weight:bold;
     padding:0;
     margin:0;
     font-size:0.8em;
+    border:2px solid #CCC;
 }
 
 .promocionado {
-border:2px dashed #CCCCCC;
+border:2px dashed #F1AF35;
 }
 
+.promocionado .precio {
+    text-decoration: blink;
+}
 .articulo a
 {
     color: #42B4E6;
@@ -273,7 +277,7 @@ height:auto;
 }
 
 .articulo .titular .titulo {
-background-color:#DDD;
+background-color:#FFF;
 color:#000;
 width:80%;
 padding:0.1%;
@@ -281,19 +285,13 @@ font-weight:bold;
 }
 
 .articulo .titular .precio {
-background-color:#EEE;
-color:#F1AF35;
-width:20%;
+background-color:#FFF;
+color:#F00;
 text-align:right;
 padding:0.1%;
 font-weight:bolder;
 }
 
-.articulo .titular .precio:hover {
-    color:#F00;
-    text-decoration: blink;
-    font-style: italic;
-}
 .articulo .titular .ubicacion {
 text-align:left;
 font-weight:bolder;
@@ -301,7 +299,7 @@ background-color:#CCC;
 }
 
 .articulo .desc {
-background-color:#DDD;
+background-color:#FFF;
 color:#000;
 text-align:left;
 padding:0.1%;
@@ -540,7 +538,9 @@ background-color:transparent;
     width:100%;
     text-align:center;
 }
-#paginador a
-{
-    text-decoration:overline;
+#paginador {
+    font-size:0.7em;
+}
+#bookmark {
+    font-size:0.8em;
 }
