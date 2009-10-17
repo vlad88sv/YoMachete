@@ -48,6 +48,10 @@ switch ($_GET['peticion'])
         require_once ("PHP/contenido.php");
         CONTENIDO_VIP();
     break;
+    case 'rss':
+        require_once ("anunciadores.php");
+        RSS();
+    break;
     case 'registro_usuarios_correo':
         if (isset($_GET['op']))
         {

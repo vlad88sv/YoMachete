@@ -10,5 +10,6 @@ RewriteRule ^admin_(.+)$ index.php?peticion=admin&op=$1&%{QUERY_STRING} [L]
 RewriteRule ^imagen_([0-9]*m)$ PHP/traductor.php?peticion=imagen&op=$1&miniatura=si [L]
 RewriteRule ^imagen_([0-9]*).*$ PHP/traductor.php?peticion=imagen&op=$1 [L]
 RewriteRule ^imagen_c_([0-9]{1,10})$ PHP/traductor.php?peticion=correo&op=$1 [L]
+RewriteRule ^rss.xml$ PHP/traductor.php?peticion=rss [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
