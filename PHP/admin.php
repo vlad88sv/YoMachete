@@ -25,7 +25,7 @@ function CONTENIDO_ADMIN()
         echo "<li>".ui_href("","admin_usuarios_agregar","Usuarios: agregar")."</li>";
         echo "<li>".ui_href("","admin_publicaciones_activacion","Publicaciones: aprobación")."</li>";
         echo "<li>".ui_href("","admin_tiendas","Tiendas: administración")."</li>";
-        echo "<li>".ui_href("","admin_tiendas","Tiendas: agregar")."</li>";
+        echo "<li>".ui_href("","admin_tienda_agregar","Tiendas: agregar")."</li>";
         echo "</ul>";
         return;
     }
@@ -530,7 +530,7 @@ function INTERFAZ__ADMIN_USUARIOS()
         }
     }
 
-    $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax`, `nImgMax`, IF(tienda=1,'Si','No') as 'tienda' FROM ventas_usuarios WHERE 1",_N_administrador,_N_moderador,_N_vendedor);
+    $c = sprintf("SELECT `id_usuario`, `usuario`, `clave`, `nombre`, `email`, `telefono1`, `telefono2`, `avatar`, `notas`, CASE `nivel` WHEN %s THEN 'Administración' WHEN %s THEN 'Moderador' WHEN %s THEN 'Vendedor' ELSE `nivel` END AS 'nivel', `estado`, `contraclave`, `ultimo_acceso`, `registro`, `FLAGS`, `nDiasVigencia`, `nPubMax`, `nImgMax`, IF(tienda=1,'Si','No') as 'tienda' FROM ventas_usuarios WHERE 1 ORDER BY `nivel`+0 DESC, usuario ASC",_N_administrador,_N_moderador,_N_vendedor);
     $r = db_consultar($c);
 ?>
 <h1>Lista de usuarios</h1>
