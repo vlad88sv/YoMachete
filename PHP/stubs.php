@@ -218,13 +218,13 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<table class="articulo'.$promocionado.'">';
     $data .= '<tbody>';
     $data .= '<tr>';
-    $data .= '<td class= "imagen">'.$imagen.'</td>';
+    $data .= '<td class="imagen">'.$imagen.'</td>';
     $data .= '<td class="detalle">';
     $data .= '<table class="titular">';
     $data .= '<tr>';
     if ($tipo != "previsualizacion")
     {
-        $data .= '<td class="titulo">'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</td>';
+        $data .= '<td class="titulo"><a href="'.$lnkTitulo.'">'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</a></td>';
     }
     else
     {
