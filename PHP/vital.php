@@ -4,7 +4,8 @@ error_reporting             (E_STRICT | E_ALL);
 ob_start                    ("ob_gzhandler");
 setlocale                   (LC_ALL, 'es_AR.UTF-8', 'es_ES.UTF-8');
 date_default_timezone_set   ('America/El_Salvador');
-ini_set                     ('session.gc_maxlifetime', '600');
+ini_set                     ('session.gc_maxlifetime', '6000');
+ini_set                     ("session.cookie_lifetime","36000");
 $base = dirname(__FILE__);
 if(!file_exists("$base/secreto.php")) die("ERROR #1");
 require_once ("$base/secreto.php"); // Datos para la conexión a la base de datos
