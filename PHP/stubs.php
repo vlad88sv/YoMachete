@@ -208,13 +208,12 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
-    $imagen="<a class=\"fancybox\" href=\"./imagen_".$f['imagen'].".jpg\" title=\"VISTA DE ARTÍCULO\"><img src=\"./imagen_".$f['imagen']."m\" alt=\"articulo\" /></a>";
+    $imagen='<a href="'.$lnkTitulo.'"><img src="./imagen_'.$f['imagen'].'m" alt="articulo" /></a>';
     $id_publicacion = $f['id_publicacion'];
     $tags = preg_replace('/(.*?)(,|$)/', '<a href="/e+$1">$1</a>$2', $f['tags']);
     $id_usuario = $f['id_usuario'];
     // ->
     $promocionado = ($f['promocionado'] == "1") ? " promocionado" : "";
-
     $data .= '<table class="articulo'.$promocionado.'">';
     $data .= '<tbody>';
     $data .= '<tr>';
@@ -224,7 +223,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<tr>';
     if ($tipo != "previsualizacion")
     {
-        $data .= '<td class="titulo"><a href="'.$lnkTitulo.'">'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</a></td>';
+        $data .= '<td class="titulo">'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</td>';
     }
     else
     {
