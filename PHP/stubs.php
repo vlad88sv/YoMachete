@@ -184,6 +184,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     }
     else
     {
+        $_GET['p'] = 1;
         $LIMIT = '0,'._MAX_PUB_X_PAG;
     }
 
@@ -271,10 +272,12 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
             if ($i == @$_GET['p'])
             {
                 $data .= "<strong>$i</strong> ";
-                continue;
             }
-            $URL = URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => $i));
-            $data .= sprintf('<a href="%s">%s</a> ',$URL, $i);
+            else
+            {
+                $URL = URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => $i));
+                $data .= sprintf('<a href="%s">%s</a> ',$URL, $i);
+            }
         }
         $data .= @$_GET['p'] < $Paginacion['paginas'] ? '<a href="'.URL_agregar_parametros(preg_replace('/p=.*/','',curPageURL()),array('p' => @$_GET['p'] + 1)).'">>></a>' : '';
         $data .= '</div>';
