@@ -224,7 +224,6 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     }
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
     $data .= '</tr>'; // Titulo + Precio
-    $data .= '<tr><td colspan="2" class="ubicacion">Ubicación: ' . $ubicacion.'</td></tr>';
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
     $data .= '<tr><td colspan="2"><strong>Etiquetas:</strong> ' . $tags.'</td></tr>';
     if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
