@@ -35,18 +35,19 @@ function CONTENIDO_VENDER()
 
         // Mostrar las ventas publicadas:
 
-        $c = "SELECT id_publicacion, titulo, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";
+        $c = "SELECT id_publicacion, titulo, id_categoria, DATE(fecha_fin) AS fecha_fin, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
             echo "<hr />";
-            echo "Ventas  publicadas actualmente.<br />";
-            echo "<ul>";
+            echo "<h2>Ventas  publicadas actualmente</h2>";
+            echo '<table class="ancha">';
+            echo '<tr><th>Título</th><th>Expira</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>N° publicación: <b>" . htmlentities($f['id_publicacion'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b> [<a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."\">ver</a>]</li>";
+                echo "<tr><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>".$f['fecha_fin']."</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."?se=editar\">editar</a>|<a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."?se=cerrar\">¡vendido!</a></td></tr>";
             }
-            echo "</ul>";
+            echo "</table>";
         }
 
         // Mostrar las ventas incompletas:
@@ -56,45 +57,48 @@ function CONTENIDO_VENDER()
         if ( mysql_num_rows($r) > 0 )
         {
             echo "<hr />";
-            echo "Se han encontrado los siguientes borradores de ventas que no ha enviado para publicación.<br />";
-            echo "<ul>";
+            echo "<h2>Publicaciones que no ha enviado a aprobación</h2>";
+            echo '<table class="ancha">';
+            echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>[".ui_href("","vender?ticket=".$f['id_publicacion'],"CONTINUAR") ."] / [" . ui_href("","vender?ticket=".$f['id_publicacion']."&eliminar=proceder","ELIMINAR") . "] > ticket: <b>" . htmlentities($f['id_publicacion'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b>, tipo: <b>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</b></li>";
+                echo "<tr><td>". htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td>".ui_href("","vender?ticket=".$f['id_publicacion'],"continuar") ."|" . ui_href("","vender?ticket=".$f['id_publicacion']."&eliminar=proceder","eliminar")."</td></tr>";
             }
-            echo "</ul>";
+            echo "</table>";
         }
 
         // Mostrar las ventas esperando aprobación
 
-        $c = "SELECT id_publicacion, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_esp_activacion."'";
+        $c = "SELECT id_publicacion, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_esp_activacion."'";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
             echo "<hr />";
-            echo "Se han encontrado las siguientes ventas que estan esperando aprobación de un administrador:<br />";
-            echo "<ul>";
+            echo "<h2>Publicaciones enviadas en espera de aprobación</h2>";
+            echo '<table class="ancha">';
+            echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>Ticket: <b>" . htmlentities($f['id_publicacion'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b></li>";
+                echo "<tr><td>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td></tr>";
             }
-            echo "</ul>";
+            echo "</table>";
         }
 
         // Mostrar las ventas caducadas
 
-        $c = "SELECT id_publicacion, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo = '"._A_aceptado."' AND fecha_fin < CURDATE()";
+        $c = "SELECT id_publicacion, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro, IF(titulo='','<sin título>', titulo) AS titulo2, id_categoria, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo = '"._A_aceptado."' AND fecha_fin < CURDATE()";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
             echo "<hr />";
-            echo "Se han encontrado las siguientes ventas que han caducado:<br />";
-            echo "<ul>";
+            echo "<h2>Publicaciones que han caducado</h2>";
+            echo '<table class="ancha">';
+            echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<li>Ticket: <b>" . htmlentities($f['id_publicacion'],ENT_QUOTES,'UTF-8') . "</b>, título: <b>" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</b>, categoría: <b>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</b> [". ui_href("","servicios?op=atp&pub=".$f['id_publicacion'],"ampliar tiempo")."]</li>";
+                echo "<tr><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo2'])."\">" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."?se=republicar\">republicar</a></td></tr>";
             }
-            echo "</ul>";
+            echo "</table>";
         }
         return;
     }
@@ -262,7 +266,7 @@ function CONTENIDO_VENDER()
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />¡Puedes usar <a href=\"http://www.bbcode-to-html.com/\">bbcode-to-html</a> para convertir tus mensajes de SVCommunity.org a HTML!, si lo haces de esta forma utiliza el botón \"html\" para ingresar el texto resultante.</span><br />";
     echo "Descripción larga<br />" . ui_textarea("descripcion",@$Publicacion["descripcion"],"","width:50em;height:20em;")."<br />";
-    
+
     if (in_array(@$Publicacion["rubro"], array("articulo","automotor")))
     {
         echo "<li>Características del artículo</li>";
