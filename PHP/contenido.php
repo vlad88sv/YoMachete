@@ -40,7 +40,7 @@ function GENERAR_ARTICULOS()
 function GENERAR_CATEGORIAS()
 {
     $data = '';
-    $data .= '<h1>¡Compartenos!</h1>';
+    $data .= '<h1>Compartenos</h1>';
     $data .= '<center><span id="bookmarks"></span></center>';
     $data .= '<h1>Recuerdanos</h1>';
     $data .= '<center>
