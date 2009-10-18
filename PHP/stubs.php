@@ -222,18 +222,11 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<td class="detalle">';
     $data .= '<table class="titular">';
     $data .= '<tr>';
-    if ($tipo != "previsualizacion")
-    {
-        $data .= '<td class="titulo"><a href="'.$lnkTitulo.'">'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</a></td>';
-    }
-    else
-    {
-        $data .= '<td class="titulo"><a>'.htmlentities(strip_tags($f['titulo']),ENT_QUOTES,'utf-8').'</a></td>';
-    }
+    $data .= '<td class="titulo"><a '.($tipo != "previsualizacion" ? 'href="'.$lnkTitulo.'"' : "").'>'.htmlentities($f['titulo'],ENT_QUOTES,'utf-8').'</a></td>';
     $data .= '<td class="precio">$'.number_format($precio,2,".",",").'</td>';
+    $data .= '<tr><td colspan="2"><strong>Etiquetas:</strong> ' . $tags.'</td></tr>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
-    $data .= '<tr><td colspan="2"><strong>Etiquetas:</strong> ' . $tags.'</td></tr>';
     if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
     {
 
