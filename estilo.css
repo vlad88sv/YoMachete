@@ -196,8 +196,9 @@ img {
 }
 
 .explicacion {
+    display:block;
 background-color:#EEE;
-margin:.8em 0 .2em 0;
+padding:0.5em;
 }
 
 .ventas li {
