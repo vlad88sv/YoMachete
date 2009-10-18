@@ -114,7 +114,7 @@ switch ($_GET['peticion'])
             {
                 // Se encontró el archivo principal, y se solicitó una minuatura de el.
                 // Ya se estableció el tipo de contenido.
-                $archivo_m = "../RCS/IMG/" . $f['id_img'] . "m";
+                $archivo_m = "../RCS/IMG/M/" . $f['id_img'] . "m";
 
                 // Comprobamos si existe la miniatura o si debemos crearla
                 if (!file_exists($archivo_m))
