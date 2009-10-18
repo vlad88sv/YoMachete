@@ -522,19 +522,49 @@ function DescargarArchivos($input,$id_publicacion,$id_usuario)
 
     return true;
 }
-function Imagen__Redimenzionar($Origen,$Ancho,$Alto)
+function scaleImage($x,$y,$cx,$cy) {
+    //Set the default NEW values to be the old, in case it doesn't even need scaling
+    list($nx,$ny)=array($x,$y);
+
+    //If image is generally smaller, don't even bother
+    if ($x>=$cx || $y>=$cx) {
+
+        //Work out ratios
+        if ($x>0) $rx=$cx/$x;
+        if ($y>0) $ry=$cy/$y;
+
+        //Use the lowest ratio, to ensure we don't go over the wanted image size
+        if ($rx>$ry) {
+            $r=$ry;
+        } else {
+            $r=$rx;
+        }
+
+        //Calculate the new size based on the chosen ratio
+        $nx=intval($x*$r);
+        $ny=intval($y*$r);
+    }
+
+    //Return the results
+    return array($nx,$ny);
+}
+function Imagen__Redimenzionar($Origen = 640, $Ancho = 480, $Alto)
 {
-    return Imagen__CrearMiniatura($Origen,$Origen,0,$Alto,false);
+    $magick=new Imagick($Origen);
+    list($newX,$newY)=scaleImage($magick->getImageWidth(),$magick->getImageHeight(),$Ancho,$Alto);
+    $magick->scaleImage($newX,$newY,true);
+    return $magick->writeImage($Origen);
 }
 /*
  * Imagen__CrearMiniatura()
  * Crea una versión reducida de la imagen en $Origen
 */
-function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100, $Fit=true)
+function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
 {
-    $image = new Imagick($Origen);
-    $image->resizeImage($Ancho, $Alto, imagick::FILTER_LANCZOS, 0, $Fit);
-    return $image->writeImage($Destino);
+    $thumb=new Imagick($Origen);
+    list($newX,$newY)=scaleImage($thumb->getImageWidth(),$thumb->getImageHeight(),$Ancho,$Alto);
+    $thumb->thumbnailImage($newX,$newY,false);
+    return $thumb->writeImage($Destino);
 }
 function CargarDatos($id_publicacion,$id_usuario)
 {
