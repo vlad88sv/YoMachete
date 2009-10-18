@@ -103,6 +103,7 @@ function CONTENIDO_REGISTRAR()
             echo "¡Su solicitud de registro ha sido procesada!<br />Sin embargo su cuenta estará activa cuando un Administrador apruebe su nueva cuenta.<br />Un mensaje será enviado su correo electrónico en el que se le confirmará que su cuenta esta activa.<br />Este proceso puede tardar entre 10 minutos y 2 horas en llevarse a cabo, gracias por su espera.<br />";
             echo "Le invitamos a seguir navegando en nuestro sitio mientras su cuenta es activada. ". ui_href("registrar_continuar","./", "Continuar") ."<br />";
             email($datos['email'],"Su registro en ".PROY_NOMBRE." ha sido exitoso","Su registro de usuario  en ".PROY_NOMBRE." ha sido exitoso, sin embargo los Administradores deberán activar manualmente su cuenta para que Ud. puede acceder.<br />\nSe le notificará por esta vía cuando la activación sea realizada.<br />\n\n<hr><br />\n<h1>Datos registrados</h1><br />\nCorreo electrónico: <strong>".$datos['email']."</strong><br />\nUsuario: <strong>".$datos['usuario']."</strong><br />\n<br /><br />Gracias por su amable espera.<br />".PROY_NOMBRE."<br />".PROY_URL);
+            email_x_nivel(_N_administrador,"aprobación de nuevo usuario pendiente",PROY_URL);
             return;
         }
     }
