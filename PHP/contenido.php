@@ -104,6 +104,7 @@ function CONTENIDO_PUBLICACION($op="")
         db_agregar_datos("ventas_mensajes_publicaciones",$datos);
         unset($datos);
         // Enviamos un mensaje al vendedor
+        email($Vendedor['email'],PROY_NOMBRE . " - nueva consulta en la publicación: " . $publicacion['titulo'], "Le han realizado una consulta en la siguiente publicacion: <a href=\"http://yomachete.com/publicacion_".$publicacion['id_publicacion']."_".SEO($publicacion['titulo'])."\">".$publicacion['titulo'].'</a>');
     }
 
     // Grabamos cualquier respuesta enviada
@@ -113,9 +114,17 @@ function CONTENIDO_PUBLICACION($op="")
         {
             $respuesta = substr(strip_tags(db_codex($respuesta)),0,300);
             $id = db_codex($id);
-            $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta', fecha_respuesta='".mysql_datetime()."' WHERE id='$id' AND id_publicacion='$ticket' LIMIT 1";
+            $c = "UPDATE ventas_mensajes_publicaciones SET respuesta='$respuesta', fecha_respuesta=NOW() WHERE id='$id' AND id_publicacion='$ticket' LIMIT 1";
             $r = db_consultar($c);
-            // Enviamos un mensaje al comprador
+            // Notificamos al dueño del mensaje
+            if (db_afectados() > 0)
+            {
+                $c = 'SELECT email FROM ventas_usuarios WHERE id_usuario = (SELECT id_usuario FROM ventas_mensajes_publicaciones WHERE id='.$id.' AND id_publicacion='.$ticket.' LIMIT 1)';
+                $r = db_consultar($c);
+                $f = mysql_fetch_assoc($r);
+                if(!empty($f['email']))
+                    email($f['email'],PROY_NOMBRE . " - respuesta a su consulta en la publicación: " . $publicacion['titulo'], "Hay una respuesta a su consulta en la siguiente publicacion: <a href=\"http://yomachete.com/publicacion_".$publicacion['id_publicacion']."_".SEO($publicacion['titulo'])."\">".$publicacion['titulo'].'</a>');
+            }
         }
     }
 
@@ -208,7 +217,7 @@ function CONTENIDO_PUBLICACION($op="")
             // Si es el dueño de la venta y no ha respondido la consulta le damos la opción de hacerlo.
             if ( !$f['respuesta'] && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
             {
-                $f['respuesta'] = ui_input("txtEnviarRespuesta[".$f['id']."]","","input","txtRespuesta",'MAXLENGTH="300"');
+                $f['respuesta'] = ui_input("txtEnviarRespuesta[".$f['id']."]","","text","txtRespuesta",'MAXLENGTH="300"');
                 $flag_activar_enviar_respuestas = true;
             }
             // Si no es el dueño de la venta y la consulta no ha sido contestada
@@ -232,6 +241,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo Mensaje("No hay consultas realizadas por el momento", _M_INFO);
     }
 
+    // Enviar consultas
     if (!S_iniciado())
     {
         echo "<hr />Necesitas iniciar sesión para poder <b>realizar consultas</b>.<br />";
@@ -240,7 +250,7 @@ function CONTENIDO_PUBLICACION($op="")
     }
     elseif (_autenticado() && _F_usuario_cache('id_usuario') != @$Vendedor['id_usuario'])
     {
-        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'"><p>Realizar consulta al vendedor:</p>' . ui_input("consulta","","input","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp; marque esta opción si desea hacer pública esta consulta (<a title=\"Usela si Ud. cree que las demas personas deben leer esta pregunta y su respectiva respuesta\">?</a>).</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
+        echo '<div id="area_consulta"><form method="POST" action="'.$_SERVER['REQUEST_URI'].'"><p>Realizar consulta al vendedor:</p>' . ui_input("consulta","","text","","width:100%;",'MAXLENGTH="300"') . "<br />" . "<table><tr><td>". ui_input("tipo_consulta","publica","checkbox"). "&nbsp; marque esta opción si desea hacer pública esta consulta (<a title=\"Usela si Ud. cree que las demas personas deben leer esta pregunta y su respectiva respuesta\">?</a>).</td><td id=\"trbtn\">".ui_input("enviar_consulta","Enviar","submit")."</td></tr></table>" . '</form></div>';
     }
     echo '</div>';
 
