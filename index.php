@@ -25,7 +25,7 @@
     <script src="JS/jquery.fav-1.0.js" type="text/javascript"></script>
     <script src="JS/jquery.bookmark.pack.js" type="text/javascript"></script>
     <style type="text/css">
-    div.jGrowl div.aviso {z-index:50;background-color: #F1AF35;color: #FFF;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;opacity:1;filter:alpha(opacity = 100);border:2px solid #000000;}
+    div.jGrowl div.aviso {z-index:255;background-color:#FFF;color:#000;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;border:3px solid #F1AF35;}
     </style>
 </head>
 <body>

@@ -12,7 +12,7 @@ function JS_onload($script){
 
 // Genera un pequeño GROWL
 function JS_growl($mensaje){
-    return "$.jGrowl('".addslashes($mensaje)."', {theme: 'aviso',life:5000})";
+    return "$.jGrowl('".addslashes($mensaje)."', {sticky: true, theme: 'aviso',life:5000})";
 }
 
 function suerte($una, $dos){
