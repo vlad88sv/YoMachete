@@ -2,7 +2,14 @@
 require_once ("vital.php");
 if (!isset($_GET['peticion']))
 {
-    echo "Petición faltante. Abortando";
+    require_once ("PHP/contenido.php");
+    echo '
+    <div id="columnas">
+    <div id="col2"><div id="secc_articulos">' . GENERAR_ARTICULOS() . GENERAR_TAG_CLOUD() . '</div></div>
+    <div id="col1"><div id="secc_categorias">' . GENERAR_CATEGORIAS() . '</div></div>
+    <div style="clear:both"></div>
+    </div> <!-- Columnas !-->
+    ';
     return;
 }
 switch ($_GET['peticion'])

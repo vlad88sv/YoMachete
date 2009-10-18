@@ -1,12 +1,71 @@
 <?php
-
-function CONTENIDO_VIP()
+// Columna central
+function GENERAR_ARTICULOS()
 {
-    echo "<h1>Inscripción para  <span style='color:F00'>Vendedor Distinguido</span></h1>";
-    echo "Con tu cuenta de <span style='color:F00'>Vendedor Distinguido</span> disfrutas de los siguientes beneficios:";
-    echo "<ul>";
-    echo "<li>Ninguno por el momento, etc.</li>";
-    echo "</ul>";
+    $data = '';
+    $categoria = isset($_GET['categoria']) ? db_codex($_GET['categoria']) : 0;
+    if ($categoria)
+    {
+        $c = "SELECT * FROM ventas_categorias WHERE id_categoria='$categoria'";
+        $resultado = db_consultar($c);
+
+        if (db_resultado($resultado, 'padre') > 0)
+        {
+            $data .= "<h1>Mostrando publicaciones de la sub-categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
+            $data .= "Ubicación: " . get_path($categoria) . "<br />";
+            $data .= "<hr />";
+            $data .= "Deseo publicar una <a href=\"./vender?op=$categoria\">venta</a> en esta categoría<br />";
+            $data .= "<hr />";
+            $WHERE = "z.id_categoria='$categoria'";
+        }
+        else
+        {
+            $data .= "<h1>Mostrando publicaciones recientes de la categoria <span style='color:#00F'>" . db_resultado($resultado, 'nombre') . "</span></h1>";
+            $WHERE = "(SELECT padre FROM ventas_categorias AS b where b.id_categoria=z.id_categoria)='$categoria'";
+        }
+    }
+    else
+    {
+        $data .= "<h1>Publicaciones mas recientes</h1>";
+        // Mostrar todos los articulos recientes
+        $WHERE = "1";
+    }
+
+    $WHERE .= "  AND z.tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE()";
+    $data .= VISTA_ListaPubs($WHERE,"ORDER BY promocionado DESC, fecha_ini DESC","indice");
+    return $data;
+}
+
+// Columna Izq.
+function GENERAR_CATEGORIAS()
+{
+    $data = '';
+    $data .= '<h1>¡Compartenos!</h1>';
+    $data .= '<center><span id="bookmarks"></span></center>';
+    $data .= '<h1>Recuerdanos</h1>';
+    $data .= '<center>
+    <a id="bookmark"><img title="Favoritos" src="IMG/favoritos.jpg" /></a>
+    <a title="RSS" target="_blank" href="http://www.yomachete.com/rss.xml"><img title="RSS" src="IMG/rss_logo.jpg" /></a>
+    <a title="Twitter" target="_blank" href="http://www.twitter.com/YoMachete"><img title="Twitter" src="IMG/twitter_logo.jpg" /></a>
+    </center>';
+    $data .= (isset($_GET['categoria'])) ? '<hr /><div class="item_cat item_cat_todos"><a href="./">Mostrar categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
+    $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
+    $c = "SELECT id_categoria, nombre FROM ventas_categorias WHERE padre=$nivel ORDER BY nombre";
+    $resultado = db_consultar($c);
+    $n_campos = mysql_num_rows($resultado);
+    $data .= "<div id=\"contenedor_categorias\">";
+    for ($i = 0; $i < $n_campos; $i++) {
+        $r = mysql_fetch_row($resultado);
+        $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
+    }
+    $data .= "</div>";
+    return $data;
+}
+function GENERAR_TAG_CLOUD()
+{
+    $c = "SELECT (SELECT tag FROM ventas_tag AS b WHERE b.id = a.id_tag) as tag, count(id_tag) AS hits FROM (SELECT * FROM ventas_tag_uso AS b WHERE b.id_publicacion IN (SELECT c.id_publicacion FROM ventas_publicaciones AS c WHERE tipo IN ("._A_aceptado . ","._A_promocionado.") AND fecha_fin >= CURDATE())) AS a GROUP BY id_tag ORDER BY hits DESC LIMIT 40";
+    $r = db_consultar($c);
+    return '<h1>Nube de etiquetas</h1><div id="nube_etiquetas">'.tag_cloud($r).'</div>';
 }
 
 function CONTENIDO_PUBLICACION($op="")
