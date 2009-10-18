@@ -47,6 +47,7 @@ function GENERAR_CATEGORIAS()
     <a id="bookmark"><img title="Favoritos" src="IMG/favoritos.jpg" /></a>
     <a title="RSS" target="_blank" href="http://www.yomachete.com/rss.xml"><img title="RSS" src="IMG/rss_logo.jpg" /></a>
     <a title="Twitter" target="_blank" href="http://www.twitter.com/YoMachete"><img title="Twitter" src="IMG/twitter_logo.jpg" /></a>
+    <a title="Facebook" target="_blank" href="http://www.facebook.com/YoMachete"><img title="Facebook" src="IMG/facebook_logo.jpg" /></a>
     </center>';
     $data .= (isset($_GET['categoria'])) ? '<hr /><div class="item_cat item_cat_todos"><a href="./">Mostrar categorías</a><div style="clear:both"></div></div>' : "<h1>Categorías</h1>";
     $nivel = (isset($_GET['categoria'])) ? $_GET['categoria'] : 0;
