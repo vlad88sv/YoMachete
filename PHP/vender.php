@@ -29,17 +29,25 @@ function CONTENIDO_VENDER()
         else
         {
             // No ha escogido categoría, le mostramos las opciones.
-            echo "Por favor especifique a continuación que tipo de venta desea publicar:<br/>";
-            echo "Deseo publicar un: " . ui_href("vender_ir_inmueble","vender?op=inmueble", "inmueble") . " / " . ui_href("vender_ir_inmueble","vender?op=automotor", "automotor") . " / " . ui_href("vender_ir_servicio","vender?op=servicio", "servicio") . " / " . ui_href("vender_ir_articulo","vender?op=articulo", "artículo");
+
+            echo "<h1>Realizar una nueva publicación</h1>" .
+            "Por favor seleccione la categoría mayor a la que pertenece su publicación. Esto es necesario para ofrecerle únicamente las opciones relevantes a su publicación, en el siguiente paso podrá definir la sub-categoría." .
+            '<br />' .
+            '<ul>' .
+            '<li>' . ui_href("vender_ir_inmueble","vender?op=inmueble", "Inmueble") . "<br /><span class='explicacion'>venta o alquiler de casas, apartamentos y demás bienes inmuebles</span></li>" .
+            '<li>' . ui_href("vender_ir_inmueble","vender?op=automotor", "Automotor") . "<br /><span class='explicacion'>venta o alquiler de automores (carros, vehículos, motocicletas y toda máquina propulsada por un motor)</span></li>" .
+            '<li>' . ui_href("vender_ir_servicio","vender?op=servicio", "Servicio") . " <br /><span class='explicacion'>servicios profesiales (electricista, programador, diseñador, albañil, constructor, arquitecto, etc.)</span></li>" .
+            '<li>' . ui_href("vender_ir_articulo","vender?op=articulo", "<strong>Artículo</strong>") . "<br /><span class='explicacion'>encontrarás sub categorías para todo lo que las anteriores 3 categorías mayores no cubren</span></li>" .
+            '</ul>';
         }
 
         // Mostrar las ventas publicadas:
 
+        echo '<h1>Mis publicaciones</h1>';
         $c = "SELECT id_publicacion, titulo, id_categoria, DATE(fecha_fin) AS fecha_fin, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
-            echo "<hr />";
             echo "<h2>Ventas  publicadas actualmente</h2>";
             echo '<table class="ancha">';
             echo '<tr><th>Título</th><th>Expira</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
@@ -56,7 +64,6 @@ function CONTENIDO_VENDER()
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
-            echo "<hr />";
             echo "<h2>Publicaciones que no ha enviado a aprobación</h2>";
             echo '<table class="ancha">';
             echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
@@ -73,7 +80,6 @@ function CONTENIDO_VENDER()
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
-            echo "<hr />";
             echo "<h2>Publicaciones enviadas en espera de aprobación</h2>";
             echo '<table class="ancha">';
             echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th></tr>';
