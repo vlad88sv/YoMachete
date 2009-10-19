@@ -19,6 +19,9 @@ require_once ("$base/stubs.php"); // Funciones varias
 require_once ("$base/publicaciones.php"); // Gestión de publicaciones
 require_once ("$base/usuario.php"); // Gestión de usuarios
 require_once ("$base/todosv.com.php");  // Envío de SMS
+
+$arrJS = array(); // Inclusiones JS para HEAD
+
 function parse_backtrace(){
 
     $raw = debug_backtrace();

@@ -192,8 +192,6 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
 
     // Obtenemos las publicaciones pendientes
     echo VISTA_ListaPubs("tipo='"._A_esp_activacion."'","ORDER by fecha_ini","admin","No hay publicaciones esperando activación");
-
-    echo JS_onload('$("a[rel=\'lightbox\']").lightBox();');
 }
 
 function INTERFAZ__PUBLICACIONES_ADMIN()

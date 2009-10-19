@@ -71,6 +71,8 @@ function GENERAR_TAG_CLOUD()
 
 function CONTENIDO_PUBLICACION($op="")
 {
+    global $HEAD_titulo;
+
     if (!isset($_GET['publicacion']))
     {
         echo Mensaje("PUBLICACION: ERROR INTERNO", _M_ERROR);
@@ -355,6 +357,8 @@ function CONTENIDO_PUBLICACION($op="")
     $("#ver_mas_adicional").click(function() {$("#detalle_adicional").toggle("fast");});
     $("#ver_mas_vendedor").click(function() {$("#detalle_vendedor").toggle("fast");});
     ');
+
+    $HEAD_titulo = PROY_NOMBRE . ' - ' . @$publicacion['titulo'];
 }
 
 function CONTENIDO_MP()

@@ -1,5 +1,48 @@
-<?php require_once ("PHP/vital.php"); ?>
-<?php echo '<?xml version="1.0" encoding="utf-8"?>'."\n"; ?>
+<?php
+require_once ("PHP/vital.php");
+// Inclusiones JS
+$arrJS[] = 'jquery-1.3.2.min';
+$arrJS[] = 'jquery.cookie';
+$arrJS[] = 'fancybox/jquery.easing.1.3';
+$arrJS[] = 'fancybox/jquery.fancybox-1.2.1.pack';
+$arrJS[] = 'jquery.jgrowl';
+$arrJS[] = 'jquery.fav-1.0';
+$arrJS[] = 'jquery.bookmark.pack';
+
+// Inclusiones CSS
+
+$arrCSS[] = 'estilo';
+$arrCSS[] = 'JS/fancybox/jquery.fancybox';
+$arrCSS[] = 'CSS/jquery.jgrowl';
+$arrCSS[] = 'JS/jquery.bookmark';
+
+// Auxiliar para HEAD
+$arrHEAD = array();
+
+$HEAD_titulo = PROY_NOMBRE . ' - compra y venta de artículos en El Salvador';
+?>
+<?php
+/* CAPTURAR <body> */
+ob_start();
+?>
+<body>
+<div id="wrapper">
+<div id="header"><?php GENERAR_CABEZA(); ?></div>
+<div id="secc_general">
+<?php require_once('PHP/traductor.php'); ?>
+</div> <!-- secc_general !-->
+</div> <!-- wrapper !-->
+<div style="clear:both"></div>
+<div id="footer"><?php echo GENERAR_PIE(); ?></div>
+<div id="GA"><?php GENERAR_GOOGLE_ANALYTICS(); ?></div>
+</body>
+</html>
+<?php $BODY = ob_get_clean(); ?>
+<?php
+/* CAPTURAR <head> */
+ob_start();
+echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -8,75 +51,23 @@
     <meta http-equiv="Content-Style-type" content="text/css" />
     <meta http-equiv="Content-Script-type" content="text/javascript" />
     <meta http-equiv="Content-Language" content="es" />
-    <title>Compra y Venta de articulos en El Salvador</title>
+    <title><?php echo $HEAD_titulo; ?></title>
     <meta name="description" content="Servicio de compra y venta en línea." />
     <meta name="keywords" content="El Salvador, Comprar, Vender, Clasificados" />
     <meta name="robots" content="index, follow" />
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="estilo.css" />
-    <link rel="stylesheet" type="text/css" href="JS/fancybox/jquery.fancybox.css" />
-    <link rel="stylesheet" type="text/css" href="CSS/jquery.jgrowl.css" />
-    <link rel="stylesheet" type="text/css" href="JS/jquery.bookmark.css"  />
-    <script src="JS/jquery-1.3.2.min.js" type="text/javascript"></script>
-    <script src="JS/jquery.cookie.js" type="text/javascript"></script>
-    <script src="JS/fancybox/jquery.easing.1.3.js" type="text/javascript"></script>
-    <script src="JS/fancybox/jquery.fancybox-1.2.1.pack.js" type="text/javascript"></script>
-    <script src="JS/jquery.jgrowl.js" type="text/javascript"></script>
-    <script src="JS/jquery.fav-1.0.js" type="text/javascript"></script>
-    <script src="JS/jquery.bookmark.pack.js" type="text/javascript"></script>
-    <style type="text/css">
-    div.jGrowl div.aviso {z-index:255;background-color:#FFF;color:#000;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;border:3px solid #F1AF35;}
-    </style>
+<?php HEAD_CSS(); ?>
+<?php HEAD_JS(); ?>
+<?php HEAD_EXTRA(); ?>
 </head>
-<body>
-<div id="wrapper">
-<div id="header"><?php GENERAR_CABEZA(); ?></div>
+<?php $HEAD = ob_get_clean(); ?>
 <?php
-echo '<div id="secc_general">';
-require_once('PHP/traductor.php');
-echo '</div>';
-echo '<div style="clear:both"></div>';
-echo '</div>';
-
-/// NOTIFICACION DE PUBLICACIONES PENDIENTES O USUARIOS PENDIENTES
-$mensaje="";
-if (_F_usuario_cache('nivel') == _N_administrador)
-{
-    $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
-    $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
-    if ($PPA || $UPA)
-    {
-        $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
-        $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
-    }
-}
-echo JS_onload('
-$("a.fancybox").fancybox();
-$.jGrowl.defaults.position = "bottom-right";
-'.($mensaje ? JS_growl($mensaje) : "").'
-');
-// -----------------------------------------------------------------
+/* MOSTRAR TODO */
+echo $HEAD,$BODY;
 ?>
-<div id="footer"><?php echo GENERAR_PIE(); ?></div>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-611766-3");
-pageTracker._trackPageview();
-} catch(err) {}</script>
-<script type="text/javascript">
-$(document).ready(function(){
-$("#bookmark").jFav();
-$("#bookmarks").bookmark({title: 'YoMachete.com - Ventas en línea en El Salvador',url: 'http://yomachete.com',sites: ['delicious', 'twitter','digg', 'facebook', 'stumbleupon','google','yahoo','windows']});
-});
-</script>
-</body>
-</html>
-
 <?php
+/* ---------------------------------------------------------------------------*/
+/* Funciones adicionales */
 function GENERAR_CABEZA()
 {
     $usuarios = db_contar("ventas_usuarios");
@@ -138,6 +129,43 @@ function GENERAR_PIE()
     global $db_contador;
     $data = '';
     $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados. [$db_contador]</p>";
+    /// NOTIFICACION DE PUBLICACIONES PENDIENTES O USUARIOS PENDIENTES
+    $mensaje="";
+    if (_F_usuario_cache('nivel') == _N_administrador)
+    {
+        $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
+        $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
+        if ($PPA || $UPA)
+        {
+            $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
+            $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+        }
+    }
+    $data .= JS_onload('
+    $("a.fancybox").fancybox();
+    $.jGrowl.defaults.position = "bottom-right";
+    '.($mensaje ? JS_growl($mensaje) : "").'
+    ');
     return $data;
+}
+function GENERAR_GOOGLE_ANALYTICS()
+{
+    return '
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js\' type=\'text/javascript\'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-611766-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+$(document).ready(function(){
+$("#bookmark").jFav();
+$("#bookmarks").bookmark({title: \'YoMachete.com - Ventas en línea en El Salvador\',url: \'http://yomachete.com\',sites: [\'delicious\', \'twitter\',\'digg\', \'facebook\', \'stumbleupon\',\'google\',\'yahoo\',\'windows\']});
+});
+</script>
+';
 }
 ?>

@@ -545,3 +545,7 @@ background-color:transparent;
 #bookmark {
     font-size:0.8em;
 }
+div.jGrowl div.aviso
+{
+    z-index:255;background-color:#FFF;color:#000;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;border:3px solid #F1AF35;
+}

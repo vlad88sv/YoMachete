@@ -851,4 +851,38 @@ function URL_agregar_parametros($URL, $params){
     $URL .= implode('&',$parametros);
     return $URL;
 }
+function HEAD_JS()
+{
+    global $arrJS;
+    require_once 'PHP/jsmin-1.1.1.php';
+    echo "\n";
+    $buffer = '';
+    foreach ($arrJS as $JS)
+    {
+        $buffer .= '<script type="text/javascript">'.JSMin::minify(file_get_contents("JS/".$JS.".js"))."</script>\n";
+    }
+
+    echo $buffer;
+    echo "\n";
+}
+function HEAD_CSS()
+{
+    global $arrCSS;
+    $buffer = '';
+    foreach ($arrCSS as $CSS)
+    {
+        $buffer .= '<style type="text/css">'.file_get_contents($CSS.".css")."</style>\n";
+        $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
+        $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
+    }
+    echo $buffer;
+    echo "\n";
+}
+function HEAD_EXTRA()
+{
+    global $arrHEAD;
+    echo "\n";
+    echo implode("\n",$arrHEAD);
+    echo "\n";
+}
 ?>
