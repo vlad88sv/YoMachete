@@ -85,19 +85,6 @@ switch ($_GET['peticion'])
         CONTENIDO_ADMIN();
     break;
     case 'imagen':
-        function getRequestHeaders() {
-        if (function_exists("apache_request_headers")) {
-        if($headers = apache_request_headers()) {
-        return $headers;
-        }
-        }
-        $headers = array();
-        // Grab the IF_MODIFIED_SINCE header
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-        $headers['If-Modified-Since'] = $_SERVER['HTTP_IF_MODIFIED_SINCE'];
-        }
-        return $headers;
-        }
 
         if (isset($_GET['op']))
         {
@@ -145,19 +132,6 @@ switch ($_GET['peticion'])
                 $archivo = "../IMG/i404.jpg";
             }
 
-            $fileModTime = filemtime($archivo);
-            // Getting headers sent by the client.
-            $headers = getRequestHeaders();
-            // Checking if the client is validating his cache and if it is current.
-            if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == $fileModTime)) {
-            // Client's cache IS current, so we just respond '304 Not Modified'.
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s', $fileModTime).' GMT', true, 304);
-            header("Cache-Control: private");
-            header("Pragma: ");
-            header("Expires: ");
-            header("Content-Type: ");
-            header('Etag: "' . MD5($archivo).'"');
-            } else {
             // Image not cached or cache outdated, we respond '200 OK' and output the image.
             header("Content-Type: " . $TipoContenido,true);
             header("Content-Length: ".filesize($archivo),true);
@@ -169,7 +143,6 @@ switch ($_GET['peticion'])
             header('Etag: "' . MD5($archivo).'"');
             header("Keep-Alive:	timeout=5, max=99");
             readfile($archivo);
-            }
         }
     break;
     case "correo":
