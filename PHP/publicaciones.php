@@ -14,7 +14,6 @@ function Publicacion_Aprobar($id_publicacion)
         $r = db_consultar($c);
         $f = mysql_fetch_assoc($r);
         tweet('Nueva publicacion: '.$f['titulo'].' | http://www.yomachete.com/publicacion_'.$f['id_publicacion']."_".SEO($f['titulo']));
-        email_x_nivel(_N_administrador,'Nueva publicacion: '.$f['titulo'],'<a href="http://www.yomachete.com/publicacion_'.$f['id_publicacion']."_".SEO($f['titulo']).'">Ver</a>');
     }
     return $db_afectados_buffer;
 }
