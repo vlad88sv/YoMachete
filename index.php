@@ -2,19 +2,9 @@
 require_once ("PHP/vital.php");
 // Inclusiones JS
 $arrJS[] = 'jquery-1.3.2.min';
-$arrJS[] = 'jquery.cookie';
-$arrJS[] = 'fancybox/jquery.easing.1.3';
-$arrJS[] = 'fancybox/jquery.fancybox-1.2.1.pack';
-$arrJS[] = 'jquery.jgrowl';
-$arrJS[] = 'jquery.fav-1.0';
-$arrJS[] = 'jquery.bookmark.pack';
 
 // Inclusiones CSS
-
 $arrCSS[] = 'estilo';
-$arrCSS[] = 'JS/fancybox/jquery.fancybox';
-$arrCSS[] = 'CSS/jquery.jgrowl';
-$arrCSS[] = 'JS/jquery.bookmark';
 
 // Auxiliar para HEAD
 $arrHEAD = array();
@@ -34,7 +24,7 @@ ob_start();
 </div> <!-- wrapper !-->
 <div style="clear:both"></div>
 <div id="footer"><?php echo GENERAR_PIE(); ?></div>
-<div id="GA"><?php GENERAR_GOOGLE_ANALYTICS(); ?></div>
+<div id="GA"><?php echo GENERAR_GOOGLE_ANALYTICS(); ?></div>
 </body>
 </html>
 <?php $BODY = ob_get_clean(); ?>
@@ -126,8 +116,9 @@ function GENERAR_CABEZA()
 }
 function GENERAR_PIE()
 {
-    global $db_contador;
+    global $db_contador,$arrJS,$arrCSS;
     $data = '';
+    $js = '';
     $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados. [$db_contador]</p>";
     /// NOTIFICACION DE PUBLICACIONES PENDIENTES O USUARIOS PENDIENTES
     $mensaje="";
@@ -141,11 +132,13 @@ function GENERAR_PIE()
             $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
         }
     }
-    $data .= JS_onload('
-    $("a.fancybox").fancybox();
-    $.jGrowl.defaults.position = "bottom-right";
-    '.($mensaje ? JS_growl($mensaje) : "").'
-    ');
+
+    if ($mensaje)
+    {
+        $arrCSS[] = 'CSS/jquery.jgrowl';
+        $arrJS[] = 'jquery.jgrowl';
+        $arrHEAD[] = JS_onload('$.jGrowl.defaults.position = "bottom-right";'.JS_growl($mensaje));
+    }
     return $data;
 }
 function GENERAR_GOOGLE_ANALYTICS()
@@ -160,12 +153,6 @@ try {
 var pageTracker = _gat._getTracker("UA-611766-3");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-<script type="text/javascript">
-$(document).ready(function(){
-$("#bookmark").jFav();
-$("#bookmarks").bookmark({title: \'YoMachete.com - Ventas en línea en El Salvador\',url: \'http://yomachete.com\',sites: [\'delicious\', \'twitter\',\'digg\', \'facebook\', \'stumbleupon\',\'google\',\'yahoo\',\'windows\']});
-});
-</script>
 ';
 }
 ?>

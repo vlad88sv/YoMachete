@@ -10,8 +10,19 @@ if (!isset($_GET['peticion']))
     <div style="clear:both"></div>
     </div> <!-- Columnas !-->
     ';
+    $arrJS[] = 'jquery.fav-1.0';
+    $arrJS[] = 'jquery.bookmark.pack';
+    $arrCSS[] = 'JS/jquery.bookmark';
+    $arrHEAD[] = JS_onload("$.bookmark.setDefaults({icons: 'bookmarks.png'}); $('#bookmark').jFav(); $('#bookmarks').bookmark({title: 'YoMachete.com - Ventas en línea en El Salvador',url: 'http://yomachete.com',sites: ['delicious', 'twitter','digg', 'facebook', 'stumbleupon','google','yahoo','windows']});");
     return;
 }
+
+$arrJS[] = 'fancybox/jquery.easing.1.3';
+$arrJS[] = 'fancybox/jquery.fancybox-1.2.1.pack';
+$arrCSS[] = 'JS/fancybox/jquery.fancybox';
+$arrHEAD[] = JS_onload('$("a.fancybox").fancybox();');
+
+
 switch ($_GET['peticion'])
 {
     case 'iniciar':
@@ -114,7 +125,8 @@ switch ($_GET['peticion'])
             if (!$flag_Abortar && isset($_GET['miniatura']))
             {
                 // Se encontró el archivo principal, y se solicitó una minuatura de el.
-                // Ya se estableció el tipo de contenido.
+                // Forzamos Content-Type: image/jpeg
+                $TipoContenido = 'image/jpeg';
                 $archivo_m = "../RCS/IMG/M/" . $f['id_img'] . "m";
 
                 // Comprobamos si existe la miniatura o si debemos crearla
@@ -132,9 +144,8 @@ switch ($_GET['peticion'])
                 $archivo = "../IMG/i404.jpg";
             }
 
-            // Image not cached or cache outdated, we respond '200 OK' and output the image.
-            header("Content-Type: " . $TipoContenido,true);
-            header("Content-Length: ".filesize($archivo),true);
+            header("Content-Type: " . $TipoContenido);
+            header("Content-Length: ".filesize($archivo));
             header("Cache-Control: ");
             header("X-Powered-By: ");
             header("Pragma: ");

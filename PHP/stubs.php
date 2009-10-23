@@ -550,10 +550,16 @@ function scaleImage($x,$y,$cx,$cy) {
 }
 function Imagen__Redimenzionar($Origen = 640, $Ancho = 480, $Alto)
 {
-    $magick=new Imagick($Origen);
-    list($newX,$newY)=scaleImage($magick->getImageWidth(),$magick->getImageHeight(),$Ancho,$Alto);
-    $magick->scaleImage($newX,$newY,true);
-    return $magick->writeImage($Origen);
+    $im=new Imagick($Origen);
+
+    $im->setImageColorspace(255);
+    $im->setCompression(Imagick::COMPRESSION_JPEG);
+    $im->setCompressionQuality(80);
+    $im->setImageFormat('jpeg');
+
+    list($newX,$newY)=scaleImage($im->getImageWidth(),$im->getImageHeight(),$Ancho,$Alto);
+    $im->scaleImage($newX,$newY,true);
+    return $im->writeImage($Origen);
 }
 /*
  * Imagen__CrearMiniatura()
@@ -561,10 +567,16 @@ function Imagen__Redimenzionar($Origen = 640, $Ancho = 480, $Alto)
 */
 function Imagen__CrearMiniatura($Origen, $Destino, $Ancho = 100, $Alto = 100)
 {
-    $thumb=new Imagick($Origen);
-    list($newX,$newY)=scaleImage($thumb->getImageWidth(),$thumb->getImageHeight(),$Ancho,$Alto);
-    $thumb->thumbnailImage($newX,$newY,false);
-    return $thumb->writeImage($Destino);
+    $im=new Imagick($Origen);
+
+    $im->setImageColorspace(255);
+    $im->setCompression(Imagick::COMPRESSION_JPEG);
+    $im->setCompressionQuality(80);
+    $im->setImageFormat('jpeg');
+
+    list($newX,$newY)=scaleImage($im->getImageWidth(),$im->getImageHeight(),$Ancho,$Alto);
+    $im->thumbnailImage($newX,$newY,false);
+    return $im->writeImage($Destino);
 }
 function CargarDatos($id_publicacion,$id_usuario)
 {

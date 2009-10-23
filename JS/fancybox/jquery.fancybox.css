@@ -300,16 +300,16 @@ div#fancy_title table td {
 td#fancy_title_left {
 	height: 32px;
 	width: 15px;
-	background: transparent url(fancy_title_left.png) repeat-x;
+	background: transparent url('JS/fancybox/fancy_title_left.png') repeat-x;
 }
 
 td#fancy_title_main {
 	height: 32px;
-	background: transparent url(fancy_title_main.png) repeat-x;
+	background: transparent url('JS/fancybox/fancy_title_main.png') repeat-x;
 }
 
 td#fancy_title_right {
 	height: 32px;
 	width: 15px;
-	background: transparent url(fancy_title_right.png) repeat-x;
+	background: transparent url('JS/fancybox/fancy_title_right.png') repeat-x;
 }
