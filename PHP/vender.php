@@ -41,15 +41,31 @@ function CONTENIDO_VENDER()
             '<li>' . ui_href("vender_ir_articulo","vender?op=articulo", "<strong>Artículo</strong>") . "<br /><span class='explicacion'>encontrarás sub categorías para todo lo que las anteriores 3 categorías mayores no cubren</span></li>" .
             '</ul>';
         }
+        echo '<h1>Mis publicaciones</h1>';
+        
+        // Mostrar las ventas "vendidas":
+
+        $c = "SELECT id_publicacion, titulo, id_categoria, DATE(fecha_fin) AS fecha_fin, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo="._A_vendido;
+        $r = db_consultar($c);
+        if ( mysql_num_rows($r) > 0 )
+        {
+            echo "<h2>Ventas realizadas y cerradas</h2>";
+            echo '<table class="ancha">';
+            echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th></tr>';
+            while ($f = mysql_fetch_array($r))
+            {
+                echo "<tr><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td></tr>";
+            }
+            echo "</table>";
+        }
 
         // Mostrar las ventas publicadas:
 
-        echo '<h1>Mis publicaciones</h1>';
         $c = "SELECT id_publicacion, titulo, id_categoria, DATE(fecha_fin) AS fecha_fin, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo='"._A_aceptado."' AND fecha_fin >='".mysql_datetime()."'";
         $r = db_consultar($c);
         if ( mysql_num_rows($r) > 0 )
         {
-            echo "<h2>Ventas  publicadas actualmente</h2>";
+            echo "<h2>Ventas publicadas actualmente</h2>";
             echo '<table class="ancha">';
             echo '<tr><th>Título</th><th>Expira</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
@@ -239,7 +255,7 @@ function CONTENIDO_VENDER()
             {
                 $vendedor = _F_usuario_datos($Publicacion['id_usuario']);
                 email($vendedor['email'],PROY_NOMBRE." - Publicación \"".$Publicacion['titulo']."\" ha sido recibida","Su publicación ha sido recibida en nuestro sistema y se encuentra en proceso de activación.<br />\nEsta activación puede demorar entre <strong>1 minuto y 1 hora</strong> dependiendo de la disponibilidad de los administradores en línea.<br />Esta corta espera es necesaria para realizar una revisión de las publiciaciones y así poder ofrecer el mejor contenido a nuestros visitantes.<br />\n!Gracias por preferir ".PROY_NOMBRE." para realizar sus publicaciones!");
-                email_x_nivel(_N_administrador,'Nueva publicacion: '.$f['titulo'],'<a href="http://www.yomachete.com/publicacion_'.$f['id_publicacion']."_".SEO($f['titulo']).'">Ver</a>');
+                email_x_nivel(_N_administrador,'Nueva publicacion: '.$f['titulo'],'<a href="http://www.yomachete.com/publicacion_'.$Publicacion['id_publicacion']."_".SEO($f['titulo']).'">Ver</a>');
                 echo Mensaje ("Su venta ha sido exitosamente enviada para aprobación", _M_INFO);
             }
         }

@@ -1,7 +1,7 @@
 <?php
 // Este archivo se encargará de levantar la sesión y la conexión a la base de datos.
 error_reporting             (E_STRICT | E_ALL);
-ob_start                    ("ob_gzhandler");
+//ob_start                    ("ob_gzhandler");
 setlocale                   (LC_ALL, 'es_AR.UTF-8', 'es_ES.UTF-8');
 date_default_timezone_set   ('America/El_Salvador');
 ini_set                     ('session.gc_maxlifetime', '6000');

@@ -50,10 +50,6 @@ switch ($_GET['peticion'])
         require_once ("PHP/buscar.php");
         CONTENIDO_BUSCAR();
     break;
-    case 'mp':
-        require_once ("PHP/contenido.php");
-        CONTENIDO_MP();
-    break;
     case 'tienda':
         require_once ("PHP/contenido.php");
         CONTENIDO_TIENDA();
@@ -95,8 +91,14 @@ switch ($_GET['peticion'])
         require_once ("PHP/admin.php");
         CONTENIDO_ADMIN();
     break;
+    case 'mtime':
+        $mtime = filemtime("../RCS/IMG/M/60m");
+        header('Last-Modified: lun, 26 oct 2009 18:26:27 GMT');
+        header('mtime: lun, 26 oct 2009 18:26:27 GMT');
+        echo $mtime.'<br />';
+        echo gmstrftime("%a, %d %b %Y %T %Z",$mtime);
+        break;
     case 'imagen':
-
         if (isset($_GET['op']))
         {
             $flag_Abortar = false;
@@ -112,14 +114,7 @@ switch ($_GET['peticion'])
             {
                 // Se encontró en la base de datos, pero estará en el disco?
                 $archivo = "../RCS/IMG/" . $f['id_img'];
-                if (file_exists($archivo))
-                {
-                    $TipoContenido = $f['mime'];
-                }
-                else
-                {
-                    $flag_Abortar = true;
-                }
+                $flag_Abortar = !file_exists($archivo);
             }
 
             if (!$flag_Abortar && isset($_GET['miniatura']))
@@ -137,22 +132,37 @@ switch ($_GET['peticion'])
                 }
                 $archivo = $archivo_m;
             }
+            else
+            {
+                //Solicitaron la imagen grande
+                $TipoContenido = $f['mime'];
+            }
 
             if ($flag_Abortar)
             {
                 $TipoContenido =  "image/jpeg";
                 $archivo = "../IMG/i404.jpg";
             }
+            
+            $mtime = filemtime($archivo);
+            $ETag = MD5($archivo);
 
+            if ((trim($_SERVER['HTTP_IF_NONE_MATCH'],'"') == $ETag) && (gmstrftime("%a, %d %b %Y %T %Z", $mtime) == $_SERVER['HTTP_IF_MODIFIED_SINCE']))
+            {
+                header('HTTP/1.1 304 Not Modified');
+                header('Cache-Control: private');
+                header("Pragma: ");
+                header('Expires: ');
+                header('Content-Type: ');
+                header('ETag: "'.$ETag.'"');
+            }
             header("Content-Type: " . $TipoContenido);
             header("Content-Length: ".filesize($archivo));
-            header("Cache-Control: ");
-            header("X-Powered-By: ");
-            header("Pragma: ");
-            header("Expires: ");
-            header("Vary: ");
-            header('Etag: "' . MD5($archivo).'"');
-            header("Keep-Alive:	timeout=5, max=99");
+            header('Cache-Control: private');
+            header('Pragma: ');
+            header('Expires: ');
+            header('Last-Modified: '.gmstrftime("%a, %d %b %Y %T %Z",$mtime));
+            header('ETag: "' . $ETag.'"');
             readfile($archivo);
         }
     break;

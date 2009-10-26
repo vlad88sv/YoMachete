@@ -1,8 +1,7 @@
 RewriteEngine on
-#RewriteCond %{REQUEST_URI} ^/imagen_([0-9]*m)$
-#RewriteCond /RCS/IMG/M/%1 -U
-#RewriteRule ^imagen_([0-9]*m)$ /RCS/IMG/M/$1 [L,R=301]
-RewriteRule ^imagen_([0-9]*)m$ /PHP/traductor.php?peticion=imagen&op=$1&miniatura=si [L]
+RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
+RewriteRule .* - [E=HTTP_IF_NONE_MATCH:%{HTTP:If-None-Match}]
+RewriteRule ^imagen_([0-9]*)m.*$ PHP/traductor.php?peticion=imagen&op=$1&miniatura=si [L]
 RewriteRule ^imagen_([0-9]*).*$ PHP/traductor.php?peticion=imagen&op=$1 [L]
 RewriteRule ^e\+(.*)$ buscar?ba=1&inc_etiq=1&b=$1 [L]
 RewriteRule ^categoria-([0-9].*?)-.*$ index.php?categoria=$1 [L]

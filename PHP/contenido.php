@@ -87,6 +87,17 @@ function CONTENIDO_PUBLICACION($op="")
         return;
     }
 
+
+    // Si ya fue vendido
+    
+    if ($publicacion['tipo'] == _A_vendido)
+    {
+        echo '<h1>Publicación concluida</h1>';
+        echo '<p>Lo sentimos, el vendedor nos ha informado la venta ya fue realizada.</p>';
+        echo '<p>¡Pero no se vaya!, puesto que puede revisar la categoría de esta publicación para encontrar uno similar! - <a href="categoria-'.$publicacion['id_categoria'].'-.html">Revisar la categoría de este producto</a></p>';
+        echo '<p>O bien puede aprovechar para realizar una publicación similar. - <a href="vender?op='.$publicacion['id_categoria'].'">Realizar publicación en esta categoría</a></p>';
+        return;
+    }
     // Si no esta aprobado solo lo puede ver un Administrador
 
     if ($op != "previsualizacion" && $publicacion['tipo'] != _A_aceptado && _F_usuario_cache('nivel') != _N_administrador)
@@ -94,7 +105,6 @@ function CONTENIDO_PUBLICACION($op="")
         echo Mensaje("esta publicacion NO se encuentra disponible",_M_ERROR);
         return;
     }
-
     // Ya venció el tiempo de publicación?.
     if ($op != "previsualizacion" && strtotime($publicacion['fecha_fin']) < strtotime(date('d-m-Y',time())))
     {
@@ -120,6 +130,14 @@ function CONTENIDO_PUBLICACION($op="")
         break;
         case 'pubrep':
             CONTENIDO_PUBREP($publicacion);
+            return;
+        break;
+        case 'cerrar':
+            CONTENIDO_CERRAR($publicacion);
+            return;
+        break;
+        case 'abrir':
+            CONTENIDO_ABRIR($publicacion);
             return;
         break;
         }
@@ -224,7 +242,7 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<br />";
 
     // Datos sobre el vendedor
-    echo "<b>Vendedor:</b> " . ui_href("","perfil?id=".$Vendedor['id_usuario'],$Vendedor['usuario']) . ( _F_usuario_cache('id_usuario') != $Vendedor['id_usuario'] ? " / enviar un <b>". ui_href("","mp?id=".$Vendedor['id_usuario'],"Mensaje Privado")."</b> " : " ")."<span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
+    echo "<b>Vendedor:</b> " . ui_href("","perfil?id=".$Vendedor['id_usuario'],$Vendedor['usuario']) . ( _F_usuario_cache('id_usuario') != $Vendedor['id_usuario'] ? " / enviar un <b>". ui_href("",PROY_URL."perfil?op=mp&amp;id=".$Vendedor['id_usuario'],"Mensaje Privado")."</b> " : " ")."<span  class=\"auto_mostrar\">[<a id=\"ver_mas_vendedor\">ver datos sobre el vendedor...</a>]</span>";
     echo "<div id=\"detalle_vendedor\" class=\"auto_ocultar\">";
     echo "<ul>";
     echo "<li>Registrado desde: " .  fechatiempo_desde_mysql_datetime(@$Vendedor['registro']) . "</li>";
@@ -239,7 +257,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "<hr /><h1>Fotografías y/o ilustraciones</h1><center>";
         foreach($imagenes as $archivo)
         {
-            echo "<div style='display:inline-block;margin:0 10px;'><a class=\"fancybox\" href=\"./imagen_".$archivo.".jpg\" title=\"IMAGEN CARGADA\" target=\"_blank\" rel=\"contenido\"><img src=\"./imagen_".$archivo."m\" /></a><br /></div>";
+            echo "<div style='display:inline-block;margin:0 10px;'><a class=\"fancybox\" href=\"./imagen_".$archivo.".jpg\" target=\"_blank\" rel=\"contenido\"><img src=\"./imagen_".$archivo."m.jpg\" /></a><br /></div>";
         }
         echo "<div style=\"clear:both\"></div>";
         echo "</center>";
@@ -359,79 +377,6 @@ function CONTENIDO_PUBLICACION($op="")
     ');
 
     $HEAD_titulo = PROY_NOMBRE . ' - ' . @$publicacion['titulo'];
-}
-
-function CONTENIDO_MP()
-{
-
-// Comprobamos que ya haya ingresado al sistema
-if (!S_iniciado())
-{
-    echo "Necesitas iniciar sesión para poder <b>enviar Mensajes Privados</b>.<br />";
-    require_once("PHP/inicio.php");
-    CONTENIDO_INICIAR_SESION();
-    return;
-}
-// Si hay un id entonces quiere enviar un MP a ese ID
-if (!empty($_GET['id']))
-{
-    $id_usuario = db_codex($_GET['id']);
-
-    //No se estará enviando el mensaje a el mismo verdad? XD
-
-    if ($id_usuario == _F_usuario_cache('id_usuario'))
-    {
-        echo Mensaje("auto-enviarse mensajes privados no es permitido",_M_ERROR);
-        return;
-    }
-
-    if (isset($_POST['enviar_mp']) && isset($_POST['asunto']) && isset($_POST['mensaje']))
-    {
-        //Agregamos el mensaje
-        $datos["id_usuario_rmt"] =  _F_usuario_cache('id_usuario');
-        $datos["mensaje"] = $_POST['mensaje'];
-        $datos["tipo"] = _MC_privado;
-        $datos["contexto"] = 'privado';
-        $datos["fecha"] = mysql_datetime();
-        $id_msj = db_agregar_datos("ventas_mensajes",$datos);
-        unset($datos);
-
-        //Agregamos el destinatario
-        $datos["id_msj"] = $id_msj;
-        $datos["id_usuario_dst"] = $id_usuario;
-        $datos["leido"] = 0;
-        $datos["eliminado"] = 0;
-        $id_msj = db_agregar_datos("ventas_mensajes_dst",$datos);
-        unset($datos);
-
-        echo Mensaje("¡Su mensaje privado ha sido enviado!");
-        echo '<h1>Opciones</h1>';
-        echo '<ul>';
-        echo '<li><a href="/">Pagina de inicio</a></li>';
-        echo '<li><a href="/">Mis mensajes privados</a></li>';
-        echo '</ul>';
-        return;
-    }
-
-    //Existe el usuario al cual quiere enviar el mensaje?
-    if (_F_usuario_existe($id_usuario,'id_usuario'))
-    {
-        $usuario_destino = _F_usuario_datos($id_usuario);
-        echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
-        echo 'Este mensaje será enviado al usuario <b>'.$usuario_destino['usuario'].'</b><br />';
-        echo '<table>';
-        echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto","","text","","width:100%")));
-        echo ui_tr(ui_td('Mensaje: '). ui_td(ui_textarea("mensaje","","","width:100%")));
-        echo '</table>';
-        echo ui_input("enviar_mp","Enviar","submit").'<br />';
-        echo '</form>';
-    }
-    else
-    {
-        echo Mensaje("ha especificado un usuario de destino no existente en el sitema",_M_ERROR);
-        return;
-    }
-}
 }
 
 function CONTENIDO_TIENDA()
@@ -561,5 +506,30 @@ function CONTENIDO_PUBREP($publicacion)
     echo '</form>';
     echo '<h1>Opciones</h1>';
     echo ui_href("",curPageURL(true),"Cancelar y retornar a la publicación");
+}
+
+/* Marca una venta como 'vendida' y la cierra al publico */
+function CONTENIDO_CERRAR($publicacion)
+{
+    if(isset($_POST['cerrar']) && _autenticado() && _F_usuario_cache('id_usuario') == $publicacion['id_usuario'])
+    {
+       db_consultar(sprintf('UPDATE ventas_publicaciones SET tipo=%s WHERE id_publicacion=%s',_A_vendido,$publicacion['id_publicacion']));
+       if (db_afectados() > 0)
+       {
+        echo '<h1>Venta concluida</h1>';
+        echo sprintf('Su venta ha sido cerrada y marcada como "vendida". Gracias por usar %s!<br />',PROY_NOMBRE);
+        echo '<h1>Opciones</h1>';
+        echo ui_href('',PROY_URL,'Retornar a la página principal');
+        echo ui_href("","vender","Retornar a su lista de ventas");    
+       }
+       return;
+    }
+    echo '<h1>Cerrar publicación</h1>';
+    echo '<p>Presione "Cerrar" para marcar su publicación como vendida y cerrarla.<br />Tenga en cuenta que no podrá re-abrirla luego de esto, asi que procure no cerrarla antes de concluir la venta.</p>';
+    echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+    echo '<input name="cerrar" type="submit" value="Cerrar" />';
+    echo '</form>';
+    echo '<h1>Opciones</h1>';
+    echo ui_href("","vender","Cancelar y retornar a su lista de ventas");    
 }
 ?>

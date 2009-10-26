@@ -48,7 +48,7 @@ function _F_usuario_acceder($email, $clave,$enlazar=true){
     if ( $n_filas == 1 ) {
         $_SESSION['autenticado'] = true;
         $_SESSION['cache_datos_usuario'] = db_fila_a_array($resultado);
-        $c = "UPDATE $tablaUsuarios SET ultimo_acceso=NOW() WHERE email='$email'";
+        $c = "UPDATE $tablaUsuarios SET ultimo_acceso=NOW() WHERE id_usuario="._F_usuario_cache('id_usuario');
         $resultado = db_consultar ($c);
         return 1;
     } else {
