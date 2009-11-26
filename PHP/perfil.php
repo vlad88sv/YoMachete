@@ -28,6 +28,7 @@ if (isset($_GET['id']))
         //Agregamos el mensaje
         $datos["id_usuario_rmt"] =  _F_usuario_cache('id_usuario');
         $datos["mensaje"] = $_POST['mensaje'];
+        $datos["asunto"] = $_POST['asunto'];
         $datos["tipo"] = _M_NOTA;
         $datos["contexto"] = _MC_privado;
         $datos["fecha"] = mysql_datetime();
@@ -67,8 +68,8 @@ if (isset($_GET['id']))
         echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
         echo 'Este mensaje será enviado al usuario <b>'.$usuario_destino['usuario'].'</b><br />';
         echo '<table>';
-        echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto","","text","","width:100%")));
-        echo ui_tr(ui_td('Mensaje: '). ui_td(ui_textarea("mensaje","","","width:100%")));
+        echo ui_tr(ui_td('Asunto: '). ui_td(ui_input("asunto",@$_GET['psjt'],"text","","width:100%")));
+        echo ui_tr(ui_td('Mensaje: '). ui_td(ui_textarea("mensaje",@$_GET['pmsj'],"","width:100%")));
         echo '</table>';
         echo ui_input("enviar_mp","Enviar","submit").'<br />';
         echo '</form>';
@@ -93,6 +94,8 @@ else
         echo ui_tr(ui_th('Nombre Remitente').ui_th('Fecha').ui_th('Asunto'));
         echo ui_tr(ui_td($f['nombre_rmt']).ui_td(fechatiempo_h_desde_mysql_datetime($f['fecha'])).ui_td($f['asunto']));
         echo '<tr><td colspan="3">'.$f['mensaje'].'</td></tr>';
+        echo '<tr><td colspan="3"><a href="./perfil?op=mp&psjt='.urlencode('RESPUESTA A: '.$f['asunto']).'&pmsj='.urlencode("---En respuesta a:\n".$f['mensaje']).'&id='.$f['id_usuario_rmt'].'">Responder este mensaje'.'</td></tr>';
+        echo '<tr><td colspan="3"><hr /></td></tr>';
         }
         echo '</table>';
     }
@@ -159,6 +162,8 @@ function CONTENIDO_PERFIL()
     // Si el que esta viendo su propio perfil, mostrale sus mensajes del sistema
     if(_F_usuario_cache('id_usuario')==$usuario['id_usuario'])
     {
+        // Link a sus mensajes privados
+        echo '<p><a href="http://yomachete.com/perfil?op=mp">Ver mensajes privados</a></p>';
         $c = "SELECT id_usuario_rmt, fecha, (SELECT usuario FROM ventas_usuarios AS b WHERE b.id_usuario = a.id_usuario_rmt LIMIT 1) AS nombre_rmt, mensaje, tipo, contexto, asunto, fecha FROM ventas_mensajes AS a WHERE contexto="._MC_broadcast." AND id IN (SELECT id_msj FROM ventas_mensajes_dst WHERE id_usuario_dst='"._F_usuario_cache('id_usuario')."') ORDER BY fecha DESC";
         $r = db_consultar($c);
         if (mysql_num_rows($r) > 0)
