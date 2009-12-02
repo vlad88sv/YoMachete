@@ -23,7 +23,7 @@ function CONTENIDO_VENDER()
     {
         // Será que aún tiene ventas disponibles?
 
-        if (ObtenerEstadisticasUsuario(_F_usuario_cache('id_usuario'),_EST_CANT_PUB_NOTEMP) >= _F_usuario_cache('nPubMax'))
+        if (ObtenerEstadisticasUsuario(_F_usuario_cache('id_usuario'),_EST_CANT_PUB_ACEPT) >= _F_usuario_cache('nPubMax'))
         {
             echo Mensaje("Ud. ha alcanzado su límite de publicaciones ("._F_usuario_cache('nPubMax')."), si desea agregar más publicaciones puede eliminar una publicación actual o adquirir una cuenta premium.");
         }
@@ -269,7 +269,10 @@ function CONTENIDO_VENDER()
 
     if($flag_modo_previsualizacion || $flag_publicar)
     {
-        echo mensaje("esta es una previsualización. Sus información no será ingresada al sistema hasta que presione el botón \"Enviar\"",_M_INFO);
+        // Si es admin no verá el mensaje confuso.
+        if ($Publicacion['id_usuario'] == _F_usuario_cache('id_usuario'))
+            echo mensaje("esta es una previsualización.<br />Su publicacion no será visible al publico hasta que presione el botón \"Enviar\".<br />Por favor revise una ultima ves su publicacion antes de enviarla.",_M_INFO);
+            
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . get_path(db_codex(@$Publicacion['id_categoria']),false)."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
@@ -300,40 +303,47 @@ function CONTENIDO_VENDER()
     }
     echo "<ol class=\"ventas\">";
     echo "<li>Selección de categoría</li>";
-    echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span><br />";
+    echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span>";
     echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",@$Publicacion["rubro"])), @$Publicacion["id_categoria"])."<br />";
-
+    
+    echo "<li>Precio</li>";
+    echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span>";
+    echo "Précio " . ui_input("precio",@$Publicacion["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
+    
     echo "<li>Título de la publicación</li>";
-    echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span><br />";
-    echo "Titulo " . ui_input("titulo",@$Publicacion["titulo"],"","","width:50ex","MAXLENGTH='50'")."<br />";
+    echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span>";
+    echo "Titulo " . ui_input("titulo",@$Publicacion["titulo"],"text","","width:50ex","MAXLENGTH='50'")."<br />";
+    
     echo "<li>Tags (palabras clave) para publicación</li>";
-    echo "<span class='explicacion'>Utilice palabras cortas separadas por coma (5 como máximo, no utilice espacios).</span><br />";
-    echo "Tags " . ui_input("tags",@$Publicacion["tags"],"","","width:50ex","MAXLENGTH='50'")."<br />";
+    echo "<span class='explicacion'>Utilice palabras cortas separadas por coma (5 como máximo, no utilice espacios).</span>";
+    echo "Tags " . ui_input("tags",@$Publicacion["tags"],"text","","width:50ex","MAXLENGTH='50'")."<br />";
+    
     echo "<li>Descripción corta de la publicación</li>";
-    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span><br />";
-    echo "Descripción corta<br />" . ui_textarea("descripcion_corta",@$Publicacion["descripcion_corta"],"","width:50em;height:4em;") . "<br />";
+    echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span>";
+    echo "Descripción corta " . ui_input("descripcion_corta",@$Publicacion["descripcion_corta"],"text","","width:70ex","MAXLENGTH='300'") . "<br />";
+    
     echo "<li>Descripción del artículo</li>";
-    echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />¡Puedes usar <a href=\"http://www.bbcode-to-html.com/\">bbcode-to-html</a> para convertir tus mensajes de SVCommunity.org a HTML!, si lo haces de esta forma utiliza el botón \"html\" para ingresar el texto resultante.</span><br />";
-    echo "Descripción larga<br />" . ui_textarea("descripcion",@$Publicacion["descripcion"],"","width:50em;height:20em;")."<br />";
+    echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />¡Puedes usar <a href=\"http://www.bbcode-to-html.com/\">bbcode-to-html</a> para convertir tus mensajes de SVCommunity.org a HTML!, si lo haces de esta forma utiliza el botón \"html\" para ingresar el texto resultante.</span>";
+    echo "Descripción larga<br />" . ui_textarea("descripcion",@$Publicacion["descripcion"],"","width:100%;height:20em;")."<br />";
 
     if (in_array(@$Publicacion["rubro"], array("articulo","automotor")))
     {
         echo "<li>Características del artículo</li>";
-        echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span><br />";
+        echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span>";
         echo db_ui_checkboxes("venta[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"venta"),"","tipo='venta'");
     }
-    echo "<li>Precio</li>";
-    echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span><br />";
-    echo "Précio " . ui_input("precio",@$Publicacion["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
+    
     echo "<li>Formas de pago admitidas</li>";
-    echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span><br />";
+    echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span>";
     echo db_ui_checkboxes("pago[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"pago"),"","tipo='pago'");
+    
     if (in_array(@$Publicacion["rubro"], array("articulo")))
     {
         echo "<li>Formas de entrega admitidas</li>";
-        echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span><br />";
+        echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span>";
         echo db_ui_checkboxes("entrega[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"entrega"),"","tipo='entrega'");
     }
+    
     switch(@$Publicacion["rubro"])
     {
         case "articulo":
@@ -349,7 +359,7 @@ function CONTENIDO_VENDER()
             echo "<li>Imagen relacionada con su servicio (logotipo, etc.)</li>";
         break;
     }
-    echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span><br />";
+    echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span>";
 
     echo "<br />";
 
@@ -369,13 +379,22 @@ function CONTENIDO_VENDER()
     {
         echo "Imagen ".($i+1).": Cargar ". ui_input("vender_imagenes[]","","file") . "<br />";
     }
-    echo "<li>Previsualizar y Publicar</li>";
-    echo "</li>";
-    echo "<span class='explicacion'>Puede observar como quedaría su publicación utilizando el botón 'Previsualizar'.<br />Cuando este satisfecho con el resultado presione el botón 'Publicar'.</span><br />";
-    echo "<br />";
-    echo "<center>";
-    echo ui_input("vender_previsualizar", "Guardar y Previsualizar", "submit");
-    echo ui_input("vender_publicar", "Publicar", "submit");
+    
+    // Si es admin solo verá "Guardar".
+    if ($Publicacion['id_usuario'] == _F_usuario_cache('id_usuario'))
+    {
+        echo "<li>Previsualizar y Publicar</li>";
+        echo "</li>";
+        echo "<span class='explicacion'>Puede observar como quedaría su publicación utilizando el botón 'Previsualizar'.<br />Cuando este satisfecho con el resultado presione el botón 'Publicar'.</span>";
+        echo "<br />";
+        echo "<center>";
+        echo ui_input("vender_previsualizar", "Vista previa", "submit");
+        echo ui_input("vender_publicar", "Publicar", "submit");
+    }
+    else
+    {
+        echo ui_input("vender_previsualizar", "Guardar", "submit");
+    }
     echo ui_input("vender_eliminar", "Eliminar", "submit");
     echo "</center>";
     echo "</form>";
