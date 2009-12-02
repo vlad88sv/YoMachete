@@ -49,7 +49,7 @@ h1 {
     text-align:center;
     padding:5px;
 }
-h2 {
+h2, .ventas li {
     display:block;
     -moz-border-radius:10px 10px 0 0;
     -webkit-border-radius:10px 10px 0 0;
@@ -69,7 +69,10 @@ p {
 img {
     border:0;
 }
-
+.ventas li {
+    margin-top:10px;
+    
+}
 #wrapper {
     height: auto;
     min-height: 94%;
@@ -201,17 +204,12 @@ background-color:#EEE;
 padding:0.5em;
 }
 
-.ventas li {
-font-size:12px;
-font-weight:bold;
-}
-
 #error
     {background-color:#F00;border:2px solid #000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#FFF;text-align:center;margin-top:5px;margin-bottom:5px;}
 #error:before
     {content:'Error: '}
 #info
-    {background-color:#F4F4F4;border:2px solid #000000;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000;text-align:center;margin-top:5px;margin-bottom:5px;}
+    {background-color:#FFFF00;border:2px solid #F00;margin:0;padding:5px;max-width:100%;font-weight:bold;color:#000000;text-align:center;margin-top:5px;margin-bottom:5px;}
 #info:before
     {content:"Información: "}
 #nota
@@ -548,4 +546,14 @@ background-color:transparent;
 div.jGrowl div.aviso
 {
     z-index:255;background-color:#FFF;color:#000;-moz-border-radius:10px;-webkit-border-radius:10px;width:600px;overflow:hidden;border:3px solid #F1AF35;
+}
+.btnlnk {
+    padding:5px;
+    background-color:#42B4E6;
+    border:1px solid #F1AF35;
+}
+
+.btnlnk {
+    color:#FFF;
+    text-decoration:underline;
 }
