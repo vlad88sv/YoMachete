@@ -17,6 +17,7 @@ function ui_combobox ($id_gui, $opciones, $selected = "", $clase="", $estilo="")
 	return '<select id="' . $id_gui . '" name="' . $id_gui . '" style="' . $estilo . '">'. $opciones . '</select>';
 }
 function ui_input ($id_gui, $valor="", $tipo="text", $clase="", $estilo="", $extra ="") {
+	$tipo = empty($tipo) ? "text" : $tipo;
 	return '<input type="'.$tipo.'" id="' . $id_gui . '" name="' . $id_gui . '" class="' . $clase . '" style="' . $estilo . '" value="' . $valor .'" '.$extra.'></input>';
 }
 function ui_textarea ($id_gui, $valor="", $clase="", $estilo="") {
