@@ -58,7 +58,7 @@ if (!empty($_GET['ae']) && $_GET['ae'] == 'leido' && !empty($_GET['id_msj']))
 }
 // ----------------- ENVIAR MP ----------------- ENVIAR MP ----------------- ENVIAR MP -----------------
 // Si hay un id entonces quiere enviar un MP a ese ID
-if (!empty($_GET['ae']) && $_GET['ae'] == 'responder' && !empty($_GET['id_msj']))
+if (!empty($_GET['id']))
 {
     $id_usuario = db_codex($_GET['id']);
 

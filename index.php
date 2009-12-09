@@ -64,43 +64,40 @@ function GENERAR_CABEZA()
     $publicaciones = db_contar("ventas_publicaciones","tipo IN("._A_aceptado.","._A_promocionado.")");
 
     // Cargamos el logo.
-    echo "<table>";
-    echo "<tr>";
-    echo "<td id=\"logotipo\">";
+    echo '<table>';
+    echo '<tr>';
+    echo '<td id="logotipo">';
         echo ui_href("","./",ui_img("cabecera_logo","IMG/cabecera_logo.jpg","Logotipo YoMachete.com"));
-    echo "</td>";
-    echo "<td id=\"menu\">";
-    echo "<table id=\"menu_der\">";
-    echo "<tr>";
-    echo "<td>";
-    echo ui_href("","./","Comprar","boton");
-    echo ui_href("","vender","Vender","boton");
+    echo '</td>';
+    echo '<td id="menu">';
+    echo '<div style="clear:both;float:right">';
+    echo '<table id="menu_der">';
+    echo '<tr>';
+    echo '<td>'.ui_href("","./","Comprar","boton").'</td>';
+    echo '<td>'.ui_href("","vender","Vender","boton").'</td>';
     if (!S_iniciado())
     {
-        echo ui_href("","iniciar","Ingresar","boton");
-        echo ui_href("","registrar","Registrarse","boton");
-        echo ui_href("","buscar","Búscar","boton");
-        echo ui_href("","ayuda","Ayuda","boton");
+        echo '<td>'.ui_href("","iniciar","Ingresar","boton").'</td>';
+        echo '<td>'.ui_href("","registrar","Registrarse","boton").'</td>';
+        echo '<td>'.ui_href("","buscar","Búscar","boton").'</td>';
+        echo '<td>'.ui_href("","ayuda","Ayuda","boton").'</td>';
     }
     else
     {
-        if(_F_usuario_cache('nivel') == _N_administrador) echo ui_href("cabecera_link_admin","admin","Administración","boton");
-        echo ui_href("","perfil",_F_usuario_cache("usuario"),"boton");
-        echo ui_href("","buscar","Búscar","boton");
-        echo ui_href("","ayuda","Ayuda","boton");
-        echo ui_href("","finalizar","Salir","boton");
+        if(_F_usuario_cache('nivel') == _N_administrador)
+            echo '<td>'.ui_href("cabecera_link_admin","admin","Administración","boton").'</td>';
+        echo '<td>'.ui_href("","perfil",_F_usuario_cache("usuario"),"boton").'</td>';
+        echo '<td>'.ui_href("","buscar","Búscar","boton").'</td>';
+        echo '<td>'.ui_href("","ayuda","Ayuda","boton").'</td>';
+        echo '<td>'.ui_href("","finalizar","Salir","boton").'</td>';
     }
-    echo "</td>";
-    echo "</tr>";
-    echo "<tr>";
-    echo "<td>";
-    echo sprintf('¡%s publicaciones! | ¡%s usuarios! | <a>Contáctenos</a> | <a>Mapa del sitio</a>', $publicaciones,$usuarios);
-    echo "</td>";
-    echo "</tr>";
-    echo "</table>";
-    echo "</td>";
-    echo "</tr>";
-    echo "</table>";
+    echo '</tr>';
+    echo '</table>';
+    echo sprintf('¡%s publicaciones! | ¡%s usuarios!', $publicaciones,$usuarios);
+    echo '</div>';
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
     if (@$_GET['peticion'] != 'buscar')
     {
         echo '
@@ -116,29 +113,40 @@ function GENERAR_CABEZA()
 }
 function GENERAR_PIE()
 {
-    global $db_contador,$arrJS,$arrCSS;
+    global $db_contador,$arrJS,$arrCSS,$arrHEAD;
     $data = '';
     $js = '';
     $data .= "<p>El uso de este Sitio Web constituye una aceptación de los Términos y Condiciones y de las Políticas de Privacidad.<br />Copyright © 2009 ENLACE WEB S.A. de C.V. Todos los derechos reservados. [$db_contador]</p>";
-    /// NOTIFICACION DE PUBLICACIONES PENDIENTES O USUARIOS PENDIENTES
-    $mensaje="";
-    if (_F_usuario_cache('nivel') == _N_administrador)
+    
+    if (S_iniciado())
     {
-        $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
-        $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
-        if ($PPA || $UPA)
+        /// NOTIFICACION DE PUBLICACIONES PENDIENTES O USUARIOS PENDIENTES
+        $mensaje='';
+        if (_F_usuario_cache('nivel') == _N_administrador)
         {
-            $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
-            $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+            $PPA = db_contar("ventas_publicaciones","tipo='"._A_esp_activacion."'");
+            $UPA = db_contar("ventas_usuarios","estado='"._N_esp_activacion."'");
+            if ($PPA || $UPA)
+            {
+                $mensaje.= "$PPA publicaciones por aprobar (".ui_href("","admin_publicaciones_activacion","ver").").<br />";
+                $mensaje.= "$UPA usuarios por aprobar (".ui_href("","admin_usuarios_activacion","ver").").<br />";
+            }
+        }
+        $_EST_CANT_MP_NUEVOS = ObtenerEstadisticasUsuario(_F_usuario_cache('id_usuario'),_EST_CANT_MP_NUEVOS);
+        if ($_EST_CANT_MP_NUEVOS > 0)
+        {
+            $mensaje.= 'Tiene ' . $_EST_CANT_MP_NUEVOS . ' nuevos Mensajes Privados sin leer. <a href="'.PROY_URL.'perfil?op=mp">Clic aquí para leerlos</a>.';            
+        }
+        
+        if (!empty($mensaje))
+        {
+            $arrCSS[] = 'CSS/jquery.jgrowl';
+            $arrJS[] = 'jquery.jgrowl';
+            $arrHEAD[] = JS_onload('$.jGrowl.defaults.position = "bottom-right";'.JS_growl($mensaje));
+            echo '<script>',JS_growl($mensaje),'</script>';
         }
     }
-
-    if ($mensaje)
-    {
-        $arrCSS[] = 'CSS/jquery.jgrowl';
-        $arrJS[] = 'jquery.jgrowl';
-        $arrHEAD[] = JS_onload('$.jGrowl.defaults.position = "bottom-right";'.JS_growl($mensaje));
-    }
+    
     return $data;
 }
 function GENERAR_GOOGLE_ANALYTICS()

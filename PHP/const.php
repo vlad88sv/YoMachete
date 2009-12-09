@@ -52,6 +52,7 @@ Estadisticas de usuarios
 define('_EST_CANT_PUB',0); //Cantidad de publicaciones (totales)
 define('_EST_CANT_PUB_ACEPT',1); //Cantidad de publicaciones (aprobadas)
 define('_EST_CANT_PUB_NOTEMP',2); //Cantidad de publicaciones (aprobadas+Esperando)
+define('_EST_CANT_MP_NUEVOS',3); //Cantidad de Mensajes Privados nuevos (sin leer)
 
 /*
  Paginación

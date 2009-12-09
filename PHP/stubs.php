@@ -12,7 +12,7 @@ function JS_onload($script){
 
 // Genera un pequeño GROWL
 function JS_growl($mensaje){
-    return "$.jGrowl('".addslashes($mensaje)."', {sticky: true, theme: 'aviso',life:5000})";
+    return "$.jGrowl('".addslashes($mensaje)."', { sticky: true });";
 }
 
 function suerte($una, $dos){
@@ -719,11 +719,13 @@ function ObtenerEstadisticasUsuario($id_usuario, $tipo)
         case _EST_CANT_PUB_NOTEMP:
             $c = "SELECT COUNT(*) AS cuenta FROM ventas_publicaciones WHERE id_usuario='$id_usuario' AND tipo != '"._A_temporal."'";
         break;
+        case _EST_CANT_MP_NUEVOS:
+            $c = "SELECT COUNT(*) AS cuenta FROM ventas_mensajes AS a LEFT JOIN ventas_mensajes_dst AS vmd ON a.id=vmd.id_msj WHERE a.contexto="._MC_privado." AND vmd.leido=0 AND vmd.eliminado=0 AND vmd.id_usuario_dst=$id_usuario";
+        break;
         default:
         return "#ERROR# constante _EST_ '$tipo' no registrada";
     }
     $r = db_consultar($c);
-    $f = mysql_fetch_array($r);
     return @$f['cuenta'];
 }
 /**
