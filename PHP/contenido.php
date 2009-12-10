@@ -106,7 +106,7 @@ function CONTENIDO_PUBLICACION($op="")
         return;
     }
     // Ya venció el tiempo de publicación?.
-    if ($op != "previsualizacion" && strtotime($publicacion['fecha_fin']) < strtotime(date('d-m-Y',time())))
+    if (@$_SESSION['opciones']['deshabilitar_tiempo_de_caducidad'] == 1 && $op != "previsualizacion" && strtotime($publicacion['fecha_fin']) < strtotime(date('d-m-Y',time())))
     {
         echo Mensaje("disculpe, la publicación solicitada ha caducado.", _M_INFO);
         echo "Esta publicacion caducó el ".$publicacion['fecha_fin']."<br />";
@@ -217,7 +217,9 @@ function CONTENIDO_PUBLICACION($op="")
     echo "<br />";
 
     // Fechas de publicación
-    echo "<b>Inicio de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_ini']) . " / <b>Fin de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_fin']);
+    echo "<b>Inicio de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_ini']);
+    if (@$_SESSION['opciones']['deshabilitar_tiempo_de_caducidad'] == 0)
+        echo "<br /><b>Fin de la publicación:</b> " . fecha_desde_mysql_datetime(@$publicacion['fecha_fin']);
     echo "<br />";
 
     // Formas de entrega para el producto (no disponible para ciertos rubros: inmuebles.

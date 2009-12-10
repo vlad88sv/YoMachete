@@ -624,8 +624,11 @@ function INTERFAZ__ADMIN_OPCIONES_GENERALES()
     {
         // Resetear todas las opciones
         db_consultar('UPDATE ventas_opciones_bool SET valor=0');
-        $HabilitarOpciones = "'". join("','",$_POST['tabla_opciones']). "'";
-        db_consultar(sprintf('UPDATE ventas_opciones_bool SET valor=1 WHERE opcion IN (%s)',$HabilitarOpciones));
+        if (isset($_POST['tabla_opciones']))
+        {
+            $HabilitarOpciones = "'". join("','",$_POST['tabla_opciones']). "'";
+            db_consultar(sprintf('UPDATE ventas_opciones_bool SET valor=1 WHERE opcion IN (%s)',$HabilitarOpciones));
+        }
     }
     
     echo '<h1>Opciones generales de administración</h1>';
