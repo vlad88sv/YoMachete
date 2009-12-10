@@ -106,4 +106,16 @@ function db_ui_checkboxes($guid, $tabla, $valor, $texto, $explicacion, $default 
     }
     return $html;
 }
+
+function db_ui_checkboxes_auto($guid, $tabla, $valor, $texto, $explicacion, $prueba, $extra="", $where="1")
+{
+    $c = "SELECT $valor, $texto, $explicacion, $prueba AS 'chequear' FROM $tabla WHERE $where";
+    $r = db_consultar($c);
+    $html = '';
+    while ($row = mysql_fetch_array($r)) {
+        $strDefault = $row['chequear'] == 1 ? "checked=\"checked\"" : "";
+        $html .= "<span title='".$row[$explicacion]."'>" . ui_input($guid, $row[$valor], "checkbox","","",$strDefault. " " . $extra) . $row[$texto] . "</span><br />";
+    }
+    return $html;
+}
 ?>

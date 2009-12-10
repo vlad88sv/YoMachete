@@ -656,6 +656,7 @@ function ObtenerDatos($id_publicacion)
     $ret = mysql_fetch_assoc($r);
     return $ret;
 }
+
 function ObtenerFlags($id_publicacion, $tipo)
 {
     $id_publicacion = db_codex($id_publicacion);
@@ -665,7 +666,7 @@ function ObtenerFlags($id_publicacion, $tipo)
     $r = db_consultar($c);
 
     $arr = array();
-    while ($f = mysql_fetch_array($r))
+    while ($f = mysql_fetch_assoc($r))
     {
         $arr[] = $f['id_flag'];
     }

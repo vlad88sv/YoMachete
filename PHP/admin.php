@@ -17,46 +17,54 @@ function CONTENIDO_ADMIN()
     }
     if (empty($_GET['op']))
     {
-        echo "<h1>Bienvenido a la interfaz de administración</h1>";
-        echo "Por favor seleccione el área a administrar:";
-        echo "<ul>";
-        echo "<li>".ui_href("","admin_usuarios_activacion","Usuarios: activación de cuentas")."</li>";
-        echo "<li>".ui_href("","admin_usuarios_admin","Usuarios: administración")."</li>";
-        echo "<li>".ui_href("","admin_usuarios_agregar","Usuarios: agregar")."</li>";
-        echo "<li>".ui_href("","admin_publicaciones_activacion","Publicaciones: aprobación")."</li>";
-        echo "<li>".ui_href("","admin_tiendas","Tiendas: administración")."</li>";
-        echo "<li>".ui_href("","admin_tienda_agregar","Tiendas: agregar")."</li>";
-        echo "</ul>";
+        echo '<h1>Bienvenido a la interfaz de administración</h1>';
+        echo 'Por favor seleccione el área a administrar:';
+        echo '<ul>';
+        echo '<li>'.ui_href('','admin_usuarios_activacion','Usuarios: activación de cuentas').'</li>';
+        echo '<li>'.ui_href('','admin_usuarios_admin','Usuarios: administración').'</li>';
+        echo '<li>'.ui_href('','admin_usuarios_agregar','Usuarios: agregar').'</li>';
+        echo '<li>'.ui_href('','admin_publicaciones_activacion','Publicaciones: aprobación').'</li>';
+        echo '<li>'.ui_href('','admin_tiendas','Tiendas: administración').'</li>';
+        echo '<li>'.ui_href('','admin_tienda_agregar','Tiendas: agregar').'</li>';
+        echo '<li>'.ui_href('','admin_opciones_generales','Opciones generales').'</li>';
+        echo '</ul>';
         return;
     }
 
     $op = $_GET['op'];
     switch ($op)
     {
-        case "usuarios_activacion":
+        case 'usuarios_activacion':
             INTERFAZ__ACTIVACION_USUARIOS();
         break;
-        case "usuarios_agregar":
+        case 'usuarios_agregar':
             INTERFAZ__ADMIN_USUARIOS_AGREGAR();
         break;
-        case "usuarios_admin":
+        case 'usuarios_admin':
             INTERFAZ__ADMIN_USUARIOS();
         break;
-        case "publicaciones_activacion":
+        case 'publicaciones_activacion':
             INTERFAZ__PUBLICACIONES_ACTIVACION();
         break;
-        case "publicaciones_admin":
+        case 'publicaciones_admin':
             INTERFAZ__PUBLICACIONES_ADMIN();
         break;
-        case "tiendas":
+        case 'tiendas':
             INTERFAZ__ADMIN_TIENDAS();
         break;
-        case "tienda_agregar":
+        case 'tienda_agregar':
             INTERFAZ__ADMIN_TIENDAS_AGREGAR();
         break;
+        case 'opciones_generales':
+            INTERFAZ__ADMIN_OPCIONES_GENERALES();
+        break;
         default:
-            echo "ERROR: Interfaz '$op' no implementada";
+            echo 'ERROR: Interfaz "',$op,'" no implementada';
     }
+    echo '<h2>Opciones</h2>';
+    echo '<ul>';
+    echo '<li><a href="admin">Retornar a opciones de administración</a></li>';
+    echo '</ul>';
 }
 
 function INTERFAZ__ACTIVACION_USUARIOS()
@@ -609,5 +617,26 @@ if (isset($_POST['crear']))
 <input type="submit" name="crear" value="Crear">
 </form>
 <?php
+}
+function INTERFAZ__ADMIN_OPCIONES_GENERALES()
+{
+    if (isset($_POST['guardar']))
+    {
+        // Resetear todas las opciones
+        db_consultar('UPDATE ventas_opciones_bool SET valor=0');
+        $HabilitarOpciones = "'". join("','",$_POST['tabla_opciones']). "'";
+        db_consultar(sprintf('UPDATE ventas_opciones_bool SET valor=1 WHERE opcion IN (%s)',$HabilitarOpciones));
+    }
+    
+    echo '<h1>Opciones generales de administración</h1>';
+    echo '<p>En esta sección podrá encontrar opciones globales que determinan el comportamiento de muchas areas del sitio.</p>';
+    echo '<p>Tenga en cuenta que estas opciones afectarán a todos los usuarios por igual y dejan sin validez cualquier límite establecido</p>';
+    echo '<form action="admin_opciones_generales" method="POST" />';
+    echo '<ul>';
+    
+    echo db_ui_checkboxes_auto('tabla_opciones[]','ventas_opciones_bool','opcion','opcion','opcion','valor');
+    echo '</ul>';
+    echo '<input type="submit" name="guardar" value="Guardar opciones" />';
+    echo '</form>';
 }
 ?>
