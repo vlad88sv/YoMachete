@@ -20,6 +20,12 @@ require_once ("$base/publicaciones.php"); // Gestión de publicaciones
 require_once ("$base/usuario.php"); // Gestión de usuarios
 require_once ("$base/todosv.com.php");  // Envío de SMS
 
+// Cargamos las opciones globales
+
+$r = db_consultar("SELECT opcion, valor FROM ventas_opciones_bool");
+while ($f = mysql_fetch_assoc($r))
+    $_SESSION['opciones'][$f['opcion']] = $f['valor'];
+
 $arrJS = array(); // Inclusiones JS para HEAD
 
 function parse_backtrace(){
