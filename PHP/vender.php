@@ -42,7 +42,7 @@ function CONTENIDO_VENDER()
             '</ul>';
         }
         echo '<h1>Mis publicaciones</h1>';
-        
+
         // Mostrar las ventas "vendidas":
 
         $c = "SELECT id_publicacion, titulo, id_categoria, DATE(fecha_fin) AS fecha_fin, IF((SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria) is NULL,'<sin categoría>',(SELECT nombre FROM ventas_categorias AS b WHERE b.id_categoria = a.id_categoria)) AS categoria, (SELECT rubro FROM ventas_categorias AS b WHERE b.id_categoria=a.id_categoria) AS rubro FROM ventas_publicaciones AS a WHERE id_usuario='"._F_usuario_cache('id_usuario')."' AND tipo="._A_vendido;
@@ -255,7 +255,7 @@ function CONTENIDO_VENDER()
             {
                 $vendedor = _F_usuario_datos($Publicacion['id_usuario']);
                 email($vendedor['email'],PROY_NOMBRE.' - Publicación "'.$Publicacion['titulo'].'" ha sido recibida','Su publicación ha sido recibida en nuestro sistema y se encuentra en proceso de activación.<br />\nEsta activación puede demorar entre <strong>1 minuto y 1 hora</strong> dependiendo de la disponibilidad de los administradores en línea.<br />Esta corta espera es necesaria para realizar una revisión de las publiciaciones y así poder ofrecer el mejor contenido a nuestros visitantes.<br />\n!Gracias por preferir '.PROY_NOMBRE.' para realizar sus publicaciones!');
-                email_x_nivel(_N_administrador,'Nueva publicacion: '.$Publicacion['titulo'],'<a href="http://www.yomachete.com/admin_publicaciones_activacion">'.SEO($Publicacion['titulo']).'</a>');
+                email_x_nivel(_N_administrador,'Nueva publicacion: '.$Publicacion['titulo'].' '.crc32(microtime()),'Estimado administrador de '.PROY_NOMBRE.', hay una nueva publicacion esperando aprobación: '.$Publicacion['titulo'].'.<br />Puede realizar la aprobación ingresando en la siguiente dirección: <a href="'.PROY_URL.'admin_publicaciones_activacion">Administración: aprobacion de publicaciones</a>');
                 echo Mensaje ('Su venta ha sido exitosamente enviada para aprobación', _M_INFO);
             }
         }
@@ -272,7 +272,7 @@ function CONTENIDO_VENDER()
         // Si es admin no verá el mensaje confuso.
         if ($Publicacion['id_usuario'] == _F_usuario_cache('id_usuario'))
             echo mensaje("esta es una previsualización.<br />Su publicacion no será visible al publico hasta que presione el botón \"Enviar\".<br />Por favor revise una ultima ves su publicacion antes de enviarla.",_M_INFO);
-            
+
         echo "<hr style=\"margin-top:50px\" />";
         echo "Ud. ha escogido la siguiente categoría: <b>" . get_path(db_codex(@$Publicacion['id_categoria']),false)."</b><br/><br/>";
         echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
@@ -305,23 +305,23 @@ function CONTENIDO_VENDER()
     echo "<li>Selección de categoría</li>";
     echo "<span class='explicacion'>Ubique su árticulo en la categoría que consideres apropiada.</span>";
     echo "Mi árticulo corresponde a la siguiente categoría<br />".ui_combobox("id_categoria",join("",ver_hijos("",@$Publicacion["rubro"])), @$Publicacion["id_categoria"])."<br />";
-    
+
     echo "<li>Precio</li>";
     echo "<span class='explicacion'>Précio en dólares de Estados Unidos de America ($ USA).</span>";
     echo "Précio " . ui_input("precio",@$Publicacion["precio"],"","","width:30ex","MAXLENGTH='30'")."<br />";
-    
+
     echo "<li>Título de la publicación</li>";
     echo "<span class='explicacion'>Utilice un título corto, descriptivo y llamativo, máximo 50 carácteres. No se admite código HTML.</span>";
     echo "Titulo " . ui_input("titulo",@$Publicacion["titulo"],"text","","width:50ex","MAXLENGTH='50'")."<br />";
-    
+
     echo "<li>Tags (palabras clave) para publicación</li>";
     echo "<span class='explicacion'>Utilice palabras cortas separadas por coma (5 como máximo, no utilice espacios).</span>";
     echo "Tags " . ui_input("tags",@$Publicacion["tags"],"text","","width:50ex","MAXLENGTH='50'")."<br />";
-    
+
     echo "<li>Descripción corta de la publicación</li>";
     echo "<span class='explicacion'>Describa brevemente su venta (o prestación de servicio), solo los detalles más importantes, máximo 300 carácteres. No se admite código HTML.</span>";
     echo "Descripción corta " . ui_input("descripcion_corta",@$Publicacion["descripcion_corta"],"text","","width:70ex","MAXLENGTH='300'") . "<br />";
-    
+
     echo "<li>Descripción del artículo</li>";
     echo "<span class='explicacion'>Describa en detalle tu artículo, incluye todos los datos relevantes que desees, máximo 5000 carácteres.<br />¡Puedes usar <a href=\"http://www.bbcode-to-html.com/\">bbcode-to-html</a> para convertir tus mensajes de SVCommunity.org a HTML!, si lo haces de esta forma utiliza el botón \"html\" para ingresar el texto resultante.</span>";
     echo "Descripción larga<br />" . ui_textarea("descripcion",@$Publicacion["descripcion"],"","width:100%;height:20em;")."<br />";
@@ -332,18 +332,18 @@ function CONTENIDO_VENDER()
         echo "<span class='explicacion'>Seleccione solo las opciones que ayuden a describir de forma precisa tu producto.</span>";
         echo db_ui_checkboxes("venta[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"venta"),"","tipo='venta'");
     }
-    
+
     echo "<li>Formas de pago admitidas</li>";
     echo "<span class='explicacion'>Selecione solo las opciones de pago que admitirá.</span>";
     echo db_ui_checkboxes("pago[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"pago"),"","tipo='pago'");
-    
+
     if (in_array(@$Publicacion["rubro"], array("articulo")))
     {
         echo "<li>Formas de entrega admitidas</li>";
         echo "<span class='explicacion'>Selecione solo las opciones de tipos de entrega que admitirá.</span>";
         echo db_ui_checkboxes("entrega[]", "ventas_flags", "id_flag", "nombrep", "descripcion",ObtenerFlags($ticket,"entrega"),"","tipo='entrega'");
     }
-    
+
     switch(@$Publicacion["rubro"])
     {
         case "articulo":
@@ -379,7 +379,7 @@ function CONTENIDO_VENDER()
     {
         echo "Imagen ".($i+1).": Cargar ". ui_input("vender_imagenes[]","","file") . "<br />";
     }
-    
+
     // Si es admin solo verá "Guardar".
     if ($Publicacion['id_usuario'] == _F_usuario_cache('id_usuario'))
     {
