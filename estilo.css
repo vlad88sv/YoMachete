@@ -190,17 +190,19 @@ img {
     float:right;
 }
 #secc_articulos, #secc_general {
+    background-color:#FFF;
+    padding:5px;
+}
+#secc_articulos {
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     border:2px solid #CCCCCC;
-    background-color:#FFF;
-    padding:5px;
 }
 
 .explicacion {
     display:block;
-background-color:#EEE;
-padding:0.5em;
+    background-color:#EEE;
+    padding:0.5em;
 }
 
 #error
