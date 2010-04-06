@@ -62,4 +62,23 @@ function ui_js_ini_slider ($id_gui, $objetivo = '', $value = '0', $inicio = '0',
 		});
 		";
 }
+
+function ui_publicacion_barra_acciones($tipo,$id_publicacion,$id_usuario,$promocionado)
+{
+	if (_F_usuario_cache('nivel') != _N_administrador)
+		return false;
+
+	$PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_publicacion=$id_publicacion&id_usuario=$id_usuario",($promocionado ?  "DESPROMOCIONAR" : "PROMOCIONAR"));
+
+	switch ($tipo)
+	{
+	    case "admin":
+		    $buffer = '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+	    break;
+	    default:
+		    $buffer = '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+	}
+	
+	return $buffer;
+}
 ?>

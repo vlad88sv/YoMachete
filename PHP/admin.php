@@ -213,16 +213,13 @@ function INTERFAZ__PUBLICACIONES_ADMIN()
         switch ($_GET['operacion'])
         {
             case "promocionar":
-                if ($_GET['estado'] == 0 || $_GET['estado'] == 1 )
+                if (PromocionarPublicacion($id_publicacion))
                 {
-                    if (PromocionarPublicacion($id_publicacion, $_GET['estado']))
-                    {
-                        echo 'Estado de promoción alternado.';
-                    }
-                    else
-                    {
-                        echo "Articulo NO pudo ser promocionado!";
-                    }
+                    echo 'Estado de promoción alternado.';
+                }
+                else
+                {
+                    echo "Articulo NO pudo ser promocionado!";
                 }
             break;
         }

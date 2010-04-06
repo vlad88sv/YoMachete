@@ -227,26 +227,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<tr><td colspan="2"><strong>Etiquetas:</strong> ' . $tags.'</td></tr>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
-    if (_F_usuario_cache('nivel') == _N_administrador && ($tipo != "previsualizacion"))
-    {
-
-        if ($f['promocionado'] == "1")
-        {
-            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_publicacion=$id_publicacion&id_usuario=$id_usuario&estado=0","DESPROMOCIONAR");
-        }
-        else
-        {
-            $PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_publicacion=$id_publicacion&id_usuario=$id_usuario&estado=1","PROMOCIONAR");
-        }
-        switch ($tipo)
-        {
-            case "admin":
-                $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
-            break;
-            default:
-            $data .= '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
-        }
-    }
+    $data .= ui_publicacion_barra_acciones($tipo, $id_publicacion, $id_usuario, $f['promocionado']);
     $data .= '</table>';
     $data .= '</td>';
     $data .= '</tr>';
@@ -766,13 +747,10 @@ function strip_html_tags( $text )
         $text );
     return strip_tags( $text );
 }
-function PromocionarPublicacion($id_publicacion, $promocionado="1")
+function PromocionarPublicacion($id_publicacion)
 {
-    $id_publicacion = db_codex($id_publicacion);
-    $promocionado = db_codex($promocionado);
-    $datos["promocionado"] = $promocionado;
-    $ret = db_actualizar_datos("ventas_publicaciones",$datos,"id_publicacion='$id_publicacion'");
-    unset($datos);
+    $c = sprintf('UPDATE ventas_publicaciones SET promocionado=IF(promocionado = 1, 0, 1) WHERE ID_publicacion = %s',$id_publicacion);
+    $r = db_consultar($c);
     return db_afectados();
 }
 function SEO($URL){
