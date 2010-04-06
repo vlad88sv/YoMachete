@@ -57,7 +57,7 @@ function GENERAR_CATEGORIAS()
     $data .= "<div id=\"contenedor_categorias\">";
     for ($i = 0; $i < $n_campos; $i++) {
         $r = mysql_fetch_row($resultado);
-        $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="categoria-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
+        $data .= "<div class=\"item_cat\">".('<a title="'.$r[1].'" href="clasificados-en-el-salvador-'.$r[0].'-'.SEO($r[1]).'">'. $r[1].'</a>')."</div> "; //Importante!, no quitar el espacio despues del </div>!!!
     }
     $data .= "</div>";
     return $data;
@@ -71,7 +71,7 @@ function GENERAR_TAG_CLOUD()
 
 function CONTENIDO_PUBLICACION($op="")
 {
-    global $HEAD_titulo;
+    global $HEAD_titulo, $HEAD_descripcion;
 
     if (!isset($_GET['publicacion']))
     {
@@ -94,7 +94,7 @@ function CONTENIDO_PUBLICACION($op="")
     {
         echo '<h1>Publicación concluida</h1>';
         echo '<p>Lo sentimos, el vendedor nos ha informado la venta ya fue realizada.</p>';
-        echo '<p>¡Pero no se vaya!, puesto que puede revisar la categoría de esta publicación para encontrar uno similar! - <a href="categoria-'.$publicacion['id_categoria'].'-.html">Revisar la categoría de este producto</a></p>';
+        echo '<p>¡Pero no se vaya!, puesto que puede revisar la categoría de esta publicación para encontrar uno similar! - <a href="clasificados-en-el-salvador-'.$publicacion['id_categoria'].'-.html">Revisar la categoría de este producto</a></p>';
         echo '<p>O bien puede aprovechar para realizar una publicación similar. - <a href="vender?op='.$publicacion['id_categoria'].'">Realizar publicación en esta categoría</a></p>';
         return;
     }
@@ -184,7 +184,7 @@ function CONTENIDO_PUBLICACION($op="")
         db_agregar_datos("ventas_mensajes_publicaciones",$datos);
         unset($datos);
         // Enviamos un mensaje al vendedor
-        email($Vendedor['email'],PROY_NOMBRE . " - nueva consulta en la publicación: " . $publicacion['titulo'], "Le han realizado una consulta en la siguiente publicacion: <a href=\"http://yomachete.com/publicacion_".$publicacion['id_publicacion']."_".SEO($publicacion['titulo'])."\">".$publicacion['titulo'].'</a>');
+        email($Vendedor['email'],PROY_NOMBRE . " - nueva consulta en la publicación: " . $publicacion['titulo'], "Le han realizado una consulta en la siguiente publicacion: <a href=\"http://yomachete.com/clasificados-en-el-salvador-vendo-".$publicacion['id_publicacion']."_".SEO($publicacion['titulo'])."\">".$publicacion['titulo'].'</a>');
     }
 
     // Grabamos cualquier respuesta enviada
@@ -203,7 +203,7 @@ function CONTENIDO_PUBLICACION($op="")
                 $r = db_consultar($c);
                 $f = mysql_fetch_assoc($r);
                 if(!empty($f['email']))
-                    email($f['email'],PROY_NOMBRE . " - respuesta a su consulta en la publicación: " . $publicacion['titulo'], "Hay una respuesta a su consulta en la siguiente publicacion: <a href=\"http://yomachete.com/publicacion_".$publicacion['id_publicacion']."_".SEO($publicacion['titulo'])."\">".$publicacion['titulo'].'</a>');
+                    email($f['email'],PROY_NOMBRE . " - respuesta a su consulta en la publicación: " . $publicacion['titulo'], "Hay una respuesta a su consulta en la siguiente publicacion: <a href=\"http://yomachete.com/clasificados-en-el-salvador-vendo-".$publicacion['id_publicacion']."_".SEO($publicacion['titulo'])."\">".$publicacion['titulo'].'</a>');
             }
         }
     }
@@ -264,7 +264,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "<div style=\"clear:both\"></div>";
         echo "</center>";
     }
-    echo "<hr /><h1>Descripción</h1><center><div class=\"publicacion_descripcion\">";
+    echo "<hr /><h1>Descripción</h1><center><div class=\"clasificados-en-el-salvador-vendo-descripcion\">";
     $descripcion = @$publicacion['descripcion'];
     if( !is_array( $descripcion ) ) {
             echo $descripcion;
@@ -281,7 +281,7 @@ function CONTENIDO_PUBLICACION($op="")
     if ($r && mysql_num_rows($r) > 0)
     {
         echo "<h1>Consultas</h1>";
-        echo '<form method="POST" action="publicacion_'.$ticket.'">';
+        echo '<form method="POST" action="clasificados-en-el-salvador-vendo-'.$ticket.'">';
         echo '<table id="tabla_consultas" class="ancha">';
         $flag_activar_enviar_respuestas = false;
         while ($f = mysql_fetch_array($r))
@@ -294,7 +294,7 @@ function CONTENIDO_PUBLICACION($op="")
             // Determinamos si es pregunta privada o publica
             $Privada = $f['tipo'] == _MeP_Privado ? "_privada" : "";
             $ControlesAdmin = "";
-            if (_F_usuario_cache('nivel') == _N_administrador) $ControlesAdmin = " [".ui_href("","./publicacion_$ticket?op=eliminar&id=".$f['id'],"X")."]". ($f['tipo'] == _MeP_Publico ? "[".ui_href("","publicacion_$ticket?op=privado&id=".$f['id'],"p")."]" : "[".ui_href("","publicacion_$ticket?op=publico&id=".$f['id'],"P")."]");
+            if (_F_usuario_cache('nivel') == _N_administrador) $ControlesAdmin = " [".ui_href("","./clasificados-en-el-salvador-vendo-$ticket?op=eliminar&id=".$f['id'],"X")."]". ($f['tipo'] == _MeP_Publico ? "[".ui_href("","clasificados-en-el-salvador-vendo-$ticket?op=privado&id=".$f['id'],"p")."]" : "[".ui_href("","clasificados-en-el-salvador-vendo-$ticket?op=publico&id=".$f['id'],"P")."]");
             echo '<tr class="pregunta'.$Privada.'"><td class="col1">'.$f['usuario'].'</td><td class="col2">'.htmlentities($f['consulta'],ENT_QUOTES,"utf-8")."</td><td class=\"col3\">".fechatiempo_h_desde_mysql_datetime($f['fecha_consulta']).$ControlesAdmin."</td></tr>";
             // Si es el dueño de la venta y no ha respondido la consulta le damos la opción de hacerlo.
             if ( !$f['respuesta'] && _F_usuario_cache('id_usuario') == @$Vendedor['id_usuario'] )
@@ -379,6 +379,7 @@ function CONTENIDO_PUBLICACION($op="")
     ');
 
     $HEAD_titulo = PROY_NOMBRE . ' - ' . @$publicacion['titulo'];
+    $HEAD_descripcion = @$publicacion['descripcion_corta'];
 }
 
 function CONTENIDO_TIENDA()

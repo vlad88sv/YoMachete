@@ -135,7 +135,7 @@ function INTERFAZ__PUBLICACIONES_ACTIVACION()
                 $ret = Publicacion_Aprobar($id_publicacion);
                 if($ret)
                 {
-                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("",PROY_URL."publicacion_".$id_publicacion,"ver")."]";
+                    $msjNota="¡Su publicación \"<strong>".$publicacion['titulo']."</strong>\" ha sido aprobada! [".ui_href("",PROY_URL."clasificados-en-el-salvador-vendo-".$id_publicacion,"ver")."]";
                 }
             break;
             case "rechazar":

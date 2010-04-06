@@ -33,14 +33,14 @@ function despachar_notificaciones_sms($mensaje){
 
 // http://www.sitepoint.com/article/hierarchical-data-database/
 // Optimizado para 1 sub-nivel
-function get_path($node,$url=true,$prefijo="categoria-") {
+function get_path($node,$url=true,$prefijo="clasificados-en-el-salvador-") {
 
     $c = "SELECT b.id_categoria AS cPadre, a.id_categoria AS cHijo, b.nombre AS nPadre, a.nombre AS nHijo FROM ventas_categorias AS a LEFT JOIN ventas_categorias AS b ON b.id_categoria=a.padre WHERE a.id_categoria=$node";
     $r = db_consultar($c);
     $f = mysql_fetch_assoc($r);
     return get_path_format($f);
 }
-function get_path_format($f,$url=true,$prefijo="categoria-")
+function get_path_format($f,$url=true,$prefijo="clasificados-en-el-salvador-")
 {
     if ($url)
     {
@@ -206,7 +206,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data = '';
     while ($f = mysql_fetch_array($r))
     {
-    $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
+    $lnkTitulo="clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $descripcion=substr($f['descripcion_corta'],0,300);
     $imagen='<a href="'.$lnkTitulo.'"><img src="./imagen_'.$f['imagen'].'m" alt="articulo" /></a>';
@@ -290,7 +290,7 @@ function VISTA_ArticuloEnBarra($Where="1",$Limite="LIMIT 6", $SiVacio="No se enc
     while ($f = mysql_fetch_array($r))
     {
     $titulo=$f['titulo'];
-    $lnkTitulo="publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
+    $lnkTitulo="clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo']);
     $precio=$f['precio'];
     $ubicacion=get_path($f['id_categoria']);
     $id_publicacion = $f['id_publicacion'];

@@ -1,6 +1,6 @@
 <?php
 // Proyecto
-define('PROY_NOMBRE','YoMachete.com');
+define('PROY_NOMBRE','Clasificados en El Salvador');
 define('PROY_URL',preg_replace("/\/?$/","","http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']))."/");
 define('PROY_MAIL_POSTMASTER','mensajero@'.$_SERVER['HTTP_HOST']);
 define('PROY_MAIL_REPLYTO',PROY_MAIL_POSTMASTER);

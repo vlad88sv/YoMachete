@@ -10,6 +10,7 @@ $arrCSS[] = 'estilo';
 $arrHEAD = array();
 
 $HEAD_titulo = PROY_NOMBRE . ' - compra y venta de artículos en El Salvador';
+$HEAD_descripcion = 'Clasificados de El Salvador.';
 ?>
 <?php
 /* CAPTURAR <body> */
@@ -42,8 +43,8 @@ echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
     <meta http-equiv="Content-Script-type" content="text/javascript" />
     <meta http-equiv="Content-Language" content="es" />
     <title><?php echo $HEAD_titulo; ?></title>
-    <meta name="description" content="Servicio de compra y venta en línea." />
-    <meta name="keywords" content="El Salvador, Comprar, Vender, Clasificados" />
+    <meta name="description" content="<?php echo $HEAD_descripcion; ?>" />
+    <meta name="keywords" content="Clasificados, El Salvador, Comprar, Vender" />
     <meta name="robots" content="index, follow" />
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
 <?php HEAD_CSS(); ?>

@@ -13,7 +13,7 @@ function Publicacion_Aprobar($id_publicacion)
         $c = "SELECT id_publicacion, titulo FROM ventas_publicaciones WHERE id_publicacion=$id_publicacion";
         $r = db_consultar($c);
         $f = mysql_fetch_assoc($r);
-        tweet('Nueva publicacion: '.$f['titulo'].' | http://www.yomachete.com/publicacion_'.$f['id_publicacion']."_".SEO($f['titulo']));
+        tweet('Nueva publicacion: '.$f['titulo'].' | http://www.yomachete.com/clasificados-en-el-salvador-vendo-'.$f['id_publicacion']."_".SEO($f['titulo']));
     }
     return $db_afectados_buffer;
 }

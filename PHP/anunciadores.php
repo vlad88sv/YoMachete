@@ -45,7 +45,7 @@ function RSS()
     while($f=mysql_fetch_assoc($r))
     {
         $descripcion=substr($f['descripcion_corta'],0,300)."...";
-        $url = "publicacion_".$f['id_publicacion']."_".SEO($f['titulo']);
+        $url = "clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo']);
         echo '<item>
 <title>'.$f['titulo'].'</title>
 <link>http://www.yomachete.com/'.$url.'</link>

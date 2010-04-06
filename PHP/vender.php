@@ -54,7 +54,7 @@ function CONTENIDO_VENDER()
             echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<tr><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td></tr>";
+                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td></tr>";
             }
             echo "</table>";
         }
@@ -70,7 +70,7 @@ function CONTENIDO_VENDER()
             echo '<tr><th>Título</th><th>Expira</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<tr><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>".$f['fecha_fin']."</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."?se=editar\">editar</a>|<a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."?se=cerrar\">¡vendido!</a></td></tr>";
+                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>".$f['fecha_fin']."</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=editar\">editar</a>|<a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=cerrar\">¡vendido!</a></td></tr>";
             }
             echo "</table>";
         }
@@ -119,7 +119,7 @@ function CONTENIDO_VENDER()
             echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<tr><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo2'])."\">" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"publicacion_".$f['id_publicacion']."_".SEO($f['titulo'])."?se=republicar\">republicar</a></td></tr>";
+                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo2'])."\">" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=republicar\">republicar</a></td></tr>";
             }
             echo "</table>";
         }
