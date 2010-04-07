@@ -51,10 +51,10 @@ function CONTENIDO_VENDER()
         {
             echo "<h2>Ventas realizadas y cerradas</h2>";
             echo '<table class="ancha">';
-            echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th></tr>';
+            echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td></tr>";
+                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"vender?ticket=".$f['id_publicacion']."\">publicar nuevamente</a></td></tr>";
             }
             echo "</table>";
         }
@@ -70,7 +70,7 @@ function CONTENIDO_VENDER()
             echo '<tr><th>Título</th><th>Expira</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>".$f['fecha_fin']."</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=editar\">editar</a>|<a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=cerrar\">¡vendido!</a></td></tr>";
+                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."\">" . htmlentities($f['titulo'],ENT_QUOTES,'UTF-8') . "</a></td><td>".$f['fecha_fin']."</td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=editar\">editar</a>|<a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=cerrar\">¡vendido!</a>|" . ui_href("","vender?ticket=".$f['id_publicacion']."&eliminar=proceder","eliminar")."</td></tr>";
             }
             echo "</table>";
         }
@@ -119,7 +119,7 @@ function CONTENIDO_VENDER()
             echo '<tr><th>Título</th><th>Categoría</th><th>Tipo</th><th>Acciones</th></tr>';
             while ($f = mysql_fetch_array($r))
             {
-                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo2'])."\">" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo'])."?se=republicar\">republicar</a></td></tr>";
+                echo "<tr><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo2'])."\">" . htmlentities($f['titulo2'],ENT_QUOTES,'UTF-8') . "</a></td><td>" . htmlentities($f['categoria'],ENT_QUOTES,'UTF-8') . "</td><td>" . htmlentities($f['rubro'],ENT_QUOTES,'UTF-8') . "</td><td><a href=\"clasificados-en-el-salvador-vendo-".$f['id_publicacion']."_".SEO($f['titulo2'])."?se=republicar\">republicar</a></td></tr>";
             }
             echo "</table>";
         }
@@ -158,11 +158,13 @@ function CONTENIDO_VENDER()
     if (!ComprobarTicket($ticket))
     {
         echo "La validación de su Ticket ha fallado.<br />";
-        echo "Esto podría bien ser una falla del sistema o un error en su navegador<br />";
-        echo "Lo sentimos, por seguridad esta operación no continuará";
+        echo "Esto podría bien ser una falla del sistema o un error en su navegador.<br />";
+        echo "Lo sentimos, por seguridad esta operación no continuará.";
         return;
     }
 
+    db_consultar(sprintf('UPDATE ventas_publicaciones SET tipo=%s WHERE id_publicacion=%s',_A_temporal,$ticket));
+    
     // ---Si el ticket es valido entoces rescatemos lo que lleva hecho---
 
     $arrHEAD[] = '<script type="text/javascript" src="JS/tiny_mce/tiny_mce_gzip.js"></script>

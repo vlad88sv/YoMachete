@@ -113,7 +113,7 @@ function CONTENIDO_PUBLICACION($op="")
         echo "Esta publicacion caducó el ".$publicacion['fecha_fin']."<br />";
         if (_F_usuario_cache('id_usuario') == $publicacion['id_usuario'])
         {
-            echo ui_href("","servicios?op=atp&pub=$ticket","¿Desea ampliar el tiempo de su publicación?");
+            echo 'Para asegurarnos que su venta sigue vigente y con datos actuales, Ud. debera revisar su publicacion y publicarla nuevamente.'. ui_href("","vender?ticket=$ticket","Presione en este enlace si desea extender el tiempo de su publicación");
         }
         return;
     }
@@ -540,25 +540,10 @@ function CONTENIDO_CERRAR($publicacion)
 /* Regresa una publicación al tintero, tendrá que ser reaprobada */
 function CONTENIDO_EDITAR($publicacion)
 {
-    if(isset($_POST['editar']) && _autenticado() && _F_usuario_cache('id_usuario') == $publicacion['id_usuario'])
-    {
-       db_consultar(sprintf('UPDATE ventas_publicaciones SET tipo=%s WHERE id_publicacion=%s',_A_temporal,$publicacion['id_publicacion']));
-       $URL_edicion = PROY_URL.'vender?ticket='.$publicacion['id_publicacion'];
-       if (db_afectados() > 0)
-       {
-        header('location: ' . $URL_edicion);
-        echo '<h1>Publicación editable </h1>';
-        echo sprintf('Su publicación ha sido marcada como "editable" y ahora esta fuera de línea. Gracias por usar %s!<br />',PROY_NOMBRE);
-        echo sprintf('<p><a href="%s" title="Editar venta">Haga click acá si Ud. no fue redirigido a la edición de su venta automáticamente</a>', $URL_edicion);
-        echo '<h1>Opciones</h1>';
-        echo ui_href('',PROY_URL,'Retornar a la página principal');
-        echo ui_href("","vender","Retornar a su lista de publicaciones");
-       }
-       return;
-    }
     echo '<h1>Editar publicación</h1>';
     echo '<p>Presione "Editar" para sacar de línea su publicación y <b>poder ser editada</b>.<br />Tenga en cuenta que esta publicación <b>retorna a su lista de publicaciones en la sección "<i><u>Publicaciones que no ha enviado a aprobación</i></u>" y luego de su edición tendrá que ser enviada nuevamente a aprobación</b>; estas son medidas para su seguridad con el fin de evitar abusos en el sistema, en el futuro, clientes honestos como Ud. se les permitirá editar las publicaciones sin tantos pasos intermedios. Gracias por su comprensión.</p>';
-    echo '<form action="'.$_SERVER['REQUEST_URI'].'" method="POST">';
+    echo '<form action="'.PROY_URL.'vender" method="GET">';
+    echo '<input name="ticket" value="'.$publicacion['id_publicacion'].'" type="hidden"/>';
     echo '<input name="editar" type="submit" value="Editar" />';
     echo '</form>';
     echo '<h1>Opciones</h1>';

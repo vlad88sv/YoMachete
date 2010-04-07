@@ -321,7 +321,6 @@ function DestruirTicket($id_publicacion,$tipo=_A_temporal)
     {
         $id_usuario =  _F_usuario_cache('id_usuario');
         $AND_usuario = "AND id_usuario='$id_usuario'";
-        $AND_tipo = "AND tipo="._A_temporal;
     }
     $id_publicacion = db_codex($id_publicacion);
     $c = "DELETE FROM ventas_publicaciones WHERE id_publicacion='$id_publicacion' $AND_usuario $AND_tipo LIMIT 1";
@@ -360,7 +359,6 @@ function ComprobarTicket($id_publicacion)
     {
         $id_usuario =  _F_usuario_cache('id_usuario');
         $AND_usuario = "AND id_usuario='$id_usuario'";
-        $AND_tipo = "AND tipo="._A_temporal;
     }
 
     $c = "SELECT id_publicacion FROM ventas_publicaciones WHERE id_publicacion='$id_publicacion' $AND_usuario $AND_tipo LIMIT 1";
