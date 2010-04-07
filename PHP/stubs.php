@@ -189,7 +189,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     }
 
     /* Encontremos las publicaciones */
-    $c = "SELECT SQL_CALC_FOUND_ROWS z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ',') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','[sin título]', titulo) AS titulo, IF(descripcion_corta='','[sin descripción]', descripcion_corta) AS descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
+    $c = "SELECT SQL_CALC_FOUND_ROWS z.id_publicacion, z.tipo, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ',') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','[sin título]', titulo) AS titulo, IF(descripcion_corta='','[sin descripción]', descripcion_corta) AS descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
     $r = db_consultar($c);
 
     /* Será que no encontramos nada? */
@@ -227,7 +227,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     $data .= '<tr><td colspan="2"><strong>Etiquetas:</strong> ' . $tags.'</td></tr>';
     $data .= '</tr>'; // Titulo + Precio
     $data .= '<tr><td colspan="2" class="desc">' . htmlentities(strip_tags($descripcion),ENT_QUOTES,'utf-8').'</td></tr>';
-    $data .= ui_publicacion_barra_acciones($tipo, $id_publicacion, $id_usuario, $f['promocionado']);
+    $data .= ui_publicacion_barra_acciones($tipo, $f);
     $data .= '</table>';
     $data .= '</td>';
     $data .= '</tr>';

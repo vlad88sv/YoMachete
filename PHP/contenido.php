@@ -87,7 +87,7 @@ function CONTENIDO_PUBLICACION($op="")
         return;
     }
 
-    echo ui_publicacion_barra_acciones('contenido', $publicacion['id_publicacion'],  $publicacion['id_usuario'],  $publicacion['promocionado']);
+    echo ui_publicacion_barra_acciones('contenido', $publicacion);
 
     // Si ya fue vendido
 

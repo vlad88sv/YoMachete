@@ -63,20 +63,26 @@ function ui_js_ini_slider ($id_gui, $objetivo = '', $value = '0', $inicio = '0',
 		";
 }
 
-function ui_publicacion_barra_acciones($tipo,$id_publicacion,$id_usuario,$promocionado)
+function ui_publicacion_barra_acciones($tipo,$publicacion)
 {
 	if (_F_usuario_cache('nivel') != _N_administrador)
 		return false;
 
-	$PROMOCIONAR = ui_href("","admin_publicaciones_admin?operacion=promocionar&id_publicacion=$id_publicacion&id_usuario=$id_usuario",($promocionado ?  "DESPROMOCIONAR" : "PROMOCIONAR"));
+	$buffer = '';
+	
+	$enlaces[] = ui_href("",'admin_publicaciones_admin?operacion=promocionar&id_publicacion='.$publicacion['id_publicacion'].'&id_usuario='.$publicacion['id_usuario'],($publicacion['promocionado'] ?  "DESPROMOCIONAR" : "PROMOCIONAR"));
+	$enlaces[] = ui_href("",'vender?ticket='.$publicacion['id_publicacion'],"EDITAR");
+	$enlaces[] = ui_href("",'admin_publicaciones_activacion?operacion=rechazar&id_publicacion='.$publicacion['id_publicacion'].'&id_usuario='.$publicacion['id_usuario'],"ELIMINAR");
+	$enlaces[] = ui_href("",'admin_publicaciones_activacion?operacion=aprobar&id_publicacion='.$publicacion['id_publicacion'].'&id_usuario='.$publicacion['id_usuario'],(@$publicacion['tipo'] == _A_aceptado ?  "DESAPROBAR" : "APROBAR"));
 
 	switch ($tipo)
 	{
-	    case "admin":
-		    $buffer = '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=aprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","APROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
-	    break;
-	    default:
-		    $buffer = '<tr><td colspan="2" class="adm">['.$PROMOCIONAR.'] / ['.ui_href("","vender?ticket=$id_publicacion","EDITAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=rechazar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","ELIMINAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=desaprobar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","DESAPROBAR").'] / ['.ui_href("","admin_publicaciones_activacion?operacion=retornar&id_publicacion=$id_publicacion&id_usuario=$id_usuario","RETORNAR").']</td></tr>';
+		case "contenido":
+			$buffer = '<p class="adm">['. join( '] / [', $enlaces) .']</p>';
+			break;
+		case "admin":
+		default:
+			$buffer = '<tr><td colspan="2" class="adm">['. join( '] / [', $enlaces) .']</td></tr>';
 	}
 	
 	return $buffer;
