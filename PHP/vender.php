@@ -237,6 +237,39 @@ function CONTENIDO_VENDER()
         header("location: ./vender?ticket=$ticket");
     }
 
+    if (($flag_modo_previsualizacion || $flag_publicar || $flag_enviar))
+    {
+        if ( in_array(@$Publicacion["rubro"], array('articulo','automotor','inmueble')) && !count($imagenes) )
+        {
+            $flag_enviar = false;
+            echo Mensaje ("necesita agregar al menos una foto de su producto", _M_ERROR);
+        }
+        
+        if (strlen($Publicacion['titulo']) < 20)
+        {
+            $flag_enviar = false;
+            echo Mensaje ("el título debe contener más de 20 letras", _M_ERROR);
+        }
+        
+        if (strlen($Publicacion['titulo']) > 50)
+        {
+            $flag_enviar = false;
+            echo Mensaje ("el título no debe contener más de 100 letras", _M_ERROR);
+        }
+        
+        if (strlen($Publicacion['descripcion_corta']) < 10)
+        {
+            $flag_enviar = false;
+            echo Mensaje ("la descripción corta debe contener más de 10 letras", _M_ERROR);
+        }
+        
+        if (strlen($Publicacion['descripcion_corta']) > 300)
+        {
+            $flag_enviar = false;
+            echo Mensaje ("la descripción corta no debe contener más de 300 letras", _M_ERROR);
+        }
+    }
+
     if ($flag_enviar)
     {
         // Al fin lo terminó de editar y lo esta enviando... Aleluya!
@@ -273,17 +306,17 @@ function CONTENIDO_VENDER()
         if ($Publicacion['id_usuario'] == _F_usuario_cache('id_usuario'))
             echo mensaje("esta es una previsualización.<br />Su publicacion no será visible al publico hasta que presione el botón \"Enviar\".<br />Por favor revise una ultima ves su publicacion antes de enviarla.",_M_INFO);
 
-        echo "<hr style=\"margin-top:50px\" />";
-        echo "Ud. ha escogido la siguiente categoría: <b>" . get_path(db_codex(@$Publicacion['id_categoria']),false)."</b><br/><br/>";
-        echo "Su publicación (una vez aprobada) se verá de la siguiente forma en la lista de publicaciones de la categoria seleccionada:<br /><br />";
+        echo '<hr />';
+        echo "<p>Esta publicando en la categoría <strong>" . get_path(db_codex(@$Publicacion['id_categoria']),false)."</strong></p>";
+        echo "<h2>Vista preliminar de su publicación en las listas</h2>";
         echo VISTA_ListaPubs("id_publicacion=$ticket","","previsualizacion","Woops!, ¡problemas intentando cargar la previsualización!");
-        echo "<br /><br />Su publicación (una vez aprobada) se verá de la siguiente forma al ser accedida:<br /><br />";
-        echo "<div id=\"prev_pub\">";
+        echo "<h2>Vista preliminar de su publicación al ser accedida</h2>";
+        echo '<div id="prev_pub">';
         require_once ("PHP/contenido.php");
         $_GET['publicacion'] = $ticket;
         CONTENIDO_PUBLICACION("previsualizacion");
         echo "</div>";
-        echo "<hr style=\"margin-bottom:50px\" />";
+        echo '<hr style="margin-bottom:50px" />';
     }
 
     // -----------------------------------------------------------------
@@ -315,7 +348,7 @@ function CONTENIDO_VENDER()
     echo "Titulo " . ui_input("titulo",@$Publicacion["titulo"],"text","","width:50ex","MAXLENGTH='50'")."<br />";
 
     echo "<li>Tags (palabras clave) para publicación</li>";
-    echo "<span class='explicacion'>Utilice palabras cortas separadas por coma (5 como máximo, no utilice espacios).</span>";
+    echo "<span class='explicacion'>Utilice 5 palabras (máximo) separadas por coma (,) que describan su producto. Para casos como 'El Salvador' ingreselo como 'El-Salvador'</span>";
     echo "Tags " . ui_input("tags",@$Publicacion["tags"],"text","","width:50ex","MAXLENGTH='50'")."<br />";
 
     echo "<li>Descripción corta de la publicación</li>";
@@ -352,14 +385,14 @@ function CONTENIDO_VENDER()
         case "automotor":
             echo "<li>Fotografías del automotor</li>";
         break;
-        case "inmuble":
+        case "inmueble":
             echo "<li>Fotografías del inmueble</li>";
         break;
         case "servicio":
             echo "<li>Imagen relacionada con su servicio (logotipo, etc.)</li>";
         break;
     }
-    echo "<span class='explicacion'>Cargue las fotografías reales de su artículo, se necesita al menos una para ser aprobado y publicado.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span>";
+    echo '<span class="explicacion">Cargue las fotografías reales de su artículo, <strong style="color:#F00">necesita al menos una foto para que su publicacion sea aprobada y publicada</strong>.<br />Imagenes tomadas de la página del fabricante o similires son permitidas con un máximo de dos imagenes.<br />En total se admiten cinco imagenes</span>';
 
     echo "<br />";
 

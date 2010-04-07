@@ -189,7 +189,7 @@ function VISTA_ListaPubs($Where="1",$OrderBy="",$tipo="normal",$SiVacio="No se e
     }
 
     /* Encontremos las publicaciones */
-    $c = "SELECT SQL_CALC_FOUND_ROWS z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ',') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
+    $c = "SELECT SQL_CALC_FOUND_ROWS z.id_publicacion, z.promocionado, (SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ',') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','[sin título]', titulo) AS titulo, IF(descripcion_corta='','[sin descripción]', descripcion_corta) AS descripcion_corta, z.id_usuario, z.precio FROM ventas_publicaciones AS z WHERE 1 AND $Where $OrderBy LIMIT $LIMIT";
     $r = db_consultar($c);
 
     /* Será que no encontramos nada? */
@@ -591,10 +591,14 @@ function CargarDatos($id_publicacion,$id_usuario)
 
     // Procesamos los nuevos tags (eliminamos los espacios, las comas finales y hacemos array)
     // Nota: no evaluamos las comas finales con posibles espacios porque se eliminan con la primera pasada
-    $tags = explode(",",preg_replace(array('/\s*/','/,$/'), '',@$_POST['tags']),5);
-
+    $tags = explode(",",preg_replace(array('/ */','/^,/','/,$/'), '$1',@$_POST['tags']),5);
+   
+    // Eliminamos posible exploit en los tags
+    $tags = db_codex($tags);
+    
     // Insertamos los nuevos tags
     $val_tags = implode("'),('",$tags);
+    
     db_consultar("INSERT IGNORE INTO ventas_tag (tag) VALUES('$val_tags')");
 
     // Ponemos los tags en referencia a la publicación actual
@@ -632,7 +636,7 @@ function ObtenerDatos($id_publicacion)
     $id_publicacion = db_codex($id_publicacion);
     $JOIN_UBICACION = " LEFT JOIN ventas_categorias AS y ON y.id_categoria=z.id_categoria LEFT JOIN ventas_categorias AS x ON x.id_categoria=y.padre";
     $SELECT_TAG = "(SELECT GROUP_CONCAT(tag ORDER BY tag ASC SEPARATOR ', ') FROM ventas_tag AS b WHERE id IN (SELECT id_tag FROM ventas_tag_uso AS c WHERE c.id_publicacion=z.id_publicacion)) AS tags";
-    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_categoria, z.id_publicacion, z.promocionado, $SELECT_TAG, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','<sin título>', titulo) AS titulo, z.descripcion_corta,z.descripcion, z.id_usuario, z.precio, z.tipo, z.fecha_fin, z.fecha_ini, y.rubro FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE id_publicacion='$id_publicacion' LIMIT 1";
+    $c = "SELECT x.nombre AS nPadre, x.id_categoria AS cPadre, y.nombre AS nHijo, z.id_categoria cHijo, z.id_categoria, z.id_publicacion, z.promocionado, $SELECT_TAG, (SELECT id_img FROM ventas_imagenes as b WHERE b.id_publicacion = z.id_publicacion ORDER BY RAND() LIMIT 1) as imagen, IF(titulo='','[sin título]', titulo) AS titulo, IF(z.descripcion_corta='','[sin descripción]',z.descripcion_corta) AS descripcion_corta,z.descripcion, z.id_usuario, z.precio, z.tipo, z.fecha_fin, z.fecha_ini, y.rubro FROM ventas_publicaciones AS z $JOIN_UBICACION WHERE id_publicacion='$id_publicacion' LIMIT 1";
     $r = db_consultar($c);
     $ret = mysql_fetch_assoc($r);
     return $ret;
